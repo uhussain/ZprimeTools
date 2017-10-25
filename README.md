@@ -12,7 +12,7 @@ to the DYSamples for Control Region Plots.
 The submit*.sh scripts can be changed as necessary and are just submitting jobs en masse.
 
 Instructions:
-```
+
 ```bash
 cmsrel CMSSW_8_0_26_patch1
 cd $CMSSW_BASE/src
@@ -21,7 +21,7 @@ export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch
 voms-proxy-init --voms=cms --valid=192:00
 ./submit.sh
 ```
-```
+
 Stitching DY inclusive sample and WJets inclusive sample withe the HT-binned samples. Currently done by hand.
 
 Edit the corresponding ZprimeJetsClass_MC*.C files to add the genHT < 100 cut in the beginning and then process the inclusive samples as follows:
