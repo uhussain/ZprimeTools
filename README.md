@@ -1,7 +1,5 @@
 # Mono-Z' Jet + MET analysis
 
-```
-
 This repository contains pacakges to analyze ntuples for the signal region and the control region 
 for the Mono-Z' Jet + MET analysis.
 Jobs are submitted to condor through the MakeCondorFiles*.csh scripts.
@@ -9,13 +7,15 @@ Jobs are submitted to condor through the MakeCondorFiles*.csh scripts.
 2) MakeCondorFiles.csh for MC
 3) MakeCondorFiles_WZ.csh for Wlv+Jets and Zvv+Jets MC as EWK+NNLO corrections need to be applied 
 using the Monojet recipe via kfactors.root
+4) kfactors.root can be found in /nfs_scratch/uhussain/MonoZprimeJet_postanalyzer_jobsubmission/ 
+
 Note: In the Control Region directory, MakeCondorFiles_WZ.csh is also used for the DYJetsToLL 
 samples as we apply the same EWK+NNLO corrections to the DYSamples for Control Region Plots.
 
 The submit*.sh scripts can be changed as necessary and are just submitting jobs en masse.
 
 Instructions:
-```
+
 
 ```bash
 cmsrel CMSSW_8_0_26_patch1
@@ -33,6 +33,8 @@ and then process the inclusive samples as follows:
 
 Signal Region:
 
+```
+
 ```bash
 ./rootcom ZprimeJetsClass_MC analyze1
 ./MakeCondorFiles.csh analyze1 /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJetsToLL/170810_152817/0000/ postDY_MLM_0.root -1 10000 DYMLM_0 PU_Central.root
@@ -48,7 +50,7 @@ And run the following commands:
 ```bash
 ./rootcom ZprimeJetsClass_MC signal
 ./signal /nfs_scratch/uhussain/MonoZprimeJet_postanalyzer_jobsubmission/ postSignal.root -1 1 > signalTest.txt
-```
+
 
 Control Region:
 
