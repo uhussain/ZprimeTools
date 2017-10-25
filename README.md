@@ -24,7 +24,7 @@ cmsenv
 export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch
 voms-proxy-init --voms=cms --valid=192:00
 ./submit.sh
-
+```
 
 Stitching DY inclusive sample and WJets inclusive sample withe the HT-binned samples. Currently done by hand.
 
@@ -33,7 +33,6 @@ and then process the inclusive samples as follows:
 
 Signal Region:
 
-```
 
 ```bash
 ./rootcom ZprimeJetsClass_MC analyze1
@@ -50,7 +49,7 @@ And run the following commands:
 ```bash
 ./rootcom ZprimeJetsClass_MC signal
 ./signal /nfs_scratch/uhussain/MonoZprimeJet_postanalyzer_jobsubmission/ postSignal.root -1 1 > signalTest.txt
-
+```
 
 Control Region:
 
