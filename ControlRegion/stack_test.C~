@@ -92,14 +92,14 @@ void stack_plotterlog()
   std::cout<<"raw WJets events: "<<rawWJets<<std::endl;
 
    // Scaling = (1/Totalevents)*Luminosity*NNLO-cross-section
-  histo_j1EtaWidth_WJets_0->Scale((1.0/WJets_Total[0])*3723.664*50690);
-  histo_j1EtaWidth_W1Jets->Scale((1.0/WJets_Total[1])*3723.664*1345);
-  histo_j1EtaWidth_W2Jets->Scale((1.0/WJets_Total[2])*3723.664*359.7);
-  histo_j1EtaWidth_W3Jets->Scale((1.0/WJets_Total[3])*3723.664*48.91);
-  histo_j1EtaWidth_W4Jets->Scale((1.0/WJets_Total[4])*3723.664*12.05);
-  histo_j1EtaWidth_W5Jets->Scale((1.0/WJets_Total[5])*3723.664*5.501);
-  histo_j1EtaWidth_W6Jets->Scale((1.0/WJets_Total[6])*3723.664*1.329);
-  histo_j1EtaWidth_W7Jets->Scale((1.0/WJets_Total[7])*3723.664*0.03216);
+  histo_j1EtaWidth_WJets_0->Scale((1.0/57025279)*3723.664*50690);
+  histo_j1EtaWidth_W1Jets->Scale((1.0/39617081)*3723.664*1345);
+  histo_j1EtaWidth_W2Jets->Scale((1.0/19914060)*3723.664*359.7);
+  histo_j1EtaWidth_W3Jets->Scale((1.0/5795947)*3723.664*48.91);
+  histo_j1EtaWidth_W4Jets->Scale((1.0/14907334)*3723.664*12.05);
+  histo_j1EtaWidth_W5Jets->Scale((1.0/6200214)*3723.664*5.501);
+  histo_j1EtaWidth_W6Jets->Scale((1.0/5288556)*3723.664*1.329);
+  histo_j1EtaWidth_W7Jets->Scale((1.0/2382305)*3723.664*0.03216);
   
   histo_j1EtaWidth_WJets_0->Add(histo_j1EtaWidth_W1Jets);
   histo_j1EtaWidth_WJets_0->Add(histo_j1EtaWidth_W2Jets);
@@ -145,13 +145,13 @@ void stack_plotterlog()
   std::cout<<"raw ZvvJets bkg:"<<rawZvvJets<<std::endl;
   
   // Scaling = (1/Totalevents)*Luminosity*LO-cross-section
-  histo_j1EtaWidth_100to200->Scale((1.0/Zvv_Total[0])*3723.664*280.35);
-  histo_j1EtaWidth_200to400->Scale((1.0/Zvv_Total[1])*3723.664*77.67);
-  histo_j1EtaWidth_400to600->Scale((1.0/Zvv_Total[2])*3723.664*10.73);
-  histo_j1EtaWidth_600to800->Scale((1.0/Zvv_Total[3])*3723.664*2.559);
-  histo_j1EtaWidth_800to1200->Scale((1.0/Zvv_Total[4])*3723.664*1.1796);
-  histo_j1EtaWidth_1200to2500->Scale((1.0/Zvv_Total[5])*3723.664*0.28833);
-  histo_j1EtaWidth_2500toInf->Scale((1.0/Zvv_Total[6])*3723.664*0.006945);
+  histo_j1EtaWidth_100to200->Scale((1.0/19026284)*3723.664*280.35);
+  histo_j1EtaWidth_200to400->Scale((1.0/19611913)*3723.664*77.67);
+  histo_j1EtaWidth_400to600->Scale((1.0/8842306)*3723.664*10.73);
+  histo_j1EtaWidth_600to800->Scale((1.0/5763181)*3723.664*2.559);
+  histo_j1EtaWidth_800to1200->Scale((1.0/2169896)*3723.664*1.1796);
+  histo_j1EtaWidth_1200to2500->Scale((1.0/143919)*3723.664*0.28833);
+  histo_j1EtaWidth_2500toInf->Scale((1.0/404725)*3723.664*0.006945);
 
   //Add the ZJetsToNuNu histograms to the first one
   histo_j1EtaWidth_100to200->Add(histo_j1EtaWidth_200to400);
@@ -196,11 +196,11 @@ void stack_plotterlog()
   double rawGJets = (histo_j1EtaWidth_G1Jets->Integral())+ (histo_j1EtaWidth_G2Jets->Integral())+ (histo_j1EtaWidth_G3Jets->Integral())+ (histo_j1EtaWidth_G4Jets->Integral())+ (histo_j1EtaWidth_G5Jets->Integral()); 
   std::cout<<"raw GJets bkg:"<<rawGJets<<std::endl;
   //Scaling
-  histo_j1EtaWidth_G1Jets->Scale((1.0/GJets_Total[0])*3723.664*17420);
-  histo_j1EtaWidth_G2Jets->Scale((1.0/GJets_Total[1])*3723.664*5391);
-  histo_j1EtaWidth_G3Jets->Scale((1.0/GJets_Total[2])*3723.664*1168);
-  histo_j1EtaWidth_G4Jets->Scale((1.0/GJets_Total[3])*3723.664*132.5);
-  histo_j1EtaWidth_G5Jets->Scale((1.0/GJets_Total[4])*3723.664*44.05);
+  histo_j1EtaWidth_G1Jets->Scale((1.0/11490000)*3723.664*17420);
+  histo_j1EtaWidth_G2Jets->Scale((1.0/14375000)*3723.664*5391);
+  histo_j1EtaWidth_G3Jets->Scale((1.0/49455800)*3723.664*1168);
+  histo_j1EtaWidth_G4Jets->Scale((1.0/11582100)*3723.664*132.5);
+  histo_j1EtaWidth_G5Jets->Scale((1.0/11611900)*3723.664*44.05);
   
   histo_j1EtaWidth_G1Jets->Add(histo_j1EtaWidth_G2Jets);
   histo_j1EtaWidth_G1Jets->Add(histo_j1EtaWidth_G3Jets);
@@ -247,14 +247,14 @@ void stack_plotterlog()
   std::cout<<"raw DYJets bkg:"<<rawDY<<std::endl;
 
   //histo_j1EtaWidth_DY1Jets->Scale((1.0/96657400)*3723.664*4895);
-  histo_j1EtaWidth_DY1Jets->Scale((1.0/DYJets_Total[0])*3723.664*4895);
-  histo_j1EtaWidth_DY2Jets->Scale((1.0/DYJets_Total[1])*3723.664*148);
-  histo_j1EtaWidth_DY3Jets->Scale((1.0/DYJets_Total[2])*3723.664*40.94);
-  histo_j1EtaWidth_DY4Jets->Scale((1.0/DYJets_Total[3])*3723.664*5.497);
-  histo_j1EtaWidth_DY5Jets->Scale((1.0/DYJets_Total[4])*3723.664*1.354);
-  histo_j1EtaWidth_DY6Jets->Scale((1.0/DYJets_Total[5])*3723.664*0.6250);
-  histo_j1EtaWidth_DY7Jets->Scale((1.0/DYJets_Total[6])*3723.664*0.1511);
-  histo_j1EtaWidth_DY8Jets->Scale((1.0/DYJets_Total[7])*3723.664*0.003647);
+  histo_j1EtaWidth_DY1Jets->Scale((1.0/96657366)*3723.664*4895);
+  histo_j1EtaWidth_DY2Jets->Scale((1.0/7549150)*3723.664*148);
+  histo_j1EtaWidth_DY3Jets->Scale((1.0/4628596)*3723.664*40.94);
+  histo_j1EtaWidth_DY4Jets->Scale((1.0/155583)*3723.664*5.497);
+  histo_j1EtaWidth_DY5Jets->Scale((1.0/8292160)*3723.664*1.354);
+  histo_j1EtaWidth_DY6Jets->Scale((1.0/2668311)*3723.664*0.6250);
+  histo_j1EtaWidth_DY7Jets->Scale((1.0/595906)*3723.664*0.1511);
+  histo_j1EtaWidth_DY8Jets->Scale((1.0/399147)*3723.664*0.003647);
 
   histo_j1EtaWidth_DY1Jets->Add(histo_j1EtaWidth_DY2Jets);
   histo_j1EtaWidth_DY1Jets->Add(histo_j1EtaWidth_DY3Jets);
@@ -288,7 +288,7 @@ void stack_plotterlog()
   double rawTTJets = histo_j1EtaWidth_TTJets->Integral();
   std::cout<<"raw TTJets here:"<<rawTTJets<<std::endl;
 
-  histo_j1EtaWidth_TTJets->Scale((1.0/TTJets_Total[0])*3723.664*502.2);
+  histo_j1EtaWidth_TTJets->Scale((1.0/10139700)*3723.664*502.2);
   histo_j1EtaWidth_TTJets->SetTitle("");
   histo_j1EtaWidth_TTJets->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_TTJets->GetXaxis()->SetTickLength(0);
@@ -310,7 +310,7 @@ void stack_plotterlog()
 
   TH1F *histo_j1EtaWidth_WW = (TH1F*)WW_Files[0]->Get("h_dileptonM_8");
   histo_j1EtaWidth_WW->SetStats(0);
-  histo_j1EtaWidth_WW->Scale((1.0/WW_Total[0])*3723.664*118.7);
+  histo_j1EtaWidth_WW->Scale((1.0/6987020)*3723.664*118.7);
   /*histo_j1EtaWidth_WW->SetTitle("");
   histo_j1EtaWidth_WW->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_WW->GetXaxis()->SetTickLength(0);
@@ -330,7 +330,7 @@ void stack_plotterlog()
   
   TH1F *histo_j1EtaWidth_WZ = (TH1F*)WZ_Files[0]->Get("h_dileptonM_8");
   histo_j1EtaWidth_WZ->SetStats(0);
-  histo_j1EtaWidth_WZ->Scale((1.0/WZ_Total[0])*3723.664*47.2);
+  histo_j1EtaWidth_WZ->Scale((1.0/2995780)*3723.664*47.2);
 /*  histo_j1EtaWidth_WZ->SetTitle("");
   histo_j1EtaWidth_WZ->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_WZ->GetXaxis()->SetTickLength(0);
@@ -350,7 +350,7 @@ void stack_plotterlog()
 
   TH1F *histo_j1EtaWidth_ZZ = (TH1F*)ZZ_Files[0]->Get("h_dileptonM_8");
   histo_j1EtaWidth_ZZ->SetStats(0);
-  histo_j1EtaWidth_ZZ->Scale((1.0/ZZ_Total[0])*3723.664*16.6);
+  histo_j1EtaWidth_ZZ->Scale((1.0/998018)*3723.664*16.6);
 /*  histo_j1EtaWidth_ZZ->SetTitle("");
   histo_j1EtaWidth_ZZ->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_ZZ->GetXaxis()->SetTickLength(0);
@@ -402,14 +402,14 @@ void stack_plotterlog()
   histo_j1EtaWidth_Q7Jets->SetStats(0);
   histo_j1EtaWidth_Q8Jets->SetStats(0);
 
-  histo_j1EtaWidth_Q1Jets->Scale((1.0/QJets_Total[0])*3723.664*27500000);
-  histo_j1EtaWidth_Q2Jets->Scale((1.0/QJets_Total[1])*3723.664*1735000);
-  histo_j1EtaWidth_Q3Jets->Scale((1.0/QJets_Total[2])*3723.664*367000);
-  histo_j1EtaWidth_Q4Jets->Scale((1.0/QJets_Total[3])*3723.664*29370);
-  histo_j1EtaWidth_Q5Jets->Scale((1.0/QJets_Total[4])*3723.664*6524);
-  histo_j1EtaWidth_Q6Jets->Scale((1.0/QJets_Total[5])*3723.664*1064);
-  histo_j1EtaWidth_Q7Jets->Scale((1.0/QJets_Total[6])*3723.664*121.5);
-  histo_j1EtaWidth_Q8Jets->Scale((1.0/QJets_Total[7])*3723.664*25.42);  
+  histo_j1EtaWidth_Q1Jets->Scale((1.0/80584300)*3723.664*27500000);
+  histo_j1EtaWidth_Q2Jets->Scale((1.0/38742400)*3723.664*1735000);
+  histo_j1EtaWidth_Q3Jets->Scale((1.0/37501400)*3723.664*367000);
+  histo_j1EtaWidth_Q4Jets->Scale((1.0/43210300)*3723.664*29370);
+  histo_j1EtaWidth_Q5Jets->Scale((1.0/29695500)*3723.664*6524);
+  histo_j1EtaWidth_Q6Jets->Scale((1.0/10358900)*3723.664*1064);
+  histo_j1EtaWidth_Q7Jets->Scale((1.0/7853460)*3723.664*121.5);
+  histo_j1EtaWidth_Q8Jets->Scale((1.0/4045060)*3723.664*25.42);  
 
   histo_j1EtaWidth_Q1Jets->Add(histo_j1EtaWidth_Q2Jets);
   histo_j1EtaWidth_Q1Jets->Add(histo_j1EtaWidth_Q3Jets);

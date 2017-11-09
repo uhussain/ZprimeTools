@@ -714,7 +714,7 @@ public :
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
-   virtual void     Loop(Long64_t maxEvents, int reportEvery);
+   virtual void     Loop(Long64_t maxEvents, int reportEvery,int include);
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
    virtual void BookHistos(const char* file2);
@@ -752,7 +752,7 @@ ZprimeJetsClass_MC::ZprimeJetsClass_MC(const char* file1,const char* file2)
     std::cout<<"name: "<<(filename->GetName())<<std::endl;
     std::cout<<"fileNumber: "<<fileNumber<<std::endl;
 
-     TString dataset = "ggtree_mc_";
+     TString dataset = "ggtree_mc_signal5GeV_";
      TString  FullPathInputFile = (path+filename->GetName());
      TString name = filename->GetName();
      if(name.Contains(dataset))

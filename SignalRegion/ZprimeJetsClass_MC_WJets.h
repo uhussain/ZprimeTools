@@ -719,7 +719,7 @@ public :
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
    virtual void     Init(TTree *tree);
-   virtual void     Loop(Long64_t maxEvents, int reportEvery);
+   virtual void     Loop(Long64_t maxEvents, int reportEvery,int include);
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
    virtual void BookHistos(const char* file2);

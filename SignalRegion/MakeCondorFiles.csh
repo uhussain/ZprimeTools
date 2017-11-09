@@ -12,7 +12,7 @@ EOF
 chmod 775 Job_${6}.sh
 
 cat>condor_${6}<<EOF
-x509userproxy = /tmp/x509up_u4318
+x509userproxy = /tmp/x509up_u23216
 universe = vanilla
 Executable = Job_${6}.sh
 Notification         = never

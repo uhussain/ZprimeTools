@@ -1,0 +1,5 @@
+#!/bin/bash
+rm *.err
+rm *.out
+rm *.log
+rm Job_*

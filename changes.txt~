@@ -1,0 +1,28 @@
+---Changes for Inclusive Samples---
+
+Added function called Inclusive(int include, float genHT) to ZprimeJetClass_MC*.C that originally needed to be editted when doing inclusive samples
+Inclusive(int include, float genHT) returns true when include=0 and genHT < 100 when include=1
+Inclusize() is used at #L
+The variable include was added to respective ZprimeJetClass_MC*.h Loop functions so that it could be passed from argv[5] in the main() functions
+MakeCondorFiles.csh was editted to use ${9} as the include variable
+Logic was added to make it so if ${9} was not determined, include would be set to 0 so that everything would work with commands already in submit*.sh
+Example of properly submitting inclusive sample:
+./rootcom ZprimeJetsClass_MC analyze1
+./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_Aug10/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJetsToLL/170810_152817/0000/ postDY_MLM_0.root -1 10000 DYMLM_0 PU_Central.root 1
+
+(note the last system argument is 1, which is the value given to the variable include)
+
+Inclusive samples were added at the end of submit.sh for ease of use
+
+---Changes to stack_plotter.C---
+
+Added function called GetTotal(std::vector<TFile*> Files) to retrieve event count data from a list of files
+GetTotal(std::vector<TFile*> Files) returns a vector of float values to be used as the total counts for scaling 
+(counts are taken from h_cutflow->GetBinContent(1) from each respective file)
+A vector is defined to have all the file names for a sample type
+This vector is used to fill another vector with files
+The vector that contains the files is given to GetTotal() and returns another vector with the total counts for each file
+The definition for the j1EtaWidth histograms was altered to accomodate the new places the files are stored
+Scale factors were altered to use the vector with the total counts instead of preset values
+
+These changes were made to every instance a sample type was used even if there was only 1 file being opened

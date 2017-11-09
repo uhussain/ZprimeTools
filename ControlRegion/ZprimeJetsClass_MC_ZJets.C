@@ -31,11 +31,24 @@
 #include <list>
 #include <set>
 #include <stdio.h> 
+#include <stdlib.h>
 using namespace std;
 using std::vector;
 
+bool Inclusive(int include, float genHT)
+{
+  if (include)
+    {
+      return genHT < 100;
+    }
+  else
+    {
+      return true;
+    }
+}
+
 int main(int argc, const char* argv[])
-{ 
+{
   Long64_t maxEvents = atof(argv[3]);
   if (maxEvents < -1LL)
   {
@@ -48,13 +61,15 @@ int main(int argc, const char* argv[])
     std::cout<<"Please enter a valid value for reportEvery (parameter 4)."<<std::endl;
     return 1;
   }
+  int include = atof(argv[5]);
+
   ZprimeJetsClass_MC_ZJets t(argv[1],argv[2]);
   
-  t.Loop(maxEvents,reportEvery);
+  t.Loop(maxEvents,reportEvery,include);
   return 0;
 }
 
-void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
+void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery,int include)
 {
   if (fChain == 0) return;
   int nTotal;
@@ -244,8 +259,8 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
     lepindex_leading = -1;
     lepindex_subleading = -1;
     nTotalEvents++;
-    if (genHT<100 && metFilters==0)
-      {    
+    if (Inclusive(include,genHT) && metFilters==0)
+      {
         nFilters++;
         fillHistos(0,event_weight);
 	      if ((HLTEleMuX>>4&1 == 1) || (HLTEleMuX>>38&1 == 1)) //"HLT_Ele27_WPTight_Gsf_v or HLT_Ele115_CaloIdVT_GsfTrkIdT_v"

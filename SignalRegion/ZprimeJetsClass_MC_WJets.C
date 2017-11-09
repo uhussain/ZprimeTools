@@ -34,6 +34,18 @@
 using namespace std;
 using std::vector;
 
+bool Inclusive(int include, float genHT)
+{
+  if (include)
+    {
+      return genHT < 100;
+    }
+  else
+    {
+      return true;
+    }
+}
+
 int main(int argc, const char* argv[])
 { 
   Long64_t maxEvents = atof(argv[3]);
@@ -48,13 +60,15 @@ int main(int argc, const char* argv[])
     std::cout<<"Please enter a valid value for reportEvery (parameter 4)."<<std::endl;
     return 1;
   }
+  int include = atof(argv[5]);
+
   ZprimeJetsClass_MC_WJets t(argv[1],argv[2]);
   
-  t.Loop(maxEvents,reportEvery);
+  t.Loop(maxEvents,reportEvery,include);
   return 0;
 }
 
-void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery)
+void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery,int include)
 {
   if (fChain == 0) return;
   int nTotal;
@@ -238,7 +252,7 @@ void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery)
     float metcut= 0.0;
     metcut = (fabs(pfMET-caloMET))/pfMET;
     //std::cout<<"|caloMET-pfMET|/pfMET: "<<metcut<<std::endl;
-    if ((genHT<100) && (metFilters==0))
+    if (Inclusive(include,genHT) && (metFilters==0))
       {
         EWK_corrected_weight = 1.0*(ewkCorrection->GetBinContent(ewkCorrection->GetXaxis()->FindBin(bosonPt)));
         NNLO_weight = 1.0*(NNLOCorrection->GetBinContent(NNLOCorrection->GetXaxis()->FindBin(bosonPt)));
