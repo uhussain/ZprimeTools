@@ -266,11 +266,12 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
                       dilepton_pt = ll.Pt();
                       
                       TLorentzVector met_4vec;
-                      met_4vec.SetPtEtaPhiE(pfMET,0.,leptoMET_phi_to_use,pfMET);
+                      met_4vec.SetPtEtaPhiE(pfMET,0.,pfMETPhi,pfMET);
                       TLorentzVector leptoMET_4vec = ll+met_4vec;
                       Double_t leptoMET = leptoMET_4vec.Pt();
                       Double_t leptoMET_phi = leptoMET_4vec.Phi();
                       nCRSelection++;
+                      Recoil = leptoMET;
                       //h_cutflow->SetBinContent(4,nCRSelection);
 		                  fillHistos(2);
 	    	              if (leptoMET>200)
@@ -459,6 +460,7 @@ void ZprimeJetsClass::BookHistos(const char* file2)
      h_subleadingLeptonPt[i] = new TH1F(("h_subleadingLeptonPt"+histname).c_str(),"h_subleadingLeptonPt",10,10.,400.);h_subleadingLeptonPt[i]->Sumw2();
      h_subleadingLeptonEta[i] = new TH1F(("h_subleadingLeptonEta"+histname).c_str(),"h_subleadingLeptonEta",10,-2.5,2.5);h_subleadingLeptonEta[i]->Sumw2();
      h_subleadingLeptonPhi[i] = new TH1F(("h_subleadingLeptonPhi"+histname).c_str(),"h_subleadingLeptonPhi",10,0.,3.1416);h_subleadingLeptonPhi[i]->Sumw2();
+     h_recoil[i] = new TH1F(("h_recoil"+histname).c_str(), "Recoil (GeV)",50,MetBins);h_recoil[i] ->Sumw2();
      h_dileptonPt[i] = new TH1F(("h_dileptonPt"+histname).c_str(),"h_dileptonPt",10,0.,400.);h_dileptonPt[i]->Sumw2();
      h_dileptonM[i] = new TH1F(("h_dileptonM"+histname).c_str(),"h_dileptonM",30,60.,120.);h_dileptonM[i]->Sumw2();
   }
@@ -512,7 +514,8 @@ void ZprimeJetsClass::fillHistos(int histoNumber)
   h_subleadingLeptonPt[histoNumber]->Fill(elePt->at(lepindex_subleading));
   h_subleadingLeptonEta[histoNumber]->Fill(eleEta->at(lepindex_subleading));
   h_subleadingLeptonPhi[histoNumber]->Fill(elePhi->at(lepindex_subleading));}
-  if(dilepton_pt > 0 && dilepton_mass > 0){ 
+  if(dilepton_pt > 0 && dilepton_mass > 0){
+  h_recoil[histoNumber]->Fill(Recoil);
   h_dileptonPt[histoNumber]->Fill(dilepton_pt);
   h_dileptonM[histoNumber]->Fill(dilepton_mass);}
 }
