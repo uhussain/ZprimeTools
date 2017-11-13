@@ -276,7 +276,7 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 		                  fillHistos(2);
 	    	              if (leptoMET>200)
 	                       {
-                           leptoMET_phi_to_use = leptoMET_phi;
+                           //leptoMET_phi_to_use = leptoMET_phi;
                            nMET200++;
                            //h_cutflow->SetBinContent(5,nMET200);
 		                       fillHistos(3);
@@ -306,11 +306,11 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
                                             std::cout<<"JetVetoSize: "<<jetveto.size()<<std::endl;
                                             for(int j = 0; j < jetveto.size(); j++)
                                                 {
-                                                  if(DeltaPhi(jetPhi->at(jetveto[j]),leptoMET_phi_to_use) < minDPhiJetMET)
+                                                  if(DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi) < minDPhiJetMET)
                                                     {
-                                                      minDPhiJetMET = DeltaPhi(jetPhi->at(jetveto[j]),leptoMET_phi_to_use);
+                                                      minDPhiJetMET = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);
                                                       if(j < 4){
-                                                        minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),leptoMET_phi_to_use);}
+                                                        minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);}
                                                            } 
                                                           }
   		                                                    h_dphimin->Fill(minDPhiJetMET_first4);
@@ -547,7 +547,7 @@ float ZprimeJetsClass::dPhiJetMETmin(std::vector<int> jets)
     njetsMax = 4;
   for(int j=0;j< njetsMax; j++)
     {
-      float dPhi = DeltaPhi((*jetPhi)[j],leptoMET_phi_to_use);
+      float dPhi = DeltaPhi((*jetPhi)[j],pfMETPhi);
       //std::cout<<"DeltaPhi: "<<dPhi<<std::endl;
       if(dPhi < dPhimin){
         dPhimin = dPhi;
@@ -651,7 +651,7 @@ bool ZprimeJetsClass::dPhiJetMETcut(std::vector<int> jets)
   int j=0;
   for(;j< njetsMax; j++){
 
-    if(DeltaPhi((*jetPhi)[j],leptoMET_phi_to_use) < 0.5)
+    if(DeltaPhi((*jetPhi)[j],pfMETPhi) < 0.5)
       break;
   }
 

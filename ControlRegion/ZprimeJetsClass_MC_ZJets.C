@@ -244,7 +244,7 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
     lepindex_leading = -1;
     lepindex_subleading = -1;
     nTotalEvents++;
-    if ((genHT < 100) && metFilters==0)
+    if (metFilters==0)
       {    
         nFilters++;
         fillHistos(0,event_weight);
@@ -313,7 +313,7 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
 		                  fillHistos(2,event_weight);
 	    	              if (leptoMET>200)
 	                       {
-                           leptoMET_phi_to_use = leptoMET_phi;
+                           //leptoMET_phi_to_use = leptoMET_phi;
                            nMET200++;
 		                       fillHistos(3,event_weight);
                            //invariant mass of the two electrons is betwen 60 and 120GeV
@@ -338,11 +338,11 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
 	             	                           double minDPhiJetMET_first4 = TMath::Pi();
                                             for(int j = 0; j < jetveto.size(); j++)
                                                 {
-                                                  if(DeltaPhi(jetPhi->at(jetveto[j]),leptoMET_phi_to_use) < minDPhiJetMET)
+                                                  if(DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi) < minDPhiJetMET)
                                                     {
-                                                      minDPhiJetMET = DeltaPhi(jetPhi->at(jetveto[j]),leptoMET_phi_to_use);
+                                                      minDPhiJetMET = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);
                                                       if(j < 4){
-                                                        minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),leptoMET_phi_to_use);}
+                                                        minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);}
                                                            } 
                                                           }
                	                                         h_dphimin->Fill(minDPhiJetMET_first4);	
@@ -679,7 +679,7 @@ bool ZprimeJetsClass_MC_ZJets::dPhiJetMETcut(std::vector<int> jets)
   for(;j< njetsMax; j++){
     //std::cout<<"DeltaPhi b/w Jet and MET"<<std::endl;
     //std::cout<<"jet "<<j<<":"<<DeltaPhi((*jetPhi)[j],pfMETPhi)<<std::endl; 
-    if(DeltaPhi((*jetPhi)[j],leptoMET_phi_to_use) < 0.5)
+    if(DeltaPhi((*jetPhi)[j],pfMETPhi) < 0.5)
       break;
   }
 
