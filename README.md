@@ -34,7 +34,7 @@ and then process the inclusive samples as follows:
 Signal Region:
 
 
-```bash
+```bUpash
 ./rootcom ZprimeJetsClass_MC analyze1
 ./MakeCondorFiles.csh analyze1 /hdfs/store/user/uhussain/Zprime_Ntuples_Aug10/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJetsToLL/170810_152817/0000/ postDY_MLM_0.root -1 10000 DYMLM_0 PU_Central.root
 ./rootcom ZprimeJetsClass_MC_WJets analyzeWJets1
@@ -64,3 +64,10 @@ After your condor jobs are finished and you have post*.root files, make plots us
 ```bash
 root -l stackplotter.C
 ```
+
+PileupCorrection Recipe adopted from Nick Smith (U.Wisconsin)
+  >>add link here to nick's repo later
+Get your "processedLumis.json" from crab --report
+./getDataDistribution.sh
+python calculatePileupCorrections.py
+You will need to edit the calculatePileupCorrections.py file in case you are using a different mc profile than what is included
