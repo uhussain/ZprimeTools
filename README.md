@@ -66,8 +66,10 @@ root -l stackplotter.C
 ```
 
 PileupCorrection Recipe adopted from Nick Smith (U.Wisconsin)
-  >>add link here to nick's repo later
+Add link here to nick's repo later
 Get your "processedLumis.json" from crab --report
+```bash
 ./getDataDistribution.sh
 python calculatePileupCorrections.py
+```bash
 You will need to edit the calculatePileupCorrections.py file in case you are using a different mc profile than what is included
