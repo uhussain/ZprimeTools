@@ -71,5 +71,5 @@ Get your "processedLumis.json" from crab --report
 ```bash
 ./getDataDistribution.sh
 python calculatePileupCorrections.py
-```bash
+```
 You will need to edit the calculatePileupCorrections.py file in case you are using a different mc profile than what is included
