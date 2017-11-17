@@ -162,7 +162,7 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
     
     //We are using these conditions so we only calculate the following quantities for the signal we are interested in
     //This will also make it faster to process the events
-    if(pfMET>300 && jetCand.size()>0){
+    if(jetCand.size()>0){
     //Positively charged hadron Cons of the Pencil Jet 
        if(j1PFConsPID->size()>0 && j1PFConsPID->at(0)==+211)
        {
@@ -244,11 +244,12 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
     lepindex_leading = -1;
     lepindex_subleading = -1;
     nTotalEvents++;
-    if (metFilters==0)
+    if ((genHT<100) && metFilters==0)
       {    
         nFilters++;
         fillHistos(0,event_weight);
-	      if ((HLTEleMuX>>4&1 == 1) || (HLTEleMuX>>38&1 == 1)) //"HLT_Ele27_WPTight_Gsf_v or HLT_Ele115_CaloIdVT_GsfTrkIdT_v"
+	      //if ((HLTEleMuX>>4&1 == 1) || (HLTEleMuX>>38&1 == 1)) //"HLT_Ele27_WPTight_Gsf_v or HLT_Ele115_CaloIdVT_GsfTrkIdT_v"
+        if (true)
       	    {
               nHLT++;
 	            fillHistos(1,event_weight);
@@ -306,12 +307,12 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
                       TLorentzVector met_4vec;
                       met_4vec.SetPtEtaPhiE(pfMET,0.,pfMETPhi,pfMET);
                       TLorentzVector leptoMET_4vec = ll+met_4vec;
-                      Double_t leptoMET = leptoMET_4vec.Pt();
+                      Double_t leptoMET = fabs(leptoMET_4vec.Pt());
                       Double_t leptoMET_phi = leptoMET_4vec.Phi();
                       nCRSelection++;
                       Recoil = leptoMET;
 		                  fillHistos(2,event_weight);
-	    	              if (leptoMET>200)
+	    	              if (leptoMET>250)
 	                       {
                            //leptoMET_phi_to_use = leptoMET_phi;
                            nMET200++;
