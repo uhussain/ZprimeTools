@@ -262,8 +262,8 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
                     kfactor = (EWK_corrected_weight/NNLO_weight);}
                   else{kfactor=1.23;}
                   event_weight*=kfactor;
-                  std::cout<<"kfactor: "<<kfactor<<std::endl; 
-                  std::cout<<"event_weight: "<<event_weight<<std::endl;
+		  //                  std::cout<<"kfactor: "<<kfactor<<std::endl; 
+		  //                  std::cout<<"event_weight: "<<event_weight<<std::endl;
                   //CR code
                   //At least one of the two electrons passes the tight selection
 		  std::vector<int> mulist = muon_veto_looseID(jetCand[0],0,0,10.0);
@@ -303,55 +303,40 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
 
 		      if(muPairSet && subleading_passes_looseIso)
 			{ 
-			  std::cout<<"Comgn here 5:"<<std::endl;
 			  TLorentzVector ll = m1 + m2;
-			  std::cout<<"Comgn here 5a:"<<std::endl;
 			  dilepton_mass = ll.M();
-			  std::cout<<"Comgn here 5a:"<<std::endl;
 			  dilepton_pt = ll.Pt();
-			  std::cout<<"Comgn here 6a:"<<std::endl;
 			  TLorentzVector met_4vec;
 			  met_4vec.SetPtEtaPhiE(pfMET,0.,pfMETPhi,pfMET);
-			  std::cout<<"Comgn here 6b:"<<std::endl;
 			  TLorentzVector leptoMET_4vec = ll + met_4vec;
-			  std::cout<<"Comgn here 6c:"<<std::endl;
 			  Double_t leptoMET = leptoMET_4vec.Pt();
-			  std::cout<<"Comgn here 6d:"<<std::endl;
 			  Double_t leptoMET_phi = leptoMET_4vec.Phi();
-			  std::cout<<"Comgn here 6e:"<<std::endl;
 			  nCRSelection++;
 			  Recoil = leptoMET;
-			  std::cout<<"Comgn here 6f:"<<std::endl;
 			  fillHistos(2,event_weight);
-			  std::cout<<"Comgn here 6fa:"<<std::endl;
 			  if (Recoil>250)
 			    {
 			      //leptoMET_phi_to_use = leptoMET_phi;
-			      std::cout<<"Comgn here 6g:"<<std::endl;
 			      nMET200++;
 			      fillHistos(3,event_weight);
 			      //invariant mass of the two electrons is betwen 60 and 120GeV
 			      if(dilepton_mass > 60 && dilepton_mass < 120)
 				{
 				  ndilepton++;
-				  std::cout<<"Comgn here 7:"<<std::endl;
 				  fillHistos(4,event_weight);
 				  if(elelist.size() == 0)
 				    {
 				      nNoElectrons++;
 				      fillHistos(5,event_weight);
-				      std::cout<<"Comgn here 8:"<<std::endl;
 				      h_metcut->Fill(metcut);
 				      if(metcut<0.5)
 					{
 					  nMETcut++;
 					  fillHistos(6,event_weight);
-					  std::cout<<"Comgn here 9:"<<std::endl;
 					  if(btagVeto())
 					    {
 					      nbtagVeto++;
 					      fillHistos(7,event_weight);
-					      std::cout<<"Comgn here 10:"<<std::endl;
 					      double minDPhiJetMET = TMath::Pi();
 					      double minDPhiJetMET_first4 = TMath::Pi();
 					      for(int j = 0; j < jetveto.size(); j++)
@@ -366,7 +351,6 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
 					      h_dphimin->Fill(minDPhiJetMET_first4);	
 					      if(dPhiJetMETcut(jetveto))
 						{
-						  std::cout<<"Comgn here 11:"<<std::endl;
 						  nDphiJetMET++;
 						  fillHistos(8,event_weight);
 						  //Category 1: Exactly Two Charged Hadrons
@@ -398,9 +382,9 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
 							}}
 						  //This is for comparison with previous results (for all events)
 						  if (j1etaWidth<0.04)
-	             		                                             {
-									       fillHistos(15,event_weight);
-									     }
+						    {
+						      fillHistos(15,event_weight);
+						    }
 						}
 					    }   
 					}	
