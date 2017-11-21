@@ -245,7 +245,7 @@ void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery)
     lepindex_leading = -1;
     lepindex_subleading = -1;
     nTotalEvents++;
-    if (metFilters==0)
+    if (genHT<100 && metFilters==0)
       {    
         nFilters++;
         fillHistos(0,event_weight);

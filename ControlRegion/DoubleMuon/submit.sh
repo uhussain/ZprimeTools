@@ -102,6 +102,8 @@ echo "Do the MC samples"
 ./rootcom ZprimeJetsClass_MC_WJets analyzeWJets
 
 ./MakeCondorFiles_WZ.csh analyzeWJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_W1Jets/170810_*/0000/ postW100to200_0.root -1 10000 W100_0 kfactors.root PU_Central.root 
+
+
                                                                                                                                                                                                                   
 ./MakeCondorFiles_WZ.csh analyzeWJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_W1Jets/170810_*/0001/ postW100to200_1.root -1 10000 W100_1 kfactors.root PU_Central.root
                                                                                                                                                                                                                    
