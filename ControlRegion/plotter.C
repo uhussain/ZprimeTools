@@ -1,3 +1,10 @@
+//Usage: ./plotter variable
+//Example: ./plotter h_dileptonM_8
+//X axis label is contained in samplename.txt
+//To add new variables add a common name (i.e. dileptonM)
+//Under the common name add what you want the X axis to be labeled (i.e. Dilepton Mass (GeV))
+//Cutflow plots are handled with a special statment to add an extra TLatex
+
 #include <fstream>
 #include <vector>
 #include <iomanip>

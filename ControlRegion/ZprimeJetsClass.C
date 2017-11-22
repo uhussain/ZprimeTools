@@ -129,7 +129,7 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
     
     //We are using these conditions so we only calculate the following quantities for the signal we are interested in
     //This will also make it faster to process the events
-    if(pfMET>300 && jetCand.size()>0){
+    if(jetCand.size()>0){
     //Positively charged hadron Cons of the Pencil Jet 
        if(j1PFConsPID->size()>0 && j1PFConsPID->at(0)==+211)
        {
@@ -268,7 +268,7 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
                       TLorentzVector met_4vec;
                       met_4vec.SetPtEtaPhiE(pfMET,0.,pfMETPhi,pfMET);
                       TLorentzVector leptoMET_4vec = ll+met_4vec;
-                      Double_t leptoMET = leptoMET_4vec.Pt();
+                      Double_t leptoMET = fabs(leptoMET_4vec.Pt());
                       Double_t leptoMET_phi = leptoMET_4vec.Phi();
                       nCRSelection++;
                       Recoil = leptoMET;
@@ -276,7 +276,8 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 		                  fillHistos(2);
 	    	              if (leptoMET>250)
 	                       {
-                           pfMETPhi = leptoMET_phi;
+				   pfMETPhi = leptoMET_phi;
+                           //leptoMET_phi_to_use = leptoMET_phi;
                            nMET200++;
                            //h_cutflow->SetBinContent(5,nMET200);
 		                       fillHistos(3);
