@@ -145,9 +145,10 @@ echo "Do the MC samples"
                                                                                                                                                                                                 
 ./MakeCondorFiles_WZ.csh analyzeZJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/ZJetsToNuNu_HT-100To200_13TeV-madgraph/crab_Zvv100to200/170810_*/0001/ postZ100to200_1.root -1 10000 Z100_1 kfactors.root PU_Central.root
 
-echo "Do Inclusive Samples"
+echo Do Inclusive Samples
 
 #Inclusive
 ./MakeCondorFiles_WZ.csh analyzeZJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJetsToLL/170810_152817/0000/ postDY_MLM_0.root -1 10000 DYMLM_0 kfactors.root PU_Central.root 1
 
-./MakeCondorFiles_WZ.csh analyzeWJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_WJets/170810_152529/0000/ postWJets_MLM_0.root -1 10000 W_0 kfactors.root PU_Central.root 1
+./MakeCondorF
+	iles_WZ.csh analyzeWJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_WJets/170810_152529/0000/ postWJets_MLM_0.root-1 10000 W_0 kfactors.root PU_Central.root 1

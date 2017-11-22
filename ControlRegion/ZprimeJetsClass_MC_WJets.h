@@ -59,7 +59,7 @@ public :
 
    //CR variables
    int lepindex_leading, lepindex_subleading;
-   double dilepton_mass,dilepton_pt;
+   double dilepton_mass,dilepton_pt,Recoil;
    float leptoMET_phi_to_use;
    
    //getPFCandidates
@@ -71,7 +71,7 @@ public :
    //CR histograms
    TH1F *h_leadingLeptonPt[16], *h_leadingLeptonEta[16],*h_leadingLeptonPhi[16],*h_subleadingLeptonPt[16],*h_subleadingLeptonEta[16], *h_subleadingLeptonPhi[16],*h_dileptonPt[16],*h_dileptonM[16];
    // Fixed size dimensions of array or collections stored in the TTree if any.
-
+   TH1F *h_recoil[16];
    TH1D *h_cutflow;
    // Declaration of leaf types
    Int_t           run;

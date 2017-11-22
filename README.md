@@ -36,7 +36,7 @@ Signal Region:
 
 ```bash
 ./rootcom ZprimeJetsClass_MC analyze1
-./MakeCondorFiles.csh analyze1 /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJetsToLL/170810_152817/0000/ postDY_MLM_0.root -1 10000 DYMLM_0 PU_Central.root
+./MakeCondorFiles.csh analyze1 /hdfs/store/user/uhussain/Zprime_Ntuples_Aug10/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJetsToLL/170810_152817/0000/ postDY_MLM_0.root -1 10000 DYMLM_0 PU_Central.root
 ./rootcom ZprimeJetsClass_MC_WJets analyzeWJets1
 ./MakeCondorFiles_WZ.csh analyzeWJets1 /hdfs/store/user/uhussain/Zprime_Ntuples_Aug10/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_WJets/170810_152529/0000/ postWJets_MLM_0.root -1 10000 W_0 kfactors.root PU_Central.root
 ```
@@ -55,9 +55,9 @@ Control Region:
 
 ```bash
 ./rootcom ZprimeJetsClass_MC_ZJets analyze1
-./MakeCondorFiles_WZ.csh analyze1 /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJetsToLL/170810_152817/0000/ postDY_MLM_0.root -1 10000 DYMLM_0 kfactors.root PU_Central.root
+./MakeCondorFiles_WZ.csh analyze1 /hdfs/store/user/uhussain/Zprime_Ntuples_Aug10/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJetsToLL/170810_152817/0000/ postDY_MLM_0.root -1 10000 DYMLM_0 kfactors.root PU_Central.root
 ./rootcom ZprimeJetsClass_MC_WJets analyzeWJets1
-./MakeCondorFiles_WZ.csh analyzeWJets1 /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_WJets/170810_152529/0000/ postWJets_MLM_0.root -1 10000 W_0 kfactors.root PU_Central.root
+./MakeCondorFiles_WZ.csh analyzeWJets1 /hdfs/store/user/uhussain/Zprime_Ntuples_Aug10/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_WJets/170810_152529/0000/ postWJets_MLM_0.root -1 10000 W_0 kfactors.root PU_Central.root
 ```
 After your condor jobs are finished and you have post*.root files, make plots using stackplotter*.C scripts and edit/automate the script to your needs
 

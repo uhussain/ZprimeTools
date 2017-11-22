@@ -226,7 +226,7 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
     lepindex_leading = -1;
     lepindex_subleading = -1;
     nTotalEvents++;
-    if (metFilters==0)
+    if ((genHT < 100) && metFilters==0)
       {   
         nFilters++;
         fillHistos(0,event_weight);
@@ -278,15 +278,16 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
                       dilepton_pt = ll.Pt();
                       
                       TLorentzVector met_4vec;
-                      met_4vec.SetPtEtaPhiE(pfMET,0.,leptoMET_phi_to_use,pfMET);
+                      met_4vec.SetPtEtaPhiE(pfMET,0.,pfMETPhi,pfMET);
                       TLorentzVector leptoMET_4vec = ll+met_4vec;
                       Double_t leptoMET = leptoMET_4vec.Pt();
                       Double_t leptoMET_phi = leptoMET_4vec.Phi();
                       nCRSelection++;
+                      Recoil = leptoMET;
 		                  fillHistos(2,event_weight);
-	    	              if (leptoMET>200)
+	    	              if (leptoMET>250)
 	                       {
-                           leptoMET_phi_to_use = leptoMET_phi;
+				 pfMETPhi = leptoMET_phi;
                            nMET200++;
 		                       fillHistos(3,event_weight);
                            //invariant mass of the two electrons is betwen 60 and 120GeV
@@ -311,11 +312,11 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
 	             	                           double minDPhiJetMET_first4 = TMath::Pi();
                                             for(int j = 0; j < jetveto.size(); j++)
                                                 {
-                                                  if(DeltaPhi(jetPhi->at(jetveto[j]),leptoMET_phi_to_use) < minDPhiJetMET)
+                                                  if(DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi) < minDPhiJetMET)
                                                     {
-                                                      minDPhiJetMET = DeltaPhi(jetPhi->at(jetveto[j]),leptoMET_phi_to_use);
+                                                      minDPhiJetMET = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);
                                                       if(j < 4){
-                                                        minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),leptoMET_phi_to_use);}
+                                                        minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);}
                                                            } 
                                                           }
                	                                         h_dphimin->Fill(minDPhiJetMET_first4);	
@@ -462,7 +463,8 @@ void ZprimeJetsClass_MC::BookHistos(const char* file2)
      h_leadingLeptonPhi[i] = new TH1F(("h_leadingLeptonPhi"+histname).c_str(),"h_leadingLeptonPhi",10,0.,3.1416);h_leadingLeptonPhi[i]->Sumw2();
      h_subleadingLeptonPt[i] = new TH1F(("h_subleadingLeptonPt"+histname).c_str(),"h_subleadingLeptonPt",10,10.,400.);h_subleadingLeptonPt[i]->Sumw2();
      h_subleadingLeptonEta[i] = new TH1F(("h_subleadingLeptonEta"+histname).c_str(),"h_subleadingLeptonEta",10,-2.5,2.5);h_subleadingLeptonEta[i]->Sumw2();
-     h_subleadingLeptonPhi[i] = new TH1F(("h_subleadingLeptonPhi"+histname).c_str(),"h_subleadingLeptonPhi",10,0.,3.1416);h_subleadingLeptonPhi[i]->Sumw2();
+     h_subleadingLeptonPhi[i] = new TH1F(("h_subleadingLeptonPhi"+histname).c_str(),"h_subleadingLeptonPhi",10,0.,3.1416);h_subleadingLeptonPhi[i]->Sumw2(); 
+     h_recoil[i] = new TH1F(("h_recoil"+histname).c_str(), "Recoil (GeV)",50,MetBins);h_recoil[i] ->Sumw2();
      h_dileptonPt[i] = new TH1F(("h_dileptonPt"+histname).c_str(),"h_dileptonPt",10,0.,400.);h_dileptonPt[i]->Sumw2();
      h_dileptonM[i] = new TH1F(("h_dileptonM"+histname).c_str(),"h_dileptonM",30,60.,120.);h_dileptonM[i]->Sumw2();
   }
@@ -515,7 +517,8 @@ void ZprimeJetsClass_MC::fillHistos(int histoNumber,double event_weight)
   h_subleadingLeptonPt[histoNumber]->Fill(elePt->at(lepindex_subleading),event_weight);
   h_subleadingLeptonEta[histoNumber]->Fill(eleEta->at(lepindex_subleading),event_weight);
   h_subleadingLeptonPhi[histoNumber]->Fill(elePhi->at(lepindex_subleading),event_weight);}
-  if(dilepton_pt > 0 && dilepton_mass > 0){ 
+  if(dilepton_pt > 0 && dilepton_mass > 0){  
+  h_recoil[histoNumber]->Fill(Recoil);
   h_dileptonPt[histoNumber]->Fill(dilepton_pt,event_weight);
   h_dileptonM[histoNumber]->Fill(dilepton_mass,event_weight);}
 }
@@ -548,7 +551,7 @@ float ZprimeJetsClass_MC::dPhiJetMETmin(std::vector<int> jets)
     njetsMax = 4; 
   for(int j=0;j< njetsMax; j++)
     {
-      float dPhi = DeltaPhi((*jetPhi)[j],leptoMET_phi_to_use);
+      float dPhi = DeltaPhi((*jetPhi)[j],pfMETPhi);
       //std::cout<<"DeltaPhi: "<<dPhi<<std::endl;
       if(dPhi < dPhimin){
         dPhimin = dPhi;
@@ -654,7 +657,7 @@ bool ZprimeJetsClass_MC::dPhiJetMETcut(std::vector<int> jets)
   for(;j< njetsMax; j++){
     //std::cout<<"DeltaPhi b/w Jet and MET"<<std::endl;
     //std::cout<<"jet "<<j<<":"<<DeltaPhi((*jetPhi)[j],leptoMET_phi_to_use)<<std::endl;
-    if(DeltaPhi((*jetPhi)[j],leptoMET_phi_to_use) < 0.5)
+    if(DeltaPhi((*jetPhi)[j],pfMETPhi) < 0.5)
       break;
   }
 
