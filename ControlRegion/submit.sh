@@ -1,7 +1,7 @@
 DATE=Aug10
 DATE_2=Aug10
 
-#echo "Do the ICHEP Data samples"
+echo "Do the ICHEP Data samples"
 echo "Do the CR data samples"
 
 ./rootcom ZprimeJetsClass analyzedata
@@ -11,22 +11,22 @@ echo "Do the CR data samples"
 ./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/ZprimeCR_Ntuples_Oct16/SingleElectron/crab_dataset2/171016_150646/0001/ postSingleEle_1.root -1 10000 Ele_1
 
 ./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/ZprimeCR_Ntuples_Oct16/SingleElectron/crab_dataset2/171016_150646/0002/ postSingleEle_2.root -1 10000 Ele_2
-#
-#./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset1/170810_*/0000/ postMETdata_0.root -1 10000 MET_0
-#
-#./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset1/170810_*/0001/ postMETdata_1.root -1 10000 MET_1
-#
-#./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset1/170810_*/0002/ postMETdata_2.root -1 10000 MET_2
-#
-#./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset1/170810_*/0003/ postMETdata_3.root -1 10000 MET_3
-#
-#./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset2/170810_*/0000/ postMETdata_4.root -1 10000 MET_4
-#
-#./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset2/170810_*/0001/ postMETdata_5.root -1 10000 MET_5
-#
-#./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset3/170810_*/0000/ postMETdata_6.root -1 10000 MET_6
-#
-#./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset3/170810_*/0001/ postMETdata_7.root -1 10000 MET_7
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset1/170810_*/0000/ postMETdata_0.root -1 10000 MET_0
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset1/170810_*/0001/ postMETdata_1.root -1 10000 MET_1
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset1/170810_*/0002/ postMETdata_2.root -1 10000 MET_2
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset1/170810_*/0003/ postMETdata_3.root -1 10000 MET_3
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset2/170810_*/0000/ postMETdata_4.root -1 10000 MET_4
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset2/170810_*/0001/ postMETdata_5.root -1 10000 MET_5
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset3/170810_*/0000/ postMETdata_6.root -1 10000 MET_6
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset3/170810_*/0001/ postMETdata_7.root -1 10000 MET_7
 
 echo "Do the MC samples"
 

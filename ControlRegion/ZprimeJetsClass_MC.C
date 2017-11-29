@@ -225,19 +225,19 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
     //CR Variables
     lepindex_leading = -1;
     lepindex_subleading = -1;
-    nTotalEvents++;
-    if ((genHT < 100) && metFilters==0)
+    nTotalEvents+=event_weight;
+    if (metFilters==0)
       {   
-        nFilters++;
+        nFilters+=event_weight;
         fillHistos(0,event_weight);
 	      //if ((HLTEleMuX>>4&1 == 1) || (HLTEleMuX>>38&1 == 1))//"HLT_Ele27_WPTight_Gsf_v or HLT_Ele115_CaloIdVT_GsfTrkIdT_v"
         if (true)
       	    {
-              nHLT++;
+              nHLT+=event_weight;
 	            fillHistos(1,event_weight);
 	            if(jetCand.size()>0)
 	              {
-                  nJetSelection++;
+                  nJetSelection+=event_weight;
                   //CR code
                   //At least one of the two electrons passes the tight selection
                   std::vector<int> elelist = electron_veto_looseID(jetCand[0],0,0,10.0);
@@ -283,32 +283,32 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
                       TLorentzVector leptoMET_4vec = ll+met_4vec;
                       Double_t leptoMET = fabs(leptoMET_4vec.Pt());
                       Double_t leptoMET_phi = leptoMET_4vec.Phi();
-                      nCRSelection++;
+                      nCRSelection+=event_weight;
                       Recoil = leptoMET;
 		                  fillHistos(2,event_weight);
 	    	              if (leptoMET>250)
 	                       {
 				 pfMETPhi = leptoMET_phi;
                            //leptoMET_phi_to_use = leptoMET_phi;
-                           nMET200++;
+                           nMET200+=event_weight;
 		                       fillHistos(3,event_weight);
                            //invariant mass of the two electrons is betwen 60 and 120GeV
                            if(dilepton_mass > 60 && dilepton_mass < 120)
 		                          {
-                                ndilepton++;
+                                ndilepton+=event_weight;
 			                          fillHistos(4,event_weight);
                                 if(mulist.size() == 0)
 	                                {
-                                    nNoMuons++;
+                                    nNoMuons+=event_weight;
 	                                  fillHistos(5,event_weight);
                                     h_metcut->Fill(metcut);
 	                                  if(metcut<0.5)
 	                                    {
-                                        nMETcut++;
+                                        nMETcut+=event_weight;
 	             	                        fillHistos(6,event_weight);
                                         if(btagVeto())
 	             		                       {
-                                           nbtagVeto++;
+                                           nbtagVeto+=event_weight;
 	             		                         fillHistos(7,event_weight);
 	             	                           double minDPhiJetMET = TMath::Pi();
 	             	                           double minDPhiJetMET_first4 = TMath::Pi();
@@ -324,7 +324,7 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
                	                                         h_dphimin->Fill(minDPhiJetMET_first4);	
 	             	                                         if(dPhiJetMETcut(jetveto))
 	             	                                           {
-                                                             nDphiJetMET++;
+                                                             nDphiJetMET+=event_weight;
 	             	                                             fillHistos(8,event_weight);
                                                               //Category 1: Exactly Two Charged Hadrons
                                                               if(TwoChPFCons==1)
@@ -658,11 +658,7 @@ bool ZprimeJetsClass_MC::dPhiJetMETcut(std::vector<int> jets)
   int j=0;
   for(;j< njetsMax; j++){
     //std::cout<<"DeltaPhi b/w Jet and MET"<<std::endl;
-<<<<<<< HEAD
-    //std::cout<<"jet "<<j<<":"<<DeltaPhi((*jetPhi)[j],leptoMET_phi_to_use)<<std::endl;
-=======
     //std::cout<<"jet "<<j<<":"<<DeltaPhi((*jetPhi)[j],pfMETPhi)<<std::endl;
->>>>>>> 9c3f5fdac94a0f196b2dc69b4ef26b6dfe11a66e
     if(DeltaPhi((*jetPhi)[j],pfMETPhi) < 0.5)
       break;
   }

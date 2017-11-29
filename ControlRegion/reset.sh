@@ -6,3 +6,6 @@ rm Job_*
 rm analyze*
 rm condor*
 rm post*
+rm *~
+rm \#*\#
+rm AutoDict*
