@@ -1,4 +1,4 @@
 #!/bin/sh
-./submit.sh
+./DoubleEleCR/submit.sh
 ./submitDY.sh
 ./submitGH.sh

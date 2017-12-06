@@ -288,7 +288,6 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
 		                  fillHistos(2,event_weight);
 	    	              if (leptoMET>250)
 	                       {
-				 pfMETPhi = leptoMET_phi;
                            //leptoMET_phi_to_use = leptoMET_phi;
                            nMET200+=event_weight;
 		                       fillHistos(3,event_weight);
@@ -469,6 +468,7 @@ void ZprimeJetsClass_MC::BookHistos(const char* file2)
      h_recoil[i] = new TH1F(("h_recoil"+histname).c_str(), "Recoil (GeV)",50,MetBins);h_recoil[i] ->Sumw2();
      h_dileptonPt[i] = new TH1F(("h_dileptonPt"+histname).c_str(),"h_dileptonPt",10,0.,400.);h_dileptonPt[i]->Sumw2();
      h_dileptonM[i] = new TH1F(("h_dileptonM"+histname).c_str(),"h_dileptonM",30,60.,120.);h_dileptonM[i]->Sumw2();
+     h_eleEoverP[i] = new TH1F(("h_eleEoverP"+histname).c_str(),"h_eleEoverP",50.,0.,20.);h_dileptonM[i]->Sumw2();
   }
 }
 
@@ -523,6 +523,7 @@ void ZprimeJetsClass_MC::fillHistos(int histoNumber,double event_weight)
   h_recoil[histoNumber]->Fill(Recoil);
   h_dileptonPt[histoNumber]->Fill(dilepton_pt,event_weight);
   h_dileptonM[histoNumber]->Fill(dilepton_mass,event_weight);}
+  h_eleEoverP[histoNumber]->Fill(eleEoverP,event_weight);
 }
 
 //Function to calculate regular deltaR separate from jet width variable 'dR'

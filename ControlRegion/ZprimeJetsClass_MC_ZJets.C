@@ -31,24 +31,11 @@
 #include <list>
 #include <set>
 #include <stdio.h> 
-#include <stdlib.h>
 using namespace std;
 using std::vector;
 
-bool Inclusive(int include, float genHT)
-{
-  if (include)
-    {
-      return genHT < 100;
-    }
-  else
-    {
-      return true;
-    }
-}
-
 int main(int argc, const char* argv[])
-{
+{ 
   Long64_t maxEvents = atof(argv[3]);
   if (maxEvents < -1LL)
   {
@@ -61,15 +48,13 @@ int main(int argc, const char* argv[])
     std::cout<<"Please enter a valid value for reportEvery (parameter 4)."<<std::endl;
     return 1;
   }
-  int include = atof(argv[5]);
-
   ZprimeJetsClass_MC_ZJets t(argv[1],argv[2]);
   
-  t.Loop(maxEvents,reportEvery,include);
+  t.Loop(maxEvents,reportEvery);
   return 0;
 }
 
-void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery,int include)
+void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
 {
   if (fChain == 0) return;
   int nTotal;
@@ -259,8 +244,8 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery,int incl
     lepindex_leading = -1;
     lepindex_subleading = -1;
     nTotalEvents+=event_weight;
-    if (Inclusive(include,genHT) && metFilters==0)
-      {
+    if (metFilters==0)
+      {    
         nFilters+=event_weight;
         fillHistos(0,event_weight);
 	      //if ((HLTEleMuX>>4&1 == 1) || (HLTEleMuX>>38&1 == 1)) //"HLT_Ele27_WPTight_Gsf_v or HLT_Ele115_CaloIdVT_GsfTrkIdT_v"
@@ -507,6 +492,7 @@ void ZprimeJetsClass_MC_ZJets::BookHistos(const char* file2)
      h_recoil[i] = new TH1F(("h_recoil"+histname).c_str(), "Recoil (GeV)",50,MetBins);h_recoil[i] ->Sumw2();
      h_dileptonPt[i] = new TH1F(("h_dileptonPt"+histname).c_str(),"h_dileptonPt",10,0.,400.);h_dileptonPt[i]->Sumw2();
      h_dileptonM[i] = new TH1F(("h_dileptonM"+histname).c_str(),"h_dileptonM",30,60.,120.);h_dileptonM[i]->Sumw2();
+     h_eleEoverP[i] = new TH1F(("h_eleEoverP"+histname).c_str(),"h_eleEoverP",50.,0.,20.);h_eleEoverP[i]->Sumw2();
   }
 }
 
@@ -561,6 +547,7 @@ void ZprimeJetsClass_MC_ZJets::fillHistos(int histoNumber,double event_weight)
   h_recoil[histoNumber]->Fill(Recoil);
   h_dileptonPt[histoNumber]->Fill(dilepton_pt,event_weight);
   h_dileptonM[histoNumber]->Fill(dilepton_mass,event_weight);}
+  h_eleEoverP[histoNumber]->Fill(eleEoverP,event_weight);
 }
 //Function to calculate regular deltaR separate from jet width variable 'dR'
 double ZprimeJetsClass_MC_ZJets::deltaR(double eta1, double phi1, double eta2, double phi2)

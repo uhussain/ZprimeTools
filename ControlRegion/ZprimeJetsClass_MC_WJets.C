@@ -34,18 +34,6 @@
 using namespace std;
 using std::vector;
 
-bool Inclusive(int include, float genHT)
-{
-  if (include)
-    {
-      return genHT < 100;
-    }
-  else
-    {
-      return true;
-    }
-}
-
 int main(int argc, const char* argv[])
 { 
   Long64_t maxEvents = atof(argv[3]);
@@ -60,15 +48,13 @@ int main(int argc, const char* argv[])
     std::cout<<"Please enter a valid value for reportEvery (parameter 4)."<<std::endl;
     return 1;
   }
-  int include = atof(argv[5]);
-
   ZprimeJetsClass_MC_WJets t(argv[1],argv[2]);
   
-  t.Loop(maxEvents,reportEvery,include);
+  t.Loop(maxEvents,reportEvery);
   return 0;
 }
 
-void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery,int include)
+void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery)
 {
   if (fChain == 0) return;
   int nTotal;
@@ -259,7 +245,7 @@ void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery,int incl
     lepindex_leading = -1;
     lepindex_subleading = -1;
     nTotalEvents+=event_weight;
-    if (Inclusive(include,genHT) && metFilters==0)
+    if (metFilters==0)
       {    
         nFilters+=event_weight;
         fillHistos(0,event_weight);
@@ -508,6 +494,7 @@ void ZprimeJetsClass_MC_WJets::BookHistos(const char* file2)
      h_recoil[i] = new TH1F(("h_recoil"+histname).c_str(), "Recoil (GeV)",50,MetBins);h_recoil[i] ->Sumw2();
      h_dileptonPt[i] = new TH1F(("h_dileptonPt"+histname).c_str(),"h_dileptonPt",10,0.,400.);h_dileptonPt[i]->Sumw2();
      h_dileptonM[i] = new TH1F(("h_dileptonM"+histname).c_str(),"h_dileptonM",30,60.,120.);h_dileptonM[i]->Sumw2();
+     h_eleEoverP[i] = new TH1F(("h_eleEoverP"+histname).c_str(),"h_eleEoverP",50.,0.,20.);h_eleEoverP[i]->Sumw2();
   }
 }
 
@@ -562,6 +549,7 @@ void ZprimeJetsClass_MC_WJets::fillHistos(int histoNumber,double event_weight)
   h_recoil[histoNumber]->Fill(Recoil);
   h_dileptonPt[histoNumber]->Fill(dilepton_pt,event_weight);
   h_dileptonM[histoNumber]->Fill(dilepton_mass,event_weight);}
+  h_eleEoverP[histoNumber]->Fill(eleEoverP,event_weight);
 }
 //Function to calculate regular deltaR separate from jet width variable 'dR'
 double ZprimeJetsClass_MC_WJets::deltaR(double eta1, double phi1, double eta2, double phi2)
@@ -591,7 +579,7 @@ float ZprimeJetsClass_MC_WJets::dPhiJetMETmin(std::vector<int> jets)
     njetsMax = 4; 
   for(int j=0;j< njetsMax; j++)
     {
-      float dPhi = DeltaPhi((*jetPhi)[j],leptoMET_phi_to_use);
+      float dPhi = DeltaPhi((*jetPhi)[j],pfMETPhi);
       //std::cout<<"DeltaPhi: "<<dPhi<<std::endl;
       if(dPhi < dPhimin){
         dPhimin = dPhi;
@@ -697,7 +685,7 @@ bool ZprimeJetsClass_MC_WJets::dPhiJetMETcut(std::vector<int> jets)
   for(;j< njetsMax; j++){
     //std::cout<<"DeltaPhi b/w Jet and MET"<<std::endl;
     //std::cout<<"jet "<<j<<":"<<DeltaPhi((*jetPhi)[j],pfMETPhi)<<std::endl;
-    if(DeltaPhi((*jetPhi)[j],leptoMET_phi_to_use) < 0.5)
+    if(DeltaPhi((*jetPhi)[j],pfMETPhi) < 0.5)
       break;
   }
 
