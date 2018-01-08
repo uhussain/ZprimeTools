@@ -62,11 +62,21 @@ std::string SampleName(const char * variable)
 
 void plotter(const char * variable,std::string name)
 {
+  system("cd Data/");
+
   double lumi_1 = 3723.664;
   double lumi_2 = 35900.;
 
   std::cout << name << std::endl;
-  system("hadd -f postSingleEle_final.root postSingleEle_{0..19}.root");
+  std::ifstream file("postSingleEle_final.root");
+  if (file)
+    {
+      file.close();
+    }
+  else
+    {
+      system("hadd -f postSingleEle_final.root postSingleEle_{0..19}.root");
+    }
 
   TCanvas *c = new TCanvas("c", "canvas",800,800);
   gStyle->SetOptStat(0);
@@ -745,8 +755,9 @@ void plotter(const char * variable,std::string name)
   yaxis_right->Draw("SAME");  
  
 */
-  c->SaveAs((std::string("CRPlots_EWK/datamc_")+std::string(variable)+std::string("_extra_G.pdf")).c_str());
-  c->SaveAs((std::string("CRPlots_EWK/datamc_")+std::string(variable)+std::string("_extra_G.png")).c_str());
+  system("cd ../");
+  c->SaveAs((std::string("../../Plots/CRPlots_EWK/datamc_")+std::string(variable)+std::string("_extra_G.pdf")).c_str());
+  c->SaveAs((std::string("../../Plots/CRPlots_EWK/datamc_")+std::string(variable)+std::string("_extra_G.png")).c_str());
 }
 
 int main(int argc, const char *argv[])

@@ -549,7 +549,7 @@ void ZprimeJetsClass_MC_WJets::fillHistos(int histoNumber,double event_weight)
   h_subleadingLeptonPhi[histoNumber]->Fill(elePhi->at(lepindex_subleading),event_weight);
   h_subleadingLeptonEoverP[histoNumber]->Fill(eleEoverP->at(lepindex_subleading),event_weight);}
   if(dilepton_pt > 0 && dilepton_mass > 0){
-  h_recoil[histoNumber]->Fill(Recoil);
+    h_recoil[histoNumber]->Fill(Recoil,event_weight);
   h_dileptonPt[histoNumber]->Fill(dilepton_pt,event_weight);
   h_dileptonM[histoNumber]->Fill(dilepton_mass,event_weight);}
 }

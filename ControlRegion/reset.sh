@@ -9,3 +9,6 @@ rm post*
 rm *~
 rm \#*\#
 rm AutoDict*
+
+rm -rf Data/
+mkdir Data/
