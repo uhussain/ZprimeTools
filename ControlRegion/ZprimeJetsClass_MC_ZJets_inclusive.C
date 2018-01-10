@@ -486,11 +486,9 @@ void ZprimeJetsClass_MC_ZJets::BookHistos(const char* file2)
      h_leadingLeptonPt[i] = new TH1F(("h_leadingLeptonPt"+histname).c_str(),"h_leadingLeptonPt",10,10.,400.);h_leadingLeptonPt[i]->Sumw2();
      h_leadingLeptonEta[i] = new TH1F(("h_leadingLeptonEta"+histname).c_str(),"h_leadingLeptonEta",10,-2.5,2.5);h_leadingLeptonEta[i]->Sumw2();
      h_leadingLeptonPhi[i] = new TH1F(("h_leadingLeptonPhi"+histname).c_str(),"h_leadingLeptonPhi",10,0.,3.1416);h_leadingLeptonPhi[i]->Sumw2();
-     h_leadingLeptonEoverP[i] = new TH1F(("h_leadingLeptonEoverP"+histname).c_str(),"h_leadingLeptonEoverP",50.,0.,20.);h_leadingLeptonEoverP[i]->Sumw2();
      h_subleadingLeptonPt[i] = new TH1F(("h_subleadingLeptonPt"+histname).c_str(),"h_subleadingLeptonPt",10,10.,400.);h_subleadingLeptonPt[i]->Sumw2();
      h_subleadingLeptonEta[i] = new TH1F(("h_subleadingLeptonEta"+histname).c_str(),"h_subleadingLeptonEta",10,-2.5,2.5);h_subleadingLeptonEta[i]->Sumw2();
      h_subleadingLeptonPhi[i] = new TH1F(("h_subleadingLeptonPhi"+histname).c_str(),"h_subleadingLeptonPhi",10,0.,3.1416);h_subleadingLeptonPhi[i]->Sumw2();
-     h_subleadingLeptonEoverP[i] = new TH1F(("h_subleadingLeptonEoverP"+histname).c_str(),"h_subleadingLeptonEoverP",50.,0.,20.);h_subleadingLeptonEoverP[i]->Sumw2();
      h_recoil[i] = new TH1F(("h_recoil"+histname).c_str(), "Recoil (GeV)",50,MetBins);h_recoil[i] ->Sumw2();
      h_dileptonPt[i] = new TH1F(("h_dileptonPt"+histname).c_str(),"h_dileptonPt",10,0.,400.);h_dileptonPt[i]->Sumw2();
      h_dileptonM[i] = new TH1F(("h_dileptonM"+histname).c_str(),"h_dileptonM",30,60.,120.);h_dileptonM[i]->Sumw2();
@@ -541,11 +539,10 @@ void ZprimeJetsClass_MC_ZJets::fillHistos(int histoNumber,double event_weight)
   h_leadingLeptonPt[histoNumber]->Fill(elePt->at(lepindex_leading),event_weight);
   h_leadingLeptonEta[histoNumber]->Fill(eleEta->at(lepindex_leading),event_weight);
   h_leadingLeptonPhi[histoNumber]->Fill(elePhi->at(lepindex_leading),event_weight);
-  h_leadingLeptonEoverP[histoNumber]->Fill(eleEoverP->at(lepindex_leading),event_weight);
   h_subleadingLeptonPt[histoNumber]->Fill(elePt->at(lepindex_subleading),event_weight);
   h_subleadingLeptonEta[histoNumber]->Fill(eleEta->at(lepindex_subleading),event_weight);
   h_subleadingLeptonPhi[histoNumber]->Fill(elePhi->at(lepindex_subleading),event_weight);
-  h_subleadingLeptonEoverP[histoNumber]->Fill(eleEoverP->at(lepindex_subleading),event_weight);}
+  }
   if(dilepton_pt > 0 && dilepton_mass > 0){
     h_recoil[histoNumber]->Fill(Recoil,event_weight);
   h_dileptonPt[histoNumber]->Fill(dilepton_pt,event_weight);

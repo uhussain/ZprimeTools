@@ -53,8 +53,6 @@ std::string SampleName(const char * variable)
 
 void plotterRebin(const char * variable, std::string name)
 {
-  system("cd Data/");
-
   double lumi_1 = 1885.122;
   double lumi_2 = 35900;
 
@@ -766,7 +764,6 @@ void plotterRebin(const char * variable, std::string name)
   yaxis_right->Draw("SAME");  
  
 */
-  system("cd ../");
   c->SaveAs((std::string("../../Plots/METXPlots/datamc_")+variable+std::string("_Rebin.pdf")).c_str());
   c->SaveAs((std::string("../../Plots/METXPlots/datamc_")+variable+std::string("_Rebin.png")).c_str());
 }

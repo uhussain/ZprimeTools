@@ -1,5 +1,4 @@
 #!/bin/sh
-cd Data/
-./../DoubleEleCR/submit.sh
-./../submitDY.sh
-./../submitGH.sh
+./DoubleEleCR/submit.sh
+./submitDY.sh
+./submitGH.sh

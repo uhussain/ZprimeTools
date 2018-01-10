@@ -62,8 +62,6 @@ std::string SampleName(const char * variable)
 
 void plotter(const char * variable,std::string name)
 {
-  system("cd Data/");
-
   double lumi_1 = 3723.664;
   double lumi_2 = 35900.;
 
@@ -755,7 +753,6 @@ void plotter(const char * variable,std::string name)
   yaxis_right->Draw("SAME");  
  
 */
-  system("cd ../");
   c->SaveAs((std::string("../../Plots/CRPlots_EWK/datamc_")+std::string(variable)+std::string("_extra_G.pdf")).c_str());
   c->SaveAs((std::string("../../Plots/CRPlots_EWK/datamc_")+std::string(variable)+std::string("_extra_G.png")).c_str());
 }

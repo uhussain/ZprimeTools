@@ -463,7 +463,6 @@ void ZprimeJetsClass::BookHistos(const char* file2)
      h_recoil[i] = new TH1F(("h_recoil"+histname).c_str(), "Recoil (GeV)",50,MetBins);h_recoil[i] ->Sumw2();
      h_dileptonPt[i] = new TH1F(("h_dileptonPt"+histname).c_str(),"h_dileptonPt",10,0.,400.);h_dileptonPt[i]->Sumw2();
      h_dileptonM[i] = new TH1F(("h_dileptonM"+histname).c_str(),"h_dileptonM",30,60.,120.);h_dileptonM[i]->Sumw2();
-     h_eleEoverP[i] = new TH1F(("h_eleEoverP"+histname).c_str(),"h_eleEoverP",50.,0.,20.);h_eleEoverP[i]->Sumw2();
   }
 }
 
@@ -519,7 +518,6 @@ void ZprimeJetsClass::fillHistos(int histoNumber)
   h_recoil[histoNumber]->Fill(Recoil);
   h_dileptonPt[histoNumber]->Fill(dilepton_pt);
   h_dileptonM[histoNumber]->Fill(dilepton_mass);}
-  h_eleEoverP[histoNumber]->Fill(eleEoverP);
 }
 
 //Function to calculate regular deltaR separate from jet width variable 'dR'
