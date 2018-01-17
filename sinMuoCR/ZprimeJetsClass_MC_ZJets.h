@@ -735,12 +735,12 @@ public :
    virtual void fillHistos(int histoNumber,double event_weight);
    virtual float DeltaPhi(float phi1, float phi2);
    virtual vector<int> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut);
-   virtual vector<int> JetVetoDecision(int ele_index);
+   virtual vector<int> JetVetoDecision(int jet_index, int mu_index);
    virtual bool btagVeto();
    virtual bool dPhiJetMETcut(std::vector<int> jets);
    virtual float dPhiJetMETmin(std::vector<int> jets);
    virtual vector<int> electron_veto_tightID(int jet_index, float elePtCut);
-   virtual vector<int> electron_veto_looseID(int jet_index, int leading_mu_index, int subleading_mu_index, float elePtCut);
+   virtual vector<int> electron_veto_looseID(int jet_index, int mu_index, float elePtCut);
    virtual vector<int> muon_veto_tightID(int jet_index, float muPtCut);
    virtual vector<int> muon_veto_looseID(int jet_index, int ele_index, float muPtCut);
    virtual vector<int>getPFCandidates();

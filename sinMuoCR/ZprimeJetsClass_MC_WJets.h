@@ -5,8 +5,8 @@
 // found on file: /hdfs/store/user/uhussain/Zprime_Ntuples_Mar7/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_W3Jets/170306_174919/0000/ggtree_mc_53.root
 //////////////////////////////////////////////////////////
 
-#ifndef ZprimeJetsClass_MC_h
-#define ZprimeJetsClass_MC_h
+#ifndef ZprimeJetsClass_MC_WJets_h
+#define ZprimeJetsClass_MC_WJets_h
 
 #include <TROOT.h>
 #include <TChain.h>
@@ -43,7 +43,7 @@
 #include "TString.h"
 #include "vector"
 using namespace std;
-class ZprimeJetsClass_MC {
+class ZprimeJetsClass_MC_WJets {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
@@ -56,23 +56,23 @@ public :
    double j1PFPosConsPt, j1PFPosConsEta,j1PFPosConsPhi, j1PFNegConsPt,j1PFNegConsEta,j1PFNegConsPhi,j1PFPhoConsPt,j1PFPhoConsEta,j1PFPhoConsPhi;
    int TwoChPFCons,TwoChPFConsPlusPho;
    double PF12PtFrac_ID_1,PF12PtFrac_ID_2,dR_PF12_ID_1,dR_PF12_ID_2,PF123PtFrac_ID_2;
+
    //CR variables
    int lepindex;
    double lepton_mass,lepton_pt,Recoil;
    float leptoMET_phi_to_use;
+   
    //getPFCandidates
    int TotalPFCandidates, ChargedPFCandidates,NeutralPFCandidates,GammaPFCandidates;
    
-   TH1F *h_nVtx[16],*h_metcut, *h_dphimin,*h_metFilters[16],*h_pfMETall[16],*h_pfMET200[16],*h_nJets[16],*h_pfMET[16],*h_pfMETPhi[16],*h_j1nCategory1[16],*h_j1nCategory2[16],*h_j1dRPF12_ID_1[16],*h_j1dRPF12_ID_2[16];
+   TH1F *h_nVtx[16], *h_metcut, *h_dphimin,*h_metFilters[16],*h_pfMETall[16],*h_pfMET200[16],*h_nJets[16],*h_pfMET[16],*h_pfMETPhi[16],*h_j1nCategory1[16],*h_j1nCategory2[16],*h_j1dRPF12_ID_1[16],*h_j1dRPF12_ID_2[16];
    TH1F *h_j1Pt[16], *h_j1Eta[16], *h_j1Phi[16], *h_j1etaWidth[16], *h_j1phiWidth[16],*h_j1nCons[16], *h_j1PF12PtFrac_ID_1[16], *h_j1PF12PtFrac_ID_2[16],*h_j1PFPtFrac_ID_2[16];  
    TH1F *h_j1TotPFCands[16], *h_j1ChPFCands[16], *h_j1NeutPFCands[16], *h_j1GammaPFCands[16], *h_j1CHF[16], *h_j1NHF[16], *h_j1ChMultiplicity[16], *h_j1NeutMultiplicity[16],*h_j1Mt[16]; 
-   //CR histograms 
+   //CR histograms
    TH1F *h_LeptonPt[16], *h_LeptonEta[16],*h_LeptonPhi[16],*h_leptonPt[16],*h_leptonM[16];
+   // Fixed size dimensions of array or collections stored in the TTree if any.
    TH1F *h_recoil[16];
    TH1D *h_cutflow;
-
-   // Fixed size dimensions of array or collections stored in the TTree if any.
-
    // Declaration of leaf types
    Int_t           run;
    Long64_t        event;
@@ -93,6 +93,7 @@ public :
    ULong64_t       HLTEleMuXIsPrescaled;
    ULong64_t       HLTPhoIsPrescaled;
    ULong64_t       HLTJetIsPrescaled;
+   vector<int>     *phoPrescale;
    vector<float>   *pdf;
    Float_t         pthat;
    Float_t         processID;
@@ -158,6 +159,7 @@ public :
    vector<float>   *phoCalibEt;
    vector<float>   *phoSCE;
    vector<float>   *phoSCRawE;
+   vector<float>   *phoESEn;
    vector<float>   *phoESEnP1;
    vector<float>   *phoESEnP2;
    vector<float>   *phoSCEta;
@@ -208,6 +210,7 @@ public :
    vector<int>     *eleChargeConsistent;
    vector<float>   *eleEn;
    vector<float>   *eleSCEn;
+   vector<float>   *eleESEn;
    vector<float>   *eleESEnP1;
    vector<float>   *eleESEnP2;
    vector<float>   *eleD0;
@@ -414,6 +417,7 @@ public :
    TBranch        *b_HLTEleMuXIsPrescaled;   //!
    TBranch        *b_HLTPhoIsPrescaled;   //!
    TBranch        *b_HLTJetIsPrescaled;   //!
+   TBranch        *b_phoPrescale;   //!
    TBranch        *b_pdf;   //!
    TBranch        *b_pthat;   //!
    TBranch        *b_processID;   //!
@@ -478,6 +482,7 @@ public :
    TBranch        *b_phoCalibEt;   //!
    TBranch        *b_phoSCE;   //!
    TBranch        *b_phoSCRawE;   //!
+   TBranch        *b_phoESEn;   //!
    TBranch        *b_phoESEnP1;   //!
    TBranch        *b_phoESEnP2;   //!
    TBranch        *b_phoSCEta;   //!
@@ -528,6 +533,7 @@ public :
    TBranch        *b_eleChargeConsistent;   //!
    TBranch        *b_eleEn;   //!
    TBranch        *b_eleSCEn;   //!
+   TBranch        *b_eleESEn;   //!
    TBranch        *b_eleESEnP1;   //!
    TBranch        *b_eleESEnP2;   //!
    TBranch        *b_eleD0;   //!
@@ -715,8 +721,8 @@ public :
    TBranch        *b_jetVtx3DSig;   //!
 
   
-   ZprimeJetsClass_MC(const char* file1,const char* file2);
-   virtual ~ZprimeJetsClass_MC();
+   ZprimeJetsClass_MC_WJets(const char* file1,const char* file2);
+   virtual ~ZprimeJetsClass_MC_WJets();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
@@ -729,22 +735,22 @@ public :
    virtual void fillHistos(int histoNumber,double event_weight);
    virtual float DeltaPhi(float phi1, float phi2);
    virtual vector<int> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut);
-   virtual vector<int> JetVetoDecision(int ele_index);
+   virtual vector<int> JetVetoDecision(int jet_index, int mu_index);
    virtual bool btagVeto();
    virtual bool dPhiJetMETcut(std::vector<int> jets);
    virtual float dPhiJetMETmin(std::vector<int> jets);
    virtual vector<int> electron_veto_tightID(int jet_index, float elePtCut);
-   virtual vector<int> electron_veto_looseID(int jet_index, int leading_mu_index, int subleading_mu_index, float elePtCut);
+   virtual vector<int> electron_veto_looseID(int jet_index, int mu_index, float elePtCut);
    virtual vector<int> muon_veto_tightID(int jet_index, float muPtCut);
-   virtual vector<int> muon_veto_looseID(int jet_index, int ele_index, float muPtCut);
-   virtual vector<int> getPFCandidates();
+   virtual vector<int> muon_veto_looseID(int jet_index, int ele_index,float muPtCut);
+   virtual vector<int>getPFCandidates();
 };
 
 #endif
 
-#ifdef ZprimeJetsClass_MC_cxx
+#ifdef ZprimeJetsClass_MC_WJets_cxx
 
-ZprimeJetsClass_MC::ZprimeJetsClass_MC(const char* file1,const char* file2) 
+ZprimeJetsClass_MC_WJets::ZprimeJetsClass_MC_WJets(const char* file1,const char* file2) 
 {
   TChain *chain = new TChain("ggNtuplizer/EventTree");
   TString path = file1;
@@ -778,7 +784,7 @@ ZprimeJetsClass_MC::ZprimeJetsClass_MC(const char* file1,const char* file2)
   Init(chain);
   BookHistos(file2);
 }
-ZprimeJetsClass_MC::~ZprimeJetsClass_MC()
+ZprimeJetsClass_MC_WJets::~ZprimeJetsClass_MC_WJets()
 {
    if (!fChain) return;
    delete fChain->GetCurrentFile();
@@ -788,13 +794,13 @@ ZprimeJetsClass_MC::~ZprimeJetsClass_MC()
    fileName->Close();
 }
 
-Int_t ZprimeJetsClass_MC::GetEntry(Long64_t entry)
+Int_t ZprimeJetsClass_MC_WJets::GetEntry(Long64_t entry)
 {
 // Read contents of entry.
    if (!fChain) return 0;
    return fChain->GetEntry(entry);
 }
-Long64_t ZprimeJetsClass_MC::LoadTree(Long64_t entry)
+Long64_t ZprimeJetsClass_MC_WJets::LoadTree(Long64_t entry)
 {
 // Set the environment to read one entry
    if (!fChain) return -5;
@@ -807,7 +813,7 @@ Long64_t ZprimeJetsClass_MC::LoadTree(Long64_t entry)
    return centry;
 }
 
-void ZprimeJetsClass_MC::Init(TTree *tree)
+void ZprimeJetsClass_MC_WJets::Init(TTree *tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -818,6 +824,7 @@ void ZprimeJetsClass_MC::Init(TTree *tree)
    // (once per file to be processed).
 
    // Set object pointer
+   phoPrescale = 0;
    pdf = 0;
    EventTag = 0;
    nPU = 0;
@@ -854,6 +861,7 @@ void ZprimeJetsClass_MC::Init(TTree *tree)
    phoCalibEt = 0;
    phoSCE = 0;
    phoSCRawE = 0;
+   phoESEn = 0;
    phoESEnP1 = 0;
    phoESEnP2 = 0;
    phoSCEta = 0;
@@ -902,6 +910,7 @@ void ZprimeJetsClass_MC::Init(TTree *tree)
    eleChargeConsistent = 0;
    eleEn = 0;
    eleSCEn = 0;
+   eleESEn = 0;
    eleESEnP1 = 0;
    eleESEnP2 = 0;
    eleD0 = 0;
@@ -1104,6 +1113,7 @@ void ZprimeJetsClass_MC::Init(TTree *tree)
    fChain->SetBranchAddress("HLTEleMuXIsPrescaled", &HLTEleMuXIsPrescaled, &b_HLTEleMuXIsPrescaled);
    fChain->SetBranchAddress("HLTPhoIsPrescaled", &HLTPhoIsPrescaled, &b_HLTPhoIsPrescaled);
    fChain->SetBranchAddress("HLTJetIsPrescaled", &HLTJetIsPrescaled, &b_HLTJetIsPrescaled);
+   fChain->SetBranchAddress("phoPrescale", &phoPrescale, &b_phoPrescale);
    fChain->SetBranchAddress("pdf", &pdf, &b_pdf);
    fChain->SetBranchAddress("pthat", &pthat, &b_pthat);
    fChain->SetBranchAddress("processID", &processID, &b_processID);
@@ -1168,6 +1178,7 @@ void ZprimeJetsClass_MC::Init(TTree *tree)
    fChain->SetBranchAddress("phoCalibEt", &phoCalibEt, &b_phoCalibEt);
    fChain->SetBranchAddress("phoSCE", &phoSCE, &b_phoSCE);
    fChain->SetBranchAddress("phoSCRawE", &phoSCRawE, &b_phoSCRawE);
+   fChain->SetBranchAddress("phoESEn", &phoESEn, &b_phoESEn);
    fChain->SetBranchAddress("phoESEnP1", &phoESEnP1, &b_phoESEnP1);
    fChain->SetBranchAddress("phoESEnP2", &phoESEnP2, &b_phoESEnP2);
    fChain->SetBranchAddress("phoSCEta", &phoSCEta, &b_phoSCEta);
@@ -1218,6 +1229,7 @@ void ZprimeJetsClass_MC::Init(TTree *tree)
    fChain->SetBranchAddress("eleChargeConsistent", &eleChargeConsistent, &b_eleChargeConsistent);
    fChain->SetBranchAddress("eleEn", &eleEn, &b_eleEn);
    fChain->SetBranchAddress("eleSCEn", &eleSCEn, &b_eleSCEn);
+   fChain->SetBranchAddress("eleESEn", &eleESEn, &b_eleESEn);
    fChain->SetBranchAddress("eleESEnP1", &eleESEnP1, &b_eleESEnP1);
    fChain->SetBranchAddress("eleESEnP2", &eleESEnP2, &b_eleESEnP2);
    fChain->SetBranchAddress("eleD0", &eleD0, &b_eleD0);
@@ -1406,7 +1418,7 @@ void ZprimeJetsClass_MC::Init(TTree *tree)
    Notify();
 }
 
-Bool_t ZprimeJetsClass_MC::Notify()
+Bool_t ZprimeJetsClass_MC_WJets::Notify()
 {
    // The Notify() function is called when a new file is opened. This
    // can be either for a new TTree in a TChain or when when a new TTree
@@ -1417,18 +1429,18 @@ Bool_t ZprimeJetsClass_MC::Notify()
    return kTRUE;
 }
 
-void ZprimeJetsClass_MC::Show(Long64_t entry)
+void ZprimeJetsClass_MC_WJets::Show(Long64_t entry)
 {
 // Print contents of entry.
 // If entry is not specified, print current entry
    if (!fChain) return;
    fChain->Show(entry);
 }
-Int_t ZprimeJetsClass_MC::Cut(Long64_t entry)
+Int_t ZprimeJetsClass_MC_WJets::Cut(Long64_t entry)
 {
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
 // returns -1 otherwise.
    return 1;
 }
-#endif // #ifdef ZprimeJetsClass_MC_cxx
+#endif // #ifdef ZprimeJetsClass_MC_WJets_cxx
