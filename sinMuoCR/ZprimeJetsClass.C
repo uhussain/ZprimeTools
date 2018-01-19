@@ -215,39 +215,42 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
       { 
         nFilters++;
         //h_cutflow->SetBinContent(2,nFilters);
-	//std::cout<<"First Histogram Fill"<<std::endl;
+	std::cout<<"First Histogram Fill"<<std::endl;
         fillHistos(0);
 	if ((HLTEleMuX>>4&1 == 1) || (HLTEleMuX>>38&1 == 1)) //"HLT_Ele27_WPTight_Gsf_v or HLT_Ele115_CaloIdVT_GsfTrkIdT_v"
 	  //if (HLTJet>>8&1 == 1) //"HLT_PFMET170_HBHECleaned_v"
 	  {
 	    nHLT++;
 	    //h_cutflow->SetBinContent(3,nHLT);
-	    //std::cout<<"Second Histogram Fill"<<std::endl;
+	    std::cout<<"Second Histogram Fill"<<std::endl;
 	    fillHistos(1);
 	    if(jetCand.size()>0)
 	      {
-		//std::cout << "Found Jet Cand" << std::endl;
+		std::cout << "Found Jet Cand" << std::endl;
 		nJetSelection++;
 		//CR code
 		//At least one of the one electrons passes the tight selection
 		std::vector<int> elelist;
 		elelist.clear();
+		std::cout << "Creating Muons" << std::endl;
 		std::vector<int> mulist = muon_veto_tightID(jetCand[0],30.0);
+		std::cout << "loose Muons" << std::endl;
 		std::vector<int> looseMus = muon_veto_looseID(jetCand[0],0,10.0);
+		std::cout << "Checking Muons" << std::endl;
 		if(mulist.size() == 1 && looseMus.size() == 1)
                   {
-		    //std::cout << "Found One Electron" << std::endl;
+		    std::cout << "Found One Electron" << std::endl;
 		    lepindex = mulist[0];
-		    //std::cout << "Set Lepton Index" << std::endl;
-		    //std::cout << "Jet Index: " << jetCand[0];
+		    std::cout << "Set Lepton Index" << std::endl;
+		    std::cout << "Jet Index: " << jetCand[0];
 		    elelist = electron_veto_looseID(jetCand[0],mulist[0],10.0);
-		    //std::cout << "Set Muon Loose Veto" <<std::endl;
+		    std::cout << "Set Muon Loose Veto" <<std::endl;
 		    jetveto = JetVetoDecision(jetCand[0],mulist[0]);
-		    //std::cout << "Set Jet Veto" <<std::endl;
+		    std::cout << "Set Jet Veto" <<std::endl;
                     
 		    TLorentzVector lep_4vec;
 		    lep_4vec.SetPtEtaPhiE(muPt->at(mulist[0]),muEta->at(mulist[0]),muPhi->at(mulist[0]),muEn->at(mulist[0]));
-		    //std::cout << "Set Lepton 4 Vector" << std::endl;
+		    std::cout << "Set Lepton 4 Vector" << std::endl;
 
 		    lepton_mass = lep_4vec.M();
 		    lepton_pt = lep_4vec.Pt();
@@ -260,40 +263,40 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 		    nCRSelection++;
 		    Recoil = leptoMET;
 		    //h_cutflow->SetBinContent(4,nCRSelection);
-		    //std::cout << "Third Histogram Fill" << std::endl;
+		    std::cout << "Third Histogram Fill" << std::endl;
 		    fillHistos(2);
 		    if (leptoMET>250)
 		      {
 			//leptoMET_phi_to_use = leptoMET_phi;
 			nMET200++;
 			//h_cutflow->SetBinContent(5,nMET200);
-			//std::cout << "Fourth Histogram Fill" << std::endl;
+			std::cout << "Fourth Histogram Fill" << std::endl;
 			fillHistos(3);
 			nlepton++;
 			//h_cutflow->SetBinContent(6,ndilepton);
-			//std::cout << "Fifth Histogram Fill" << std::endl;
+			std::cout << "Fifth Histogram Fill" << std::endl;
 			fillHistos(4);
 			if(elelist.size() == 0)
 			  {
 			    nNoElectrons++;
 			    //h_cutflow->SetBinContent(7,nNoMuons);
-			    //std::cout << "Sixth Histogram Fill" << std::endl;
+			    std::cout << "Sixth Histogram Fill" << std::endl;
 			    fillHistos(5);
 			    h_metcut->Fill(metcut);
 			    if(metcut<0.5)
 			      {
 				nMETcut++;
 				//h_cutflow->SetBinContent(8,nMETcut);
-				//std::cout << "Seventh Histogram Fill" << std::endl;
+				std::cout << "Seventh Histogram Fill" << std::endl;
 				fillHistos(6);
 				if(btagVeto())
 				  {
 				    nbtagVeto++;
-				    //std::cout << "Eigth Histogram Fill" << std::endl;
+				    std::cout << "Eigth Histogram Fill" << std::endl;
 				    fillHistos(7);
 				    double minDPhiJetMET = TMath::Pi();
 				    double minDPhiJetMET_first4 = TMath::Pi();
-				    //std::cout<<"JetVetoSize: "<<jetveto.size()<<std::endl;
+				    std::cout<<"JetVetoSize: "<<jetveto.size()<<std::endl;
 				    for(int j = 0; j < jetveto.size(); j++)
 				      {
 					if(DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi) < minDPhiJetMET)
@@ -307,45 +310,45 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 				    if(dPhiJetMETcut(jetveto))
 				      {
 					nDphiJetMET++;
-					//std::cout << "Ninth Histogram Fill" << std::endl;
+					std::cout << "Ninth Histogram Fill" << std::endl;
 					fillHistos(8);
 					//Category 1: Exactly Two Charged Hadrons
 					if(TwoChPFCons==1)
 					  {
-					    //std::cout << "Tenth Histogram Fill" << std::endl;
+					    std::cout << "Tenth Histogram Fill" << std::endl;
 					    fillHistos(9);
 					    //Effectiveness of this cut in Category 1 Events
 					    if(PF12PtFrac_ID_1>0.7)
 					      {
-						//std::cout << "Eleventh Histogram Fill" << std::endl;
+						std::cout << "Eleventh Histogram Fill" << std::endl;
 						fillHistos(10);}
 					  } 
 					//Category 2: Two charged Hadrons + Photon
 					if(TwoChPFConsPlusPho==1)
 					  {
-					    //std::cout << "Twelvth Histogram Fill" << std::endl;
+					    std::cout << "Twelvth Histogram Fill" << std::endl;
 					    fillHistos(11);
 					    //Effectiveness of this cut in Category 2 Events
 					    if(PF123PtFrac_ID_2>0.7)
 					      {
-						//std::cout << "Thirteenth Histogram Fill" << std::endl;
+						std::cout << "Thirteenth Histogram Fill" << std::endl;
 						fillHistos(12);}
 					  }
 					//Category of events with < 2 charged Hadrons
 					if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
 					  {
-					    //std::cout << "Fourteenth Histogram Fill" << std::endl;
+					    std::cout << "Fourteenth Histogram Fill" << std::endl;
 					    fillHistos(13);
 					    //Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
 					    if(j1etaWidth<0.04)
 					      {
-						//std::cout << "Fifthteenth Histogram Fill" << std::endl;
+						std::cout << "Fifthteenth Histogram Fill" << std::endl;
 						fillHistos(14);
 					      }}
 					//This is for comparison with previous results (for all events)
 					if (j1etaWidth<0.04)
 					  {
-					    //std::cout << "Sixteenth Histogram Fill" << std::endl;
+					    std::cout << "Sixteenth Histogram Fill" << std::endl;
 					    fillHistos(15);
 					  }
 				      }
@@ -357,7 +360,7 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 	      }
 	  }
       }
-    //std::cout<<"Tree Fill"<<std::endl;
+    std::cout<<"Tree Fill"<<std::endl;
     tree->Fill();
     
     if (jentry%reportEvery == 0)
@@ -367,7 +370,7 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
   }  
   // std::cout<<"ntest: "<<ntest<<std::endl;
   // std::cout<<"nbtagVeto: "<<nbtagVeto<<std::endl;
-  //std::cout<<"Error"<<std::endl;
+  std::cout<<"Error"<<std::endl;
   h_cutflow->SetBinContent(1,nTotalEvents); 
   h_cutflow->SetBinContent(2,nFilters);
   h_cutflow->SetBinContent(3,nHLT);
@@ -892,7 +895,7 @@ std::vector<int> ZprimeJetsClass::electron_veto_looseID(int jet_index, int mu_in
 //Veto failed if a muon is found that passes Loose Muon ID, Loose Muon Isolation, and muPtcut, and does not overlap the candidate photon within dR of 0.5
 std::vector<int> ZprimeJetsClass::muon_veto_looseID(int jet_index, int ele_index, float muPtCut)
 {
-  //std::cout << "Inside Muon Loose Veto" << std::endl;
+  std::cout << "Inside Muon Loose Veto" << std::endl;
   std::vector<int> mu_cands;
   mu_cands.clear();
 
@@ -905,7 +908,7 @@ std::vector<int> ZprimeJetsClass::muon_veto_looseID(int jet_index, int ele_index
   Float_t zero = 0.0;
   Float_t muPhoPU = 999.9;
   Float_t tightIso_combinedRelative = 999.9;
-  //std::cout << "Checking all Muons" << std::endl;
+  std::cout << "Checking all Muons" << std::endl;
   for(int i = 0; i < nMu; i++)
     {
       // pass_PFMuon = muIsPFMuon->at(i);
@@ -922,11 +925,11 @@ std::vector<int> ZprimeJetsClass::muon_veto_looseID(int jet_index, int ele_index
 	  //Muon passes pt cut
 	  if(muPt->at(i) > muPtCut)
 	    {
-	      //std::cout <<"Passed Pt Cut" << std::endl;
+	      std::cout <<"Passed Pt Cut" << std::endl;
 	      //Muon does not overlap photon
-	      if(deltaR(muEta->at(i),muPhi->at(i),jetEta->at(jet_index),jetPhi->at(jet_index)) > 0.5 && deltaR(muEta->at(i),muPhi->at(i),eleEta->at(ele_index),elePhi->at(ele_index)) > 0.5)
+	      if(deltaR(muEta->at(i),muPhi->at(i),jetEta->at(jet_index),jetPhi->at(jet_index)) > 0.5)
 		{
-		  //std::cout << "Passed DeltaR Cut" << std::endl;
+		  std::cout << "Passed DeltaR Cut" << std::endl;
 		  mu_cands.push_back(i);
 		}
 	    }

@@ -932,7 +932,7 @@ std::vector<int> ZprimeJetsClass_MC_WJets::muon_veto_looseID(int jet_index, int 
 	  if(muPt->at(i) > muPtCut)
 	    {
 	      //Muon does not overlap photon
-	      if(deltaR(muEta->at(i),muPhi->at(i),jetEta->at(jet_index),jetPhi->at(jet_index)) > 0.5 && deltaR(muEta->at(i),muPhi->at(i),eleEta->at(ele_index),elePhi->at(ele_index)) > 0.5)
+	      if(deltaR(muEta->at(i),muPhi->at(i),jetEta->at(jet_index),jetPhi->at(jet_index)) > 0.5)
 		{
 		  mu_cands.push_back(i);
 		}
