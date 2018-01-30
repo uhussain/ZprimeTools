@@ -578,7 +578,7 @@ void plotter(const char * variable,std::string name)
   //leg->AddEntry(histo_signal_20GeV, "ZprimeSignal_mchi20GeV"); 
   //leg->AddEntry(histo_signal_50GeV, "ZprimeSignal_mchi50GeV");
   //leg->AddEntry(histo_signal_100GeV, "ZprimeSignal_mchi100GeV"); 
-  leg->AddEntry(histo_j1EtaWidth_DY1Jets,"Z#rightarrow ll","F");  
+  leg->AddEntry(histo_j1EtaWidth_DY1Jets,"Z#rightarrow l","F");  
   //leg->AddEntry(histo_j1EtaWidth_100to200,"Z#rightarrow#nu#nu","F"); 
   //leg->AddEntry(histo_j1EtaWidth_G1Jets,"#gamma+jets", "F");
   //leg->AddEntry(histo_j1EtaWidth_Q1Jets, "QCD","F");

@@ -66,14 +66,14 @@ void plotter(const char * variable,std::string name)
   double lumi_2 = 35900.;
 
   std::cout << name << std::endl;
-  std::ifstream file("postSingleEle_final.root");
+  std::ifstream file("postSingleMuo_final.root");
   if (file)
     {
       file.close();
     }
   else
     {
-      system("hadd -f postSingleEle_final.root postSingleEle_{0..19}.root");
+      system("hadd -f postSingleMuo_final.root postSingleMuo_{0..19}.root");
     }
 
   TCanvas *c = new TCanvas("c", "canvas",800,800);
@@ -90,7 +90,7 @@ void plotter(const char * variable,std::string name)
   pad1->SetBottomMargin(0.);
   
   //opening the data file and adding "h_dileptonM_8" histogram
-  TFile *f_datafile_0 = new TFile("postSingleEle_final.root");
+  TFile *f_datafile_0 = new TFile("postSingleMuo_final.root");
   //TFile *f_datafile_1 = new TFile("postMETdata_1.root");
   TH1F *histo_j1EtaWidth_data_0 = (TH1F*)f_datafile_0->Get(variable);
   //TH1F *histo_j1EtaWidth_data_1 = (TH1F*)f_datafile_1->Get(variable);
@@ -578,7 +578,7 @@ void plotter(const char * variable,std::string name)
   //leg->AddEntry(histo_signal_20GeV, "ZprimeSignal_mchi20GeV"); 
   //leg->AddEntry(histo_signal_50GeV, "ZprimeSignal_mchi50GeV");
   //leg->AddEntry(histo_signal_100GeV, "ZprimeSignal_mchi100GeV"); 
-  leg->AddEntry(histo_j1EtaWidth_DY1Jets,"Z#rightarrow ll","F");  
+  leg->AddEntry(histo_j1EtaWidth_DY1Jets,"Z#rightarrow l","F");  
   //leg->AddEntry(histo_j1EtaWidth_100to200,"Z#rightarrow#nu#nu","F"); 
   //leg->AddEntry(histo_j1EtaWidth_G1Jets,"#gamma+jets", "F");
   //leg->AddEntry(histo_j1EtaWidth_Q1Jets, "QCD","F");

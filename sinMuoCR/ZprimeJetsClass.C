@@ -239,7 +239,7 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 		std::cout << "Checking Muons" << std::endl;
 		if(mulist.size() == 1 && looseMus.size() == 1)
                   {
-		    std::cout << "Found One Electron" << std::endl;
+		    std::cout << "Found One Muon" << std::endl;
 		    lepindex = mulist[0];
 		    std::cout << "Set Lepton Index" << std::endl;
 		    std::cout << "Jet Index: " << jetCand[0];
