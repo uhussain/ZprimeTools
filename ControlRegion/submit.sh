@@ -1,32 +1,50 @@
 DATE=Aug10
-DATE_2=Aug10
+DATE_DY=Oct24
+DATE_DATA=13Nov
 
-#echo "Do the ICHEP Data samples"
 echo "Do the CR data samples"
 
 ./rootcom ZprimeJetsClass analyzedata
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/ZprimeCR_Ntuples_Oct16/SingleElectron/crab_dataset2/171016_150646/0000/ postSingleEle_0.root -1 10000 Ele_0
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR/SingleElectron/crab_dataset1/171113_*/0000/ postSingleEle_0.root -1 10000 Ele_0
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/ZprimeCR_Ntuples_Oct16/SingleElectron/crab_dataset2/171016_150646/0001/ postSingleEle_1.root -1 10000 Ele_1
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR/SingleElectron/crab_dataset1/171113_*/0001/ postSingleEle_1.root -1 10000 Ele_1
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/ZprimeCR_Ntuples_Oct16/SingleElectron/crab_dataset2/171016_150646/0002/ postSingleEle_2.root -1 10000 Ele_2
-#
-#./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset1/170810_*/0000/ postMETdata_0.root -1 10000 MET_0
-#
-#./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset1/170810_*/0001/ postMETdata_1.root -1 10000 MET_1
-#
-#./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset1/170810_*/0002/ postMETdata_2.root -1 10000 MET_2
-#
-#./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset1/170810_*/0003/ postMETdata_3.root -1 10000 MET_3
-#
-#./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset2/170810_*/0000/ postMETdata_4.root -1 10000 MET_4
-#
-#./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset2/170810_*/0001/ postMETdata_5.root -1 10000 MET_5
-#
-#./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset3/170810_*/0000/ postMETdata_6.root -1 10000 MET_6
-#
-#./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/MET/crab_dataset3/170810_*/0001/ postMETdata_7.root -1 10000 MET_7
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR/SingleElectron/crab_dataset1/171113_*/0002/ postSingleEle_2.root -1 10000 Ele_2
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR/SingleElectron/crab_dataset1/171113_*/0003/ postSingleEle_3.root -1 10000 Ele_3
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR/SingleElectron/crab_dataset2/171113_*/0000/ postSingleEle_4.root -1 10000 Ele_4
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR/SingleElectron/crab_dataset2/171113_*/0001/ postSingleEle_5.root -1 10000 Ele_5
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR/SingleElectron/crab_dataset3/171113_*/0000/ postSingleEle_6.root -1 10000 Ele_6
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR/SingleElectron/crab_dataset3/171113_*/0001/ postSingleEle_7.root -1 10000 Ele_7
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR/SingleElectron/crab_dataset4/171113_*/0000/ postSingleEle_8.root -1 10000 Ele_8
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR/SingleElectron/crab_dataset4/171113_*/0001/ postSingleEle_9.root -1 10000 Ele_9
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR/SingleElectron/crab_dataset5/171113_*/0000/ postSingleEle_10.root -1 10000 Ele_10
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR/SingleElectron/crab_dataset5/171113_*/0001/ postSingleEle_11.root -1 10000 Ele_11
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR/SingleElectron/crab_dataset6/171113_*/0000/ postSingleEle_12.root -1 10000 Ele_12
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR/SingleElectron/crab_dataset6/171113_*/0001/ postSingleEle_13.root -1 10000 Ele_13
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR/SingleElectron/crab_dataset6/171113_*/0002/ postSingleEle_14.root -1 10000 Ele_14
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR_1/SingleElectron/crab_dataset7/171114_*/0000/ postSingleEle_15.root -1 10000 Ele_15  
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR_1/SingleElectron/crab_dataset7/171114_*/0001/ postSingleEle_16.root -1 10000 Ele_16  
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR_1/SingleElectron/crab_dataset7/171114_*/0002/ postSingleEle_17.root -1 10000 Ele_17  
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR_1/SingleElectron/crab_dataset7/171114_*/0003/ postSingleEle_18.root -1 10000 Ele_18  
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_DATA}_CR_1/SingleElectron/crab_dataset8/171114_*/0000/ postSingleEle_19.root -1 10000 Ele_19 
 
 echo "Do the MC samples"
 
@@ -34,45 +52,15 @@ echo "Do the MC samples"
 
 ./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT100to200/170810_*/0000/ postQCD100to200_0.root -1 10000 QCD100_0 PU_Central.root
 
-./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT100to200/170810_*/0001/ postQCD100to200_1.root -1 10000 QCD100_1 PU_Central.root
-
-./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT100to200/170810_*/0002/ postQCD100to200_2.root -1 10000 QCD100_2 PU_Central.root
-
-./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT100to200/170810_*/0003/ postQCD100to200_3.root -1 10000 QCD100_3 PU_Central.root
-
-./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT100to200/170810_*/0004/ postQCD100to200_4.root -1 10000 QCD100_4 PU_Central.root
-
-./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT100to200/170810_*/0005/ postQCD100to200_5.root -1 10000 QCD100_5 PU_Central.root
-
 ./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT200to300/170810_*/0000/ postQCD200to300_0.root -1 10000 QCD200_0 PU_Central.root
-
-./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT200to300/170810_*/0001/ postQCD200to300_1.root -1 10000 QCD200_1 PU_Central.root
-
-./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT200to300_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT200to300/170810_*/0002/ postQCD200to300_2.root -1 10000 QCD200_2 PU_Central.root
 
 ./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT300to500/170810_*/0000/ postQCD300to500_0.root -1 10000 QCD300_0 PU_Central.root
 
-./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT300to500/170810_*/0001/ postQCD300to500_1.root -1 10000 QCD300_1 PU_Central.root
-
-./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT300to500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT300to500/170810_*/0002/ postQCD300to500_2.root -1 10000 QCD300_2 PU_Central.root
-
 ./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT500to700/170810_*/0000/ postQCD500to700_0.root -1 10000 QCD500_0 PU_Central.root
-
-./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT500to700/170810_*/0001/ postQCD500to700_1.root -1 10000 QCD500_1 PU_Central.root
-
-./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT500to700/170810_*/0002/ postQCD500to700_2.root -1 10000 QCD500_2 PU_Central.root
-
-./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT500to700_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT500to700/170810_*/0003/ postQCD500to700_3.root -1 10000 QCD500_3 PU_Central.root
 
 ./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT700to1000/170810_*/0000/ postQCD700to1000_0.root -1 10000 QCD700_0 PU_Central.root
 
-./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT700to1000/170810_*/0001/ postQCD700to1000_1.root -1 10000 QCD700_1 PU_Central.root
-
-./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT700to1000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT700to1000/170810_*/0002/ postQCD700to1000_2.root -1 10000 QCD700_2 PU_Central.root
-
 ./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT1000to1500/170810_*/0000/ postQCD1000to1500_0.root -1 10000 QCD1000_0 PU_Central.root
-
-./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT1000to1500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT1000to1500/170810_*/0001/ postQCD1000to1500_1.root -1 10000 QCD1000_1 PU_Central.root
 
 ./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/QCD_HT1500to2000_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_QCD_HT1500to2000/170810_*/0000/ postQCD1500to2000_0.root -1 10000 QCD1500_0 PU_Central.root
 
@@ -96,34 +84,51 @@ echo "Do the MC samples"
 
 ./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/ZZ_TuneCUETP8M1_13TeV-pythia8/crab_ZZ/170810_*/0000/ postZZ.root -1 10000 ZZ PU_Central.root
 
+echo "Do the DY MC samples"
 
-#WJets
+./rootcom ZprimeJetsClass_MC_ZJets_inclusive analyze1
+
+./MakeCondorFiles_WZ.csh analyze1 /hdfs/store/user/uhussain/Zprime_Ntuples_Aug10/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJetsToLL/170810_152817/0000/ postDY_MLM_0.root -1 10000 DYMLM_0 kfactors.root PU_Central.root
+
+./rootcom ZprimeJetsClass_MC_ZJets analyzeDY
+
+./MakeCondorFiles_WZ.csh analyzeDY /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE_DY}/DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJets_HT100to200/171024_*/0000/ postDY100to200.root -1 10000 DY100 kfactors.root PU_Central.root
+
+./MakeCondorFiles_WZ.csh analyzeDY /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE_DY}/DYJetsToLL_M-50_HT-200to400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJets_HT200to400/171024_*/0000/ postDY200to400.root -1 10000 DY200 kfactors.root PU_Central.root
+
+./MakeCondorFiles_WZ.csh analyzeDY /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE_DY}/DYJetsToLL_M-50_HT-400to600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJets_HT400to600/171024_*/0000/ postDY400to600.root -1 10000 DY400 kfactors.root PU_Central.root
+
+./MakeCondorFiles_WZ.csh analyzeDY /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE_DY}/DYJetsToLL_M-50_HT-600to800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJets_HT600to800/171024_*/0000/ postDY600to800.root -1 10000 DY600 kfactors.root PU_Central.root
+
+./MakeCondorFiles_WZ.csh analyzeDY /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE_DY}/DYJetsToLL_M-50_HT-800to1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJets_HT800to1200/171024_*/0000/ postDY800to1200.root -1 10000 DY800 kfactors.root PU_Central.root
+
+./MakeCondorFiles_WZ.csh analyzeDY /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE_DY}/DYJetsToLL_M-50_HT-1200to2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJets_HT1200to2500/171024_*/0000/ postDY1200to2500.root -1 10000 DY1200 kfactors.root PU_Central.root
+
+./MakeCondorFiles_WZ.csh analyzeDY /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE_DY}/DYJetsToLL_M-50_HT-2500toInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJets_HT2500toInf/171024_*/0000/ postDY2500toInf.root -1 10000 DY2500 kfactors.root PU_Central.root
+
+echo "Do the WJets MC samples"
+
+./rootcom ZprimeJetsClass_MC_WJets_inclusive analyzeWJets1
+
+./MakeCondorFiles_WZ.csh analyzeWJets1 /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_WJets/170810_152529/0000/ postWJets_MLM_0.root -1 10000 W_0 kfactors.root PU_Central.root
 
 ./rootcom ZprimeJetsClass_MC_WJets analyzeWJets
 
 ./MakeCondorFiles_WZ.csh analyzeWJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_W1Jets/170810_*/0000/ postW100to200_0.root -1 10000 W100_0 kfactors.root PU_Central.root 
                                                                                                                                                                                                                   
-./MakeCondorFiles_WZ.csh analyzeWJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_W1Jets/170810_*/0001/ postW100to200_1.root -1 10000 W100_1 kfactors.root PU_Central.root
-                                                                                                                                                                                                                   
-./MakeCondorFiles_WZ.csh analyzeWJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_W1Jets/170810_*/0002/ postW100to200_2.root -1 10000 W100_2 kfactors.root PU_Central.root
-                                                                                                                                                                                                                   
 ./MakeCondorFiles_WZ.csh analyzeWJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_W2Jets/170810_*/0000/ postW200to400_0.root -1 10000 W200_0 kfactors.root PU_Central.root
-                                                                                                                                                                                                                   
-./MakeCondorFiles_WZ.csh analyzeWJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_HT-200To400_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_W2Jets/170810_*/0001/ postW200to400_1.root -1 10000 W200_1 kfactors.root PU_Central.root
                                                                                                                                                                                                                    
 ./MakeCondorFiles_WZ.csh analyzeWJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_W3Jets/170810_*/0000/ postW400to600_0.root -1 10000 W400_0 kfactors.root PU_Central.root
                                                                                                                                                                                                                    
 ./MakeCondorFiles_WZ.csh analyzeWJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_HT-600To800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_W4Jets/170810_*/0000/ postW600to800_0.root -1 10000 W600_0 kfactors.root PU_Central.root
                                                                                                                                                                                                                    
-./MakeCondorFiles_WZ.csh analyzeWJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_HT-600To800_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_W4Jets/170810_*/0001/ postW600to800_1.root -1 10000 W600_1 kfactors.root PU_Central.root
-
 ./MakeCondorFiles_WZ.csh analyzeWJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_HT-800To1200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_W5Jets/170810_*/0000/ postW800to1200_0.root -1 10000 W800_0 kfactors.root PU_Central.root
                                                                                                                                                                                                                       
 ./MakeCondorFiles_WZ.csh analyzeWJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_HT-1200To2500_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_W6Jets/170810_*/0000/ postW1200to2500_0.root -1 10000 W1200_0 kfactors.root PU_Central.root
                                                                                                                                                                                                                       
 ./MakeCondorFiles_WZ.csh analyzeWJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_HT-2500ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_W7Jets/170810_*/0000/ postW2500toInf_0.root -1 10000 W2500_0 kfactors.root PU_Central.root
 
-#ZJets
+echo "Do the ZJets MC samples"
 
 ./rootcom ZprimeJetsClass_MC_ZJets analyzeZJets
 
@@ -139,8 +144,4 @@ echo "Do the MC samples"
                                                                                                                                                                                                 
 ./MakeCondorFiles_WZ.csh analyzeZJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/ZJetsToNuNu_HT-200To400_13TeV-madgraph/crab_Zvv200to400/170810_*/0000/ postZ200to400_0.root -1 10000 Z200_0 kfactors.root PU_Central.root
                                                                                                                                                                                                 
-./MakeCondorFiles_WZ.csh analyzeZJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/ZJetsToNuNu_HT-200To400_13TeV-madgraph/crab_Zvv200to400/170810_*/0001/ postZ200to400_1.root -1 10000 Z200_1 kfactors.root PU_Central.root
-                                                                                                                                                                                                
 ./MakeCondorFiles_WZ.csh analyzeZJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/ZJetsToNuNu_HT-100To200_13TeV-madgraph/crab_Zvv100to200/170810_*/0000/ postZ100to200_0.root -1 10000 Z100_0 kfactors.root PU_Central.root
-                                                                                                                                                                                                
-./MakeCondorFiles_WZ.csh analyzeZJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/ZJetsToNuNu_HT-100To200_13TeV-madgraph/crab_Zvv100to200/170810_*/0001/ postZ100to200_1.root -1 10000 Z100_1 kfactors.root PU_Central.root
