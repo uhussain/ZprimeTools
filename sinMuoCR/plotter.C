@@ -88,7 +88,7 @@ void plotter(const char * variable,std::string name)
   pad1->SetLogy();
   pad1->SetFillColor(0); pad1->SetFrameBorderMode(0); pad1->SetBorderMode(0);
   pad1->SetBottomMargin(0.);
-  
+  //std::cout << "Opening postSingleMuo_final.root" << std::endl;
   //opening the data file and adding "h_dileptonM_8" histogram
   TFile *f_datafile_0 = new TFile("postSingleMuo_final.root");
   //TFile *f_datafile_1 = new TFile("postMETdata_1.root");

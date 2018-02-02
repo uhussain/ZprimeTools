@@ -217,7 +217,7 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
         //h_cutflow->SetBinContent(2,nFilters);
 	std::cout<<"First Histogram Fill"<<std::endl;
         fillHistos(0);
-	if ((HLTEleMuX>>4&1 == 1) || (HLTEleMuX>>38&1 == 1)) //"HLT_Ele27_WPTight_Gsf_v or HLT_Ele115_CaloIdVT_GsfTrkIdT_v"
+	if ((HLTJet>>4&1 == 1) || (HLTJet>>5&1 == 1) || (HLTJet>>6&1 == 1) || (HLTJet>>8&1 == 1)) //"HLT_Ele27_WPTight_Gsf_v or HLT_Ele115_CaloIdVT_GsfTrkIdT_v"
 	  //if (HLTJet>>8&1 == 1) //"HLT_PFMET170_HBHECleaned_v"
 	  {
 	    nHLT++;
@@ -233,7 +233,7 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 		std::vector<int> elelist;
 		elelist.clear();
 		std::cout << "Creating Muons" << std::endl;
-		std::vector<int> mulist = muon_veto_tightID(jetCand[0],30.0);
+		std::vector<int> mulist = muon_veto_tightID(jetCand[0],20.0);
 		std::cout << "loose Muons" << std::endl;
 		std::vector<int> looseMus = muon_veto_looseID(jetCand[0],0,10.0);
 		std::cout << "Checking Muons" << std::endl;
