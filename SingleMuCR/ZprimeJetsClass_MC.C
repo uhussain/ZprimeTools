@@ -407,7 +407,7 @@ void ZprimeJetsClass_MC::BookHistos(const char* file2)
     char ptbins[100];
     sprintf(ptbins, "_%d", i);
     std::string histname(ptbins);
-    h_nJets[i]   = new TH1F(("nJets"+histname).c_str(), "nJets;Number of Jets", 50, 0, 100);h_nJets[i]->Sumw2();
+    h_nJets[i]   = new TH1F(("nJets"+histname).c_str(), "nJets;Number of Jets", 10, 0, 10);h_nJets[i]->Sumw2();
     h_pfMETall[i] =  new TH1F(("pfMETall"+histname).c_str(), "pfMET",50,0,2000);h_pfMETall[i] ->Sumw2(); 
     h_pfMET200[i] = new TH1F(("pfMET200"+histname).c_str(), "pfMET",50,170,1500);h_pfMET200[i] ->Sumw2(); 
     h_pfMET[i] = new TH1F(("pfMET"+histname).c_str(), "E_{T}^{miss} (GeV)",50,MetBins);h_pfMET[i] ->Sumw2();
@@ -436,9 +436,9 @@ void ZprimeJetsClass_MC::BookHistos(const char* file2)
     h_j1Mt[i]  = new TH1F(("j1Mt"+histname).c_str(), "j1Mt;M_{T} of Leading Jet (GeV)", 50,MtBins);h_j1Mt[i]->Sumw2(); 
     h_nVtx[i] = new TH1F(("nVtx"+histname).c_str(),"nVtx;nVtx",70,0,70);h_nVtx[i]->Sumw2();
     //CR Histograms
-    h_LeptonPt[i] = new TH1F(("h_LeptonPt"+histname).c_str(),"h_LeptonPt",10,10.,400.);h_LeptonPt[i]->Sumw2();
-    h_LeptonEta[i] = new TH1F(("h_LeptonEta"+histname).c_str(),"h_LeptonEta",10,-2.5,2.5);h_LeptonEta[i]->Sumw2();
-    h_LeptonPhi[i] = new TH1F(("h_LeptonPhi"+histname).c_str(),"h_LeptonPhi",10,0.,3.1416);h_LeptonPhi[i]->Sumw2();
+    h_LeptonPt[i] = new TH1F(("h_LeptonPt"+histname).c_str(),"h_LeptonPt",30,0.,1500.);h_LeptonPt[i]->Sumw2();
+    h_LeptonEta[i] = new TH1F(("h_LeptonEta"+histname).c_str(),"h_LeptonEta",30,-3.0,3.0);h_LeptonEta[i]->Sumw2();
+    h_LeptonPhi[i] = new TH1F(("h_LeptonPhi"+histname).c_str(),"h_LeptonPhi",30,0.,3.1416);h_LeptonPhi[i]->Sumw2();
     h_recoil[i] = new TH1F(("h_recoil"+histname).c_str(), "Recoil (GeV)",50,MetBins);h_recoil[i] ->Sumw2();
   }
 }
@@ -483,7 +483,7 @@ void ZprimeJetsClass_MC::fillHistos(int histoNumber,double event_weight)
   h_j1phiWidth[histoNumber]->Fill(j1phiWidth,event_weight);
   h_j1nCons[histoNumber]->Fill((j1nPhotons+j1nCHPions+j1nMisc),event_weight);
   //CR Histograms
-  if(lepindex > 0){ 
+  if(lepindex >= 0){ 
     h_LeptonPt[histoNumber]->Fill(muPt->at(lepindex),event_weight);
     h_LeptonEta[histoNumber]->Fill(muEta->at(lepindex),event_weight);
     h_LeptonPhi[histoNumber]->Fill(muPhi->at(lepindex),event_weight);
