@@ -72,9 +72,8 @@ void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery)
 
   std::vector<int> jetveto;
   jetveto.clear();
-
-  double nTotalEvents,nFilters, nHLT, nCRSelection, nMET200, nlepton, nNoElectrons, nMETcut,nbtagVeto, nDphiJetMET,nJetSelection;
-  nTotalEvents = nFilters = nHLT = nCRSelection = nMET200 = nlepton = nNoElectrons = nMETcut = nDphiJetMET = nbtagVeto = nJetSelection = 0;
+  double nTotalEvents,nFilters, nHLT, nCRSelection, nMET200, lepMET_MT160, nNoElectrons, nMETcut,nbtagVeto, nDphiJetMET,nJetSelection;
+  nTotalEvents = nFilters = nHLT = nCRSelection = nMET200 = lepMET_MT160 = nNoElectrons = nMETcut = nDphiJetMET = nbtagVeto = nJetSelection = 0;
   
   
   //getPFCandidates
@@ -134,7 +133,7 @@ void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery)
     jetCand = getJetCand(200,2.4,0.8,0.1);
     
     float metcut= 0.0;
-    metcut = (fabs(pfMET-caloMET))/pfMET;
+    //metcut = (fabs(pfMET-caloMET))/pfMET;
     //getPFCandidatesMethod
     TotalPFCandidates=ChargedPFCandidates=NeutralPFCandidates=GammaPFCandidates=0;
     PFCandidates = getPFCandidates();
@@ -248,126 +247,130 @@ void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery)
       {    
         nFilters+=event_weight;
         fillHistos(0,event_weight);
-	//if ((HLTEleMuX>>4&1 == 1) || (HLTEleMuX>>38&1 == 1)) //"HLT_Ele27_WPTight_Gsf_v or HLT_Ele115_CaloIdVT_GsfTrkIdT_v"
+        //if ((HLTEleMuX>>4&1 == 1) || (HLTEleMuX>>38&1 == 1)) //"HLT_Ele27_WPTight_Gsf_v or HLT_Ele115_CaloIdVT_GsfTrkIdT_v"
         if (true)
-	  {
-	    nHLT+=event_weight;
-	    fillHistos(1,event_weight);
-	    if(jetCand.size()>0)
-	      {
-		nJetSelection+=event_weight;
-		EWK_corrected_weight = 1.0*(ewkCorrection->GetBinContent(ewkCorrection->GetXaxis()->FindBin(bosonPt)));
-		NNLO_weight = 1.0*(NNLOCorrection->GetBinContent(NNLOCorrection->GetXaxis()->FindBin(bosonPt)));
-		if(EWK_corrected_weight!=0 && NNLO_weight!=0){
-		  kfactor = (EWK_corrected_weight/NNLO_weight);}
-		else{kfactor=1.21;}
-		event_weight*=kfactor;
-		std::cout<<"kfactor: "<<kfactor<<std::endl; 
-		std::cout<<"event_weight: "<<event_weight<<std::endl;
-		//CR code
-		//At least one of the two electrons passes the tight selection
-		std::vector<int> elelist;
-		elelist.clear();
-		std::vector<int> mulist = muon_veto_tightID(jetCand[0],30.0);
-		std::vector<int> looseMus = muon_veto_looseID(jetCand[0],0,10.0);
-		if(mulist.size() == 1 && looseMus.size() == 1)
-                  {
-		    lepindex = mulist[0];
-                    elelist = electron_veto_looseID(jetCand[0],mulist[0],10.0);
-                    jetveto = JetVetoDecision(jetCand[0],mulist[0]);
+	        {
+	          nHLT+=event_weight;
+	          fillHistos(1,event_weight);
+	          if(jetCand.size()>0)
+	            {
+		            nJetSelection+=event_weight;
+		            EWK_corrected_weight = 1.0*(ewkCorrection->GetBinContent(ewkCorrection->GetXaxis()->FindBin(bosonPt)));
+		            NNLO_weight = 1.0*(NNLOCorrection->GetBinContent(NNLOCorrection->GetXaxis()->FindBin(bosonPt)));
+		            if(EWK_corrected_weight!=0 && NNLO_weight!=0){
+		              kfactor = (EWK_corrected_weight/NNLO_weight);}
+		            else{kfactor=1.21;}
+		            event_weight*=kfactor;
+		            //std::cout<<"kfactor: "<<kfactor<<std::endl; 
+		            //std::cout<<"event_weight: "<<event_weight<<std::endl; 
+	      	      //CR code
+	      	      //At least one of the two electrons passes the tight selection
+	      	      std::vector<int> elelist;
+	      	      elelist.clear();
+	      	      std::vector<int> mulist = muon_veto_tightID(jetCand[0],30.0);
+	      	      std::vector<int> looseMus = muon_veto_looseID(jetCand[0],0,10.0);      
+	      	      if(mulist.size() == 1 && looseMus.size() == 1)
+                  { 
+	      	          lepindex = mulist[0];
+                    elelist = electron_veto_looseID(jetCand[0],lepindex,10.0);
+                    jetveto = JetVetoDecision(jetCand[0],lepindex);
 
                     TLorentzVector lep_4vec;
-                    lep_4vec.SetPtEtaPhiE(muPt->at(mulist[0]),muEta->at(mulist[0]),muPhi->at(mulist[0]),muEn->at(mulist[0]));
+                    lep_4vec.SetPtEtaPhiE(muPt->at(lepindex),muEta->at(lepindex),muPhi->at(lepindex),muEn->at(lepindex));
 
-                    lepton_mass = lep_4vec.M();
-                    lepton_pt = lep_4vec.Pt();
-                      
-		    TLorentzVector met_4vec;
-		    met_4vec.SetPtEtaPhiE(pfMET,0.,pfMETPhi,pfMET);
-		    TLorentzVector leptoMET_4vec = lep_4vec+met_4vec;
-		    Double_t leptoMET = fabs(leptoMET_4vec.Pt());
-		    Double_t leptoMET_phi = leptoMET_4vec.Phi();
-		    nCRSelection+=event_weight;
-		    Recoil = leptoMET;
-		    fillHistos(2,event_weight);
-		    if (leptoMET>250)
-		      {
-			//leptoMET_phi_to_use = leptoMET_phi;
-			nMET200+=event_weight;
-			fillHistos(3,event_weight);
-			nlepton+=event_weight;
-			fillHistos(4,event_weight);
-			if(mulist.size() == 0)
-			  {
-			    nNoElectrons+=event_weight;
-			    fillHistos(5,event_weight);
-			    h_metcut->Fill(metcut);
-			    if(metcut<0.5)
-			      {
-				nMETcut+=event_weight;
-				fillHistos(6,event_weight);
-				if(btagVeto())
-				  {
-				    nbtagVeto+=event_weight;
-				    fillHistos(7,event_weight);
-				    double minDPhiJetMET = TMath::Pi();
-				    double minDPhiJetMET_first4 = TMath::Pi();
-				    for(int j = 0; j < jetveto.size(); j++)
-				      {
-					if(DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi) < minDPhiJetMET)
-					  {
-					    minDPhiJetMET = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);
-					    if(j < 4){
-					      minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);}
-					  } 
-				      }
-				    h_dphimin->Fill(minDPhiJetMET_first4);	
-				    if(dPhiJetMETcut(jetveto))
-				      {
-					nDphiJetMET+=event_weight;
-					fillHistos(8,event_weight);
-					//Category 1: Exactly Two Charged Hadrons
-					if(TwoChPFCons==1)
-					  {
-					    fillHistos(9,event_weight);
-					    //Effectiveness of this cut in Category 1 Events
-					    if(PF12PtFrac_ID_1>0.7)
-					      {
-						fillHistos(10,event_weight);}
-					  } 
-					//Category 2: Two charged Hadrons + Photon
-					if(TwoChPFConsPlusPho==1)
-					  {
-					    fillHistos(11,event_weight);
-					    //Effectiveness of this cut in Category 2 Events
-					    if(PF123PtFrac_ID_2>0.7)
-					      {
-						fillHistos(12,event_weight);}
-					  }
-					//Category of events with < 2 charged Hadrons
-					if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
-					  {
-					    fillHistos(13,event_weight);
-					    //Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
-					    if(j1etaWidth<0.04)
-					      {
-						fillHistos(14,event_weight);
-					      }}
-					//This is for comparison with previous results (for all events)
-					if (j1etaWidth<0.04)
-					  {
-					    fillHistos(15,event_weight);
-					  }
-				      }
-				  }   
-			      }	
-			  }
-		      }
-		  }
-	      }
-	  }
+                    lepton_pt = lep_4vec.Pt();         
+	      	          TLorentzVector met_4vec;
+	      	          met_4vec.SetPtEtaPhiE(pfMET,0.,pfMETPhi,pfMET);
+	      	          TLorentzVector leptoMET_4vec = lep_4vec+met_4vec;
+	      	          Double_t leptoMET = fabs(leptoMET_4vec.Pt());
+	      	          Double_t leptoMET_phi = leptoMET_4vec.Phi();
+	      	          nCRSelection+=event_weight;
+	      	          Recoil = leptoMET;
+                    metcut = (fabs(pfMET-caloMET))/Recoil;
+	      	          fillHistos(2,event_weight);
+	      	          if (leptoMET>250)
+	      	            {
+	      	      	      //leptoMET_phi_to_use = leptoMET_phi;
+	      	      	      nMET200+=event_weight;
+	      	      	      fillHistos(3,event_weight);
+	      	      	      if(elelist.size() == 0)
+	      	      	        {
+                            nNoElectrons+=event_weight;
+	      	      	          fillHistos(4,event_weight);
+                            Float_t dPhi_lepMET = DeltaPhi(muPhi->at(lepindex),pfMETPhi);
+                            Float_t lepMET_MT = sqrt(2*muPt->at(lepindex)*pfMET*(1-TMath::Cos(dPhi_lepMET)));
+                            h_lepMET_MT->Fill(lepMET_MT,event_weight);
+                            if(lepMET_MT < 160)
+                              {
+		          	              lepMET_MT160+=event_weight;
+		          	              fillHistos(5,event_weight);
+	      	      	            h_metcut->Fill(metcut,event_weight);
+	      	      	            if(metcut<0.5)
+	      	      	              {
+	      	      		              nMETcut+=event_weight;
+	      	      		              fillHistos(6,event_weight);
+	      	      		              if(btagVeto())
+	      	      		                {
+	      	      		                  nbtagVeto+=event_weight;
+	      	      		                  fillHistos(7,event_weight);
+	      	      		                  double minDPhiJetMET = TMath::Pi();
+	      	      		                  double minDPhiJetMET_first4 = TMath::Pi();
+	      	      		                  for(int j = 0; j < jetveto.size(); j++)
+	      	      		                    {
+	      	      		              	      if(DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi) < minDPhiJetMET)
+	      	      		              	        {
+	      	      		              	          minDPhiJetMET = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);
+	      	      		              	          if(j < 4){
+	      	      		              	            minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);}
+	      	      		              	        } 
+	      	      		                    }
+	      	      		                  h_dphimin->Fill(minDPhiJetMET_first4,event_weight);	
+	      	      		                  if(dPhiJetMETcut(jetveto))
+	      	      		                    {
+	      	      		              	      nDphiJetMET+=event_weight;
+	      	      		              	      fillHistos(8,event_weight);
+	      	      		              	      //Category 1: Exactly Two Charged Hadrons
+	      	      		              	      if(TwoChPFCons==1)
+	      	      		              	        {
+	      	      		              	          fillHistos(9,event_weight);
+	      	      		              	          //Effectiveness of this cut in Category 1 Events
+	      	      		              	          if(PF12PtFrac_ID_1>0.7)
+	      	      		              	            {
+	      	      		              	      	      fillHistos(10,event_weight);}
+	      	      		              	        } 
+	      	      		              	      //Category 2: Two charged Hadrons + Photon
+	      	      		              	      if(TwoChPFConsPlusPho==1)
+	      	      		              	        {
+	      	      		              	          fillHistos(11,event_weight);
+	      	      		              	          //Effectiveness of this cut in Category 2 Events
+	      	      		              	          if(PF123PtFrac_ID_2>0.7)
+	      	      		              	            {
+	      	      		              	      	      fillHistos(12,event_weight);}
+	      	      		              	        }
+	      	      		              	      //Category of events with < 2 charged Hadrons
+	      	      		              	      if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
+	      	      		              	        {
+	      	      		              	          fillHistos(13,event_weight);
+	      	      		              	          //Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
+	      	      		              	          if(j1etaWidth<0.04)
+	      	      		              	            {
+	      	      		              	      	      fillHistos(14,event_weight);
+	      	      		              	            }}
+	      	      		              	      //This is for comparison with previous results (for all events)
+	      	      		              	      if (j1etaWidth<0.04)
+	      	      		              	        {
+	      	      		              	          fillHistos(15,event_weight);
+	      	      		              	        }
+	      	      		                          }
+	      	      		                      }   
+	      	      	                          }	
+	      	      	                }
+	      	                          }
+	      	        }
+	                  }
+	              }
+                  }
       }
-      
     tree->Fill();
     
     if (jentry%reportEvery == 0)
@@ -383,8 +386,8 @@ void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery)
   h_cutflow->SetBinContent(4,nJetSelection);
   h_cutflow->SetBinContent(5,nCRSelection);
   h_cutflow->SetBinContent(6,nMET200);
-  h_cutflow->SetBinContent(7,nlepton);
-  h_cutflow->SetBinContent(8,nNoElectrons);
+  h_cutflow->SetBinContent(7,nNoElectrons);
+  h_cutflow->SetBinContent(8,lepMET_MT160);
   h_cutflow->SetBinContent(9,nMETcut);
   h_cutflow->SetBinContent(10,nbtagVeto);
   h_cutflow->SetBinContent(11,nDphiJetMET);
@@ -408,8 +411,8 @@ void ZprimeJetsClass_MC_WJets::BookHistos(const char* file2)
   h_cutflow->GetXaxis()->SetBinLabel(4,"GoodJet");
   h_cutflow->GetXaxis()->SetBinLabel(5,"CRSelection"); 
   h_cutflow->GetXaxis()->SetBinLabel(6,"leptoMetCut");
-  h_cutflow->GetXaxis()->SetBinLabel(7,"leptonMassCut");
-  h_cutflow->GetXaxis()->SetBinLabel(8,"NoElectrons");
+  h_cutflow->GetXaxis()->SetBinLabel(7,"NoElectrons");
+  h_cutflow->GetXaxis()->SetBinLabel(8,"lepMT160");
   h_cutflow->GetXaxis()->SetBinLabel(9,"caloMET cut");
   h_cutflow->GetXaxis()->SetBinLabel(10,"B-JetVeto");
   h_cutflow->GetXaxis()->SetBinLabel(11,"DeltaPhiCut");
@@ -425,12 +428,13 @@ void ZprimeJetsClass_MC_WJets::BookHistos(const char* file2)
 
   h_dphimin = new TH1F("h_dphimin","h_dphimin; Minimum dPhiJetMET",50,0,3.2);h_dphimin->Sumw2();
   h_metcut  = new TH1F("h_metcut","h_metcut; |pfMET-caloMET|/pfMET", 50,0,1.2);h_metcut->Sumw2();
+  h_lepMET_MT = new TH1F("h_lepMET_MT","h_lepMET_MT; transverse mass of the lepton-Emiss system",40,0,400);h_lepMET_MT->Sumw2();
   for(int i=0; i<16; i++){
 
     char ptbins[100];
     sprintf(ptbins, "_%d", i);
     std::string histname(ptbins);
-    h_nJets[i]   = new TH1F(("nJets"+histname).c_str(), "nJets;Number of Jets", 50, 0, 100);h_nJets[i]->Sumw2(); 
+    h_nJets[i]   = new TH1F(("nJets"+histname).c_str(), "nJets;Number of Jets", 10, 0, 10);h_nJets[i]->Sumw2();
     h_pfMETall[i] =  new TH1F(("pfMETall"+histname).c_str(), "pfMET",50,0,2000);h_pfMETall[i] ->Sumw2(); 
     h_pfMET200[i] = new TH1F(("pfMET200"+histname).c_str(), "pfMET",50,170,1500);h_pfMET200[i] ->Sumw2(); 
     h_pfMET[i] = new TH1F(("pfMET"+histname).c_str(), "E_{T}^{miss} (GeV)",50,MetBins);h_pfMET[i] ->Sumw2();
@@ -459,12 +463,10 @@ void ZprimeJetsClass_MC_WJets::BookHistos(const char* file2)
     h_j1Mt[i]  = new TH1F(("j1Mt"+histname).c_str(), "j1Mt;M_{T} of Leading Jet (GeV)", 50,MtBins);h_j1Mt[i]->Sumw2(); 
     h_nVtx[i] = new TH1F(("nVtx"+histname).c_str(),"nVtx;nVtx",70,0,70);h_nVtx[i]->Sumw2();
     //CR plots
-    h_LeptonPt[i] = new TH1F(("h_LeptonPt"+histname).c_str(),"h_LeptonPt",10,10.,400.);h_LeptonPt[i]->Sumw2();
-    h_LeptonEta[i] = new TH1F(("h_LeptonEta"+histname).c_str(),"h_LeptonEta",10,-2.5,2.5);h_LeptonEta[i]->Sumw2();
-    h_LeptonPhi[i] = new TH1F(("h_LeptonPhi"+histname).c_str(),"h_LeptonPhi",10,0.,3.1416);h_LeptonPhi[i]->Sumw2();
+    h_LeptonPt[i] = new TH1F(("h_LeptonPt"+histname).c_str(),"h_LeptonPt",30,0.,1500.);h_LeptonPt[i]->Sumw2();
+    h_LeptonEta[i] = new TH1F(("h_LeptonEta"+histname).c_str(),"h_LeptonEta",30,-3.0,3.0);h_LeptonEta[i]->Sumw2();
+    h_LeptonPhi[i] = new TH1F(("h_LeptonPhi"+histname).c_str(),"h_LeptonPhi",30,0.,3.1416);h_LeptonPhi[i]->Sumw2();
     h_recoil[i] = new TH1F(("h_recoil"+histname).c_str(), "Recoil (GeV)",50,MetBins);h_recoil[i] ->Sumw2();
-    h_leptonPt[i] = new TH1F(("h_leptonPt"+histname).c_str(),"h_leptonPt",10,0.,400.);h_leptonPt[i]->Sumw2();
-    h_leptonM[i] = new TH1F(("h_leptonM"+histname).c_str(),"h_leptonM",30,0.,60.);h_leptonM[i]->Sumw2();
   }
 }
 
@@ -508,15 +510,13 @@ void ZprimeJetsClass_MC_WJets::fillHistos(int histoNumber,double event_weight)
   h_j1phiWidth[histoNumber]->Fill(j1phiWidth,event_weight);
   h_j1nCons[histoNumber]->Fill((j1nPhotons+j1nCHPions+j1nMisc),event_weight);
   //CR Histograms
-  if(lepindex > 0){ 
+  if(lepindex >= 0){ 
     h_LeptonPt[histoNumber]->Fill(muPt->at(lepindex),event_weight);
     h_LeptonEta[histoNumber]->Fill(muEta->at(lepindex),event_weight);
     h_LeptonPhi[histoNumber]->Fill(muPhi->at(lepindex),event_weight);
   }
-  if(lepton_pt > 0 && lepton_mass > 0){
-    h_recoil[histoNumber]->Fill(Recoil,event_weight);
-    h_leptonPt[histoNumber]->Fill(lepton_pt,event_weight);
-    h_leptonM[histoNumber]->Fill(lepton_mass,event_weight);}
+  if(lepton_pt > 0){
+    h_recoil[histoNumber]->Fill(Recoil,event_weight);}
 }
 //Function to calculate regular deltaR separate from jet width variable 'dR'
 double ZprimeJetsClass_MC_WJets::deltaR(double eta1, double phi1, double eta2, double phi2)

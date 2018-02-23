@@ -1,12 +1,12 @@
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
-// Wed Mar  8 10:15:33 2017 by ROOT version 6.06/01
+// Wed Mar  8 10:01:47 2017 by ROOT version 6.06/01
 // from TTree EventTree/Event data (tag V08_00_24_00)
-// found on file: /hdfs/store/user/uhussain/Zprime_Ntuples_Mar7/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_W3Jets/170306_174919/0000/ggtree_mc_53.root
+// found on file: /hdfs/store/user/uhussain/Zprime_Ntuples_Mar7/MET/crab_dataset1/170306_144308/0000/ggtree_data_313.root
 //////////////////////////////////////////////////////////
 
-#ifndef ZprimeJetsClass_MC_ZJets_h
-#define ZprimeJetsClass_MC_ZJets_h
+#ifndef ZprimeJetsClass_h
+#define ZprimeJetsClass_h
 
 #include <TROOT.h>
 #include <TChain.h>
@@ -40,13 +40,13 @@
 // Header file for the classes stored in the TTree if any.
 #include "vector"
 #include "vector"
-#include "TString.h"
 #include "vector"
 using namespace std;
-class ZprimeJetsClass_MC_ZJets {
+class ZprimeJetsClass {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
+
 
    TFile *fileName;
    TTree *tree;
@@ -57,35 +57,22 @@ public :
    int TwoChPFCons,TwoChPFConsPlusPho;
    double PF12PtFrac_ID_1,PF12PtFrac_ID_2,dR_PF12_ID_1,dR_PF12_ID_2,PF123PtFrac_ID_2;
 
-   //CR variables
-   int lepindex;
-<<<<<<< HEAD
-   double lepton_mass,lepton_pt,Recoil;
-   float leptoMET_phi_to_use;
-=======
-   double lepton_pt,Recoil;
-   //float leptoMET_phi_to_use;
->>>>>>> 97d6dc6ebfa65ee0fe2c4d0fe2e98a261137cf6c
-   
    //getPFCandidates
    int TotalPFCandidates, ChargedPFCandidates,NeutralPFCandidates,GammaPFCandidates;
-   
-<<<<<<< HEAD
-   TH1F *h_nVtx[16], *h_metcut, *h_dphimin,*h_metFilters[16],*h_pfMETall[16],*h_pfMET200[16],*h_nJets[16],*h_pfMET[16],*h_pfMETPhi[16],*h_j1nCategory1[16],*h_j1nCategory2[16],*h_j1dRPF12_ID_1[16],*h_j1dRPF12_ID_2[16];
-   TH1F *h_j1Pt[16], *h_j1Eta[16], *h_j1Phi[16], *h_j1etaWidth[16], *h_j1phiWidth[16],*h_j1nCons[16], *h_j1PF12PtFrac_ID_1[16], *h_j1PF12PtFrac_ID_2[16],*h_j1PFPtFrac_ID_2[16];  
-   TH1F *h_j1TotPFCands[16], *h_j1ChPFCands[16], *h_j1NeutPFCands[16], *h_j1GammaPFCands[16], *h_j1CHF[16], *h_j1NHF[16], *h_j1ChMultiplicity[16], *h_j1NeutMultiplicity[16],*h_j1Mt[16];  
-   //CR histograms
-   TH1F *h_LeptonPt[16], *h_LeptonEta[16],*h_LeptonPhi[16],*h_leptonPt[16],*h_leptonM[16];
-=======
-   TH1F *h_nVtx[16], *h_metcut,*h_lepMET_MT,*h_dphimin,*h_metFilters[16],*h_pfMETall[16],*h_pfMET200[16],*h_nJets[16],*h_pfMET[16],*h_pfMETPhi[16],*h_j1nCategory1[16],*h_j1nCategory2[16],*h_j1dRPF12_ID_1[16],*h_j1dRPF12_ID_2[16];
-   TH1F *h_j1Pt[16], *h_j1Eta[16], *h_j1Phi[16], *h_j1etaWidth[16], *h_j1phiWidth[16],*h_j1nCons[16], *h_j1PF12PtFrac_ID_1[16], *h_j1PF12PtFrac_ID_2[16],*h_j1PFPtFrac_ID_2[16];  
-   TH1F *h_j1TotPFCands[16], *h_j1ChPFCands[16], *h_j1NeutPFCands[16], *h_j1GammaPFCands[16], *h_j1CHF[16], *h_j1NHF[16], *h_j1ChMultiplicity[16], *h_j1NeutMultiplicity[16],*h_j1Mt[16];  
-   //CR histograms
-   TH1F *h_LeptonPt[16], *h_LeptonEta[16],*h_LeptonPhi[16];
->>>>>>> 97d6dc6ebfa65ee0fe2c4d0fe2e98a261137cf6c
-   // Fixed size dimensions of array or collections stored in the TTree if any.
+
+   //CR variables
+   int lepindex_leading, lepindex_subleading;
+   double dilepton_mass,dilepton_pt, Recoil;
+   float leptoMET_phi_to_use;
+
+   TH1F *h_nVtx[16],*h_metcut, *h_dphimin,*h_metFilters[16],*h_pfMETall[16],*h_pfMET200[16],*h_nJets[16],*h_pfMET[16],*h_pfMETPhi[16],*h_j1nCategory1[16],*h_j1nCategory2[16],*h_j1dRPF12_ID_1[16],*h_j1dRPF12_ID_2[16];
+   TH1F *h_j1Pt[16], *h_j1Eta[16], *h_j1Phi[16], *h_j1etaWidth[16], *h_j1phiWidth[16],*h_j1nCons[16], *h_j1PF12PtFrac_ID_1[16], *h_j1PF12PtFrac_ID_2[16],*h_j1PFPtFrac_ID_2[16]; 
+   TH1F *h_j1TotPFCands[16], *h_j1ChPFCands[16], *h_j1NeutPFCands[16], *h_j1GammaPFCands[16], *h_j1CHF[16], *h_j1NHF[16], *h_j1ChMultiplicity[16], *h_j1NeutMultiplicity[16],*h_j1Mt[16]; 
+   //CR histograms 
+   TH1F *h_leadingLeptonPt[16], *h_leadingLeptonEta[16],*h_leadingLeptonPhi[16],*h_subleadingLeptonPt[16],*h_subleadingLeptonEta[16], *h_subleadingLeptonPhi[16],*h_dileptonPt[16],*h_dileptonM[16]; 
    TH1F *h_recoil[16];
    TH1D *h_cutflow;
+   // Fixed size dimensions of array or collections stored in the TTree if any.                   
    // Declaration of leaf types
    Int_t           run;
    Long64_t        event;
@@ -107,42 +94,6 @@ public :
    ULong64_t       HLTPhoIsPrescaled;
    ULong64_t       HLTJetIsPrescaled;
    vector<int>     *phoPrescale;
-   vector<float>   *pdf;
-   Float_t         pthat;
-   Float_t         processID;
-   Float_t         genWeight;
-   Float_t         genHT;
-   TString         *EventTag;
-   Int_t           nPUInfo;
-   vector<int>     *nPU;
-   vector<int>     *puBX;
-   vector<float>   *puTrue;
-   Int_t           nMC;
-   vector<int>     *mcPID;
-   vector<float>   *mcVtx;
-   vector<float>   *mcVty;
-   vector<float>   *mcVtz;
-   vector<float>   *mcPt;
-   vector<float>   *mcMass;
-   vector<float>   *mcEta;
-   vector<float>   *mcPhi;
-   vector<float>   *mcE;
-   vector<float>   *mcEt;
-   vector<int>     *mcGMomPID;
-   vector<int>     *mcMomPID;
-   vector<float>   *mcMomPt;
-   vector<float>   *mcMomMass;
-   vector<float>   *mcMomEta;
-   vector<float>   *mcMomPhi;
-   vector<unsigned short> *mcStatusFlag;
-   vector<int>     *mcParentage;
-   vector<int>     *mcStatus;
-   vector<float>   *mcCalIsoDR03;
-   vector<float>   *mcTrkIsoDR03;
-   vector<float>   *mcCalIsoDR04;
-   vector<float>   *mcTrkIsoDR04;
-   Float_t         genMET;
-   Float_t         genMETPhi;
    Int_t           metFilters;
    Float_t         pfMET;
    Float_t         caloMET;
@@ -376,21 +327,6 @@ public :
    vector<float>   *jetCSV2BJetTags;
    vector<float>   *jetJetProbabilityBJetTags;
    vector<float>   *jetpfCombinedMVAV2BJetTags;
-   vector<int>     *jetPartonID;
-   vector<int>     *jetHadFlvr;
-   vector<float>   *jetGenJetEn;
-   vector<float>   *jetGenJetPt;
-   vector<float>   *jetGenJetEta;
-   vector<float>   *jetGenJetPhi;
-   vector<int>     *jetGenPartonID;
-   vector<float>   *jetGenEn;
-   vector<float>   *jetGenPt;
-   vector<float>   *jetGenEta;
-   vector<float>   *jetGenPhi;
-   vector<int>     *jetGenPartonMomID;
-   vector<float>   *jetP4Smear;
-   vector<float>   *jetP4SmearUp;
-   vector<float>   *jetP4SmearDo;
    vector<bool>    *jetPFLooseId;
    vector<int>     *jetID;
    vector<float>   *jetPUID;
@@ -409,6 +345,64 @@ public :
    vector<float>   *jetVtxNtrks;
    vector<float>   *jetVtx3DVal;
    vector<float>   *jetVtx3DSig;
+   Int_t           nAK8Jet;
+   vector<float>   *AK8JetPt;
+   vector<float>   *AK8JetEn;
+   vector<float>   *AK8JetRawPt;
+   vector<float>   *AK8JetRawEn;
+   vector<float>   *AK8JetEta;
+   vector<float>   *AK8JetPhi;
+   vector<float>   *AK8JetMass;
+   vector<float>   *AK8Jet_tau1;
+   vector<float>   *AK8Jet_tau2;
+   vector<float>   *AK8Jet_tau3;
+   vector<float>   *AK8JetCHF;
+   vector<float>   *AK8JetNHF;
+   vector<float>   *AK8JetCEF;
+   vector<float>   *AK8JetNEF;
+   vector<int>     *AK8JetNCH;
+   vector<int>     *AK8JetNNP;
+   vector<float>   *AK8JetMUF;
+   vector<int>     *AK8Jetnconstituents;
+   vector<bool>    *AK8JetPFLooseId;
+   vector<bool>    *AK8JetPFTightLepVetoId;
+   vector<float>   *AK8JetSoftDropMass;
+   vector<float>   *AK8JetSoftDropMassCorr;
+   vector<float>   *AK8JetPrunedMass;
+   vector<float>   *AK8JetPrunedMassCorr;
+   vector<float>   *AK8JetpfBoostedDSVBTag;
+   vector<float>   *AK8JetDSVnewV4;
+   vector<float>   *AK8JetCSV;
+   vector<float>   *AK8JetJECUnc;
+   vector<float>   *AK8JetL2L3corr;
+   vector<float>   *AK8puppiPt;
+   vector<float>   *AK8puppiMass;
+   vector<float>   *AK8puppiEta;
+   vector<float>   *AK8puppiPhi;
+   vector<float>   *AK8puppiTau1;
+   vector<float>   *AK8puppiTau2;
+   vector<float>   *AK8puppiTau3;
+   vector<float>   *AK8puppiSDL2L3corr;
+   vector<float>   *AK8puppiSDMass;
+   vector<float>   *AK8puppiSDMassL2L3Corr;
+   vector<int>     *nAK8SDSJ;
+   vector<vector<float> > *AK8SDSJPt;
+   vector<vector<float> > *AK8SDSJEta;
+   vector<vector<float> > *AK8SDSJPhi;
+   vector<vector<float> > *AK8SDSJMass;
+   vector<vector<float> > *AK8SDSJE;
+   vector<vector<int> > *AK8SDSJCharge;
+   vector<vector<int> > *AK8SDSJFlavour;
+   vector<vector<float> > *AK8SDSJCSV;
+   vector<int>     *nAK8puppiSDSJ;
+   vector<vector<float> > *AK8puppiSDSJPt;
+   vector<vector<float> > *AK8puppiSDSJEta;
+   vector<vector<float> > *AK8puppiSDSJPhi;
+   vector<vector<float> > *AK8puppiSDSJMass;
+   vector<vector<float> > *AK8puppiSDSJE;
+   vector<vector<int> > *AK8puppiSDSJCharge;
+   vector<vector<int> > *AK8puppiSDSJFlavour;
+   vector<vector<float> > *AK8puppiSDSJCSV;
 
    // List of branches
    TBranch        *b_run;   //!
@@ -431,44 +425,8 @@ public :
    TBranch        *b_HLTPhoIsPrescaled;   //!
    TBranch        *b_HLTJetIsPrescaled;   //!
    TBranch        *b_phoPrescale;   //!
-   TBranch        *b_pdf;   //!
-   TBranch        *b_pthat;   //!
-   TBranch        *b_processID;   //!
-   TBranch        *b_genWeight;   //!
-   TBranch        *b_genHT;   //!
-   TBranch        *b_EventTag;   //!
-   TBranch        *b_nPUInfo;   //!
-   TBranch        *b_nPU;   //!
-   TBranch        *b_puBX;   //!
-   TBranch        *b_puTrue;   //!
-   TBranch        *b_nMC;   //!
-   TBranch        *b_mcPID;   //!
-   TBranch        *b_mcVtx;   //!
-   TBranch        *b_mcVty;   //!
-   TBranch        *b_mcVtz;   //!
-   TBranch        *b_mcPt;   //!
-   TBranch        *b_mcMass;   //!
-   TBranch        *b_mcEta;   //!
-   TBranch        *b_mcPhi;   //!
-   TBranch        *b_mcE;   //!
-   TBranch        *b_mcEt;   //!
-   TBranch        *b_mcGMomPID;   //!
-   TBranch        *b_mcMomPID;   //!
-   TBranch        *b_mcMomPt;   //!
-   TBranch        *b_mcMomMass;   //!
-   TBranch        *b_mcMomEta;   //!
-   TBranch        *b_mcMomPhi;   //!
-   TBranch        *b_mcStatusFlag;   //!
-   TBranch        *b_mcParentage;   //!
-   TBranch        *b_mcStatus;   //!
-   TBranch        *b_mcCalIsoDR03;   //!
-   TBranch        *b_mcTrkIsoDR03;   //!
-   TBranch        *b_mcCalIsoDR04;   //!
-   TBranch        *b_mcTrkIsoDR04;   //!
-   TBranch        *b_genMET;   //!
-   TBranch        *b_genMETPhi;   //!
    TBranch        *b_metFilters;   //!
-   TBranch        *b_pfMET;   //!
+   TBranch        *b_pfMET;   //! 
    TBranch        *b_caloMET;   //!
    TBranch        *b_caloMet_fCoordinates_fX;   //!
    TBranch        *b_caloMet_fCoordinates_fY;   //!
@@ -699,21 +657,6 @@ public :
    TBranch        *b_jetCSV2BJetTags;   //!
    TBranch        *b_jetJetProbabilityBJetTags;   //!
    TBranch        *b_jetpfCombinedMVAV2BJetTags;   //!
-   TBranch        *b_jetPartonID;   //!
-   TBranch        *b_jetHadFlvr;   //!
-   TBranch        *b_jetGenJetEn;   //!
-   TBranch        *b_jetGenJetPt;   //!
-   TBranch        *b_jetGenJetEta;   //!
-   TBranch        *b_jetGenJetPhi;   //!
-   TBranch        *b_jetGenPartonID;   //!
-   TBranch        *b_jetGenEn;   //!
-   TBranch        *b_jetGenPt;   //!
-   TBranch        *b_jetGenEta;   //!
-   TBranch        *b_jetGenPhi;   //!
-   TBranch        *b_jetGenPartonMomID;   //!
-   TBranch        *b_jetP4Smear;   //!
-   TBranch        *b_jetP4SmearUp;   //!
-   TBranch        *b_jetP4SmearDo;   //!
    TBranch        *b_jetPFLooseId;   //!
    TBranch        *b_jetID;   //!
    TBranch        *b_jetPUID;   //!
@@ -732,10 +675,67 @@ public :
    TBranch        *b_jetVtxNtrks;   //!
    TBranch        *b_jetVtx3DVal;   //!
    TBranch        *b_jetVtx3DSig;   //!
+   TBranch        *b_nAK8Jet;   //!
+   TBranch        *b_AK8JetPt;   //!
+   TBranch        *b_AK8JetEn;   //!
+   TBranch        *b_AK8JetRawPt;   //!
+   TBranch        *b_AK8JetRawEn;   //!
+   TBranch        *b_AK8JetEta;   //!
+   TBranch        *b_AK8JetPhi;   //!
+   TBranch        *b_AK8JetMass;   //!
+   TBranch        *b_AK8Jet_tau1;   //!
+   TBranch        *b_AK8Jet_tau2;   //!
+   TBranch        *b_AK8Jet_tau3;   //!
+   TBranch        *b_AK8JetCHF;   //!
+   TBranch        *b_AK8JetNHF;   //!
+   TBranch        *b_AK8JetCEF;   //!
+   TBranch        *b_AK8JetNEF;   //!
+   TBranch        *b_AK8JetNCH;   //!
+   TBranch        *b_AK8JetNNP;   //!
+   TBranch        *b_AK8JetMUF;   //!
+   TBranch        *b_AK8Jetnconstituents;   //!
+   TBranch        *b_AK8JetPFLooseId;   //!
+   TBranch        *b_AK8JetPFTightLepVetoId;   //!
+   TBranch        *b_AK8JetSoftDropMass;   //!
+   TBranch        *b_AK8JetSoftDropMassCorr;   //!
+   TBranch        *b_AK8JetPrunedMass;   //!
+   TBranch        *b_AK8JetPrunedMassCorr;   //!
+   TBranch        *b_AK8JetpfBoostedDSVBTag;   //!
+   TBranch        *b_AK8JetDSVnewV4;   //!
+   TBranch        *b_AK8JetCSV;   //!
+   TBranch        *b_AK8JetJECUnc;   //!
+   TBranch        *b_AK8JetL2L3corr;   //!
+   TBranch        *b_AK8puppiPt;   //!
+   TBranch        *b_AK8puppiMass;   //!
+   TBranch        *b_AK8puppiEta;   //!
+   TBranch        *b_AK8puppiPhi;   //!
+   TBranch        *b_AK8puppiTau1;   //!
+   TBranch        *b_AK8puppiTau2;   //!
+   TBranch        *b_AK8puppiTau3;   //!
+   TBranch        *b_AK8puppiSDL2L3corr;   //!
+   TBranch        *b_AK8puppiSDMass;   //!
+   TBranch        *b_AK8puppiSDMassL2L3Corr;   //!
+   TBranch        *b_nAK8SDSJ;   //!
+   TBranch        *b_AK8SDSJPt;   //!
+   TBranch        *b_AK8SDSJEta;   //!
+   TBranch        *b_AK8SDSJPhi;   //!
+   TBranch        *b_AK8SDSJMass;   //!
+   TBranch        *b_AK8SDSJE;   //!
+   TBranch        *b_AK8SDSJCharge;   //!
+   TBranch        *b_AK8SDSJFlavour;   //!
+   TBranch        *b_AK8SDSJCSV;   //!
+   TBranch        *b_nAK8puppiSDSJ;   //!
+   TBranch        *b_AK8puppiSDSJPt;   //!
+   TBranch        *b_AK8puppiSDSJEta;   //!
+   TBranch        *b_AK8puppiSDSJPhi;   //!
+   TBranch        *b_AK8puppiSDSJMass;   //!
+   TBranch        *b_AK8puppiSDSJE;   //!
+   TBranch        *b_AK8puppiSDSJCharge;   //!
+   TBranch        *b_AK8puppiSDSJFlavour;   //!
+   TBranch        *b_AK8puppiSDSJCSV;   //!
 
-  
-   ZprimeJetsClass_MC_ZJets(const char* file1,const char* file2);
-   virtual ~ZprimeJetsClass_MC_ZJets();
+   ZprimeJetsClass(const char* file1,const char* file2);
+   virtual ~ZprimeJetsClass();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
@@ -744,26 +744,27 @@ public :
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
    virtual void BookHistos(const char* file2);
+   //virtual double dR(double jetetaWidth, double jetphiWidth);
    virtual double deltaR(double eta1, double phi1, double eta2, double phi2);
-   virtual void fillHistos(int histoNumber,double event_weight);
+   virtual void fillHistos(int histoNumber);
    virtual float DeltaPhi(float phi1, float phi2);
-   virtual vector<int> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut);
-   virtual vector<int> JetVetoDecision(int jet_index, int mu_index);
+   virtual vector<int> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut); 
+   virtual vector<int> JetVetoDecision(int leading_ele_index, int subleading_ele_index);
    virtual bool btagVeto();
    virtual bool dPhiJetMETcut(std::vector<int> jets);
    virtual float dPhiJetMETmin(std::vector<int> jets);
    virtual vector<int> electron_veto_tightID(int jet_index, float elePtCut);
-   virtual vector<int> electron_veto_looseID(int jet_index, int mu_index, float elePtCut);
+   virtual vector<int> electron_veto_looseID(int jet_index, int leading_mu_index, int subleading_mu_index, float elePtCut);
    virtual vector<int> muon_veto_tightID(int jet_index, float muPtCut);
-   virtual vector<int> muon_veto_looseID(int jet_index, int ele_index, float muPtCut);
+   virtual vector<int> muon_veto_looseID(int jet_index, int leading_ele_index, int subleading_ele_index, float muPtCut);
    virtual vector<int>getPFCandidates();
 };
 
 #endif
 
-#ifdef ZprimeJetsClass_MC_ZJets_cxx
+#ifdef ZprimeJetsClass_cxx
 
-ZprimeJetsClass_MC_ZJets::ZprimeJetsClass_MC_ZJets(const char* file1,const char* file2) 
+ZprimeJetsClass::ZprimeJetsClass(const char* file1,const char* file2) 
 {
   TChain *chain = new TChain("ggNtuplizer/EventTree");
   TString path = file1;
@@ -780,7 +781,7 @@ ZprimeJetsClass_MC_ZJets::ZprimeJetsClass_MC_ZJets(const char* file1,const char*
     std::cout<<"name: "<<(filename->GetName())<<std::endl;
     std::cout<<"fileNumber: "<<fileNumber<<std::endl;
 
-     TString dataset = "ggtree_mc_";
+     TString dataset = "ggtree_data_";
      TString  FullPathInputFile = (path+filename->GetName());
      TString name = filename->GetName();
      if(name.Contains(dataset))
@@ -797,8 +798,9 @@ ZprimeJetsClass_MC_ZJets::ZprimeJetsClass_MC_ZJets(const char* file1,const char*
   Init(chain);
   BookHistos(file2);
 }
-ZprimeJetsClass_MC_ZJets::~ZprimeJetsClass_MC_ZJets()
+ZprimeJetsClass::~ZprimeJetsClass()
 {
+
    if (!fChain) return;
    delete fChain->GetCurrentFile();
    fileName->cd();
@@ -807,13 +809,13 @@ ZprimeJetsClass_MC_ZJets::~ZprimeJetsClass_MC_ZJets()
    fileName->Close();
 }
 
-Int_t ZprimeJetsClass_MC_ZJets::GetEntry(Long64_t entry)
+Int_t ZprimeJetsClass::GetEntry(Long64_t entry)
 {
 // Read contents of entry.
    if (!fChain) return 0;
    return fChain->GetEntry(entry);
 }
-Long64_t ZprimeJetsClass_MC_ZJets::LoadTree(Long64_t entry)
+Long64_t ZprimeJetsClass::LoadTree(Long64_t entry)
 {
 // Set the environment to read one entry
    if (!fChain) return -5;
@@ -826,7 +828,7 @@ Long64_t ZprimeJetsClass_MC_ZJets::LoadTree(Long64_t entry)
    return centry;
 }
 
-void ZprimeJetsClass_MC_ZJets::Init(TTree *tree)
+void ZprimeJetsClass::Init(TTree *tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -838,34 +840,6 @@ void ZprimeJetsClass_MC_ZJets::Init(TTree *tree)
 
    // Set object pointer
    phoPrescale = 0;
-   pdf = 0;
-   EventTag = 0;
-   nPU = 0;
-   puBX = 0;
-   puTrue = 0;
-   mcPID = 0;
-   mcVtx = 0;
-   mcVty = 0;
-   mcVtz = 0;
-   mcPt = 0;
-   mcMass = 0;
-   mcEta = 0;
-   mcPhi = 0;
-   mcE = 0;
-   mcEt = 0;
-   mcGMomPID = 0;
-   mcMomPID = 0;
-   mcMomPt = 0;
-   mcMomMass = 0;
-   mcMomEta = 0;
-   mcMomPhi = 0;
-   mcStatusFlag = 0;
-   mcParentage = 0;
-   mcStatus = 0;
-   mcCalIsoDR03 = 0;
-   mcTrkIsoDR03 = 0;
-   mcCalIsoDR04 = 0;
-   mcTrkIsoDR04 = 0;
    phoE = 0;
    phoEt = 0;
    phoEta = 0;
@@ -1068,21 +1042,6 @@ void ZprimeJetsClass_MC_ZJets::Init(TTree *tree)
    jetCSV2BJetTags = 0;
    jetJetProbabilityBJetTags = 0;
    jetpfCombinedMVAV2BJetTags = 0;
-   jetPartonID = 0;
-   jetHadFlvr = 0;
-   jetGenJetEn = 0;
-   jetGenJetPt = 0;
-   jetGenJetEta = 0;
-   jetGenJetPhi = 0;
-   jetGenPartonID = 0;
-   jetGenEn = 0;
-   jetGenPt = 0;
-   jetGenEta = 0;
-   jetGenPhi = 0;
-   jetGenPartonMomID = 0;
-   jetP4Smear = 0;
-   jetP4SmearUp = 0;
-   jetP4SmearDo = 0;
    jetPFLooseId = 0;
    jetID = 0;
    jetPUID = 0;
@@ -1101,6 +1060,63 @@ void ZprimeJetsClass_MC_ZJets::Init(TTree *tree)
    jetVtxNtrks = 0;
    jetVtx3DVal = 0;
    jetVtx3DSig = 0;
+   AK8JetPt = 0;
+   AK8JetEn = 0;
+   AK8JetRawPt = 0;
+   AK8JetRawEn = 0;
+   AK8JetEta = 0;
+   AK8JetPhi = 0;
+   AK8JetMass = 0;
+   AK8Jet_tau1 = 0;
+   AK8Jet_tau2 = 0;
+   AK8Jet_tau3 = 0;
+   AK8JetCHF = 0;
+   AK8JetNHF = 0;
+   AK8JetCEF = 0;
+   AK8JetNEF = 0;
+   AK8JetNCH = 0;
+   AK8JetNNP = 0;
+   AK8JetMUF = 0;
+   AK8Jetnconstituents = 0;
+   AK8JetPFLooseId = 0;
+   AK8JetPFTightLepVetoId = 0;
+   AK8JetSoftDropMass = 0;
+   AK8JetSoftDropMassCorr = 0;
+   AK8JetPrunedMass = 0;
+   AK8JetPrunedMassCorr = 0;
+   AK8JetpfBoostedDSVBTag = 0;
+   AK8JetDSVnewV4 = 0;
+   AK8JetCSV = 0;
+   AK8JetJECUnc = 0;
+   AK8JetL2L3corr = 0;
+   AK8puppiPt = 0;
+   AK8puppiMass = 0;
+   AK8puppiEta = 0;
+   AK8puppiPhi = 0;
+   AK8puppiTau1 = 0;
+   AK8puppiTau2 = 0;
+   AK8puppiTau3 = 0;
+   AK8puppiSDL2L3corr = 0;
+   AK8puppiSDMass = 0;
+   AK8puppiSDMassL2L3Corr = 0;
+   nAK8SDSJ = 0;
+   AK8SDSJPt = 0;
+   AK8SDSJEta = 0;
+   AK8SDSJPhi = 0;
+   AK8SDSJMass = 0;
+   AK8SDSJE = 0;
+   AK8SDSJCharge = 0;
+   AK8SDSJFlavour = 0;
+   AK8SDSJCSV = 0;
+   nAK8puppiSDSJ = 0;
+   AK8puppiSDSJPt = 0;
+   AK8puppiSDSJEta = 0;
+   AK8puppiSDSJPhi = 0;
+   AK8puppiSDSJMass = 0;
+   AK8puppiSDSJE = 0;
+   AK8puppiSDSJCharge = 0;
+   AK8puppiSDSJFlavour = 0;
+   AK8puppiSDSJCSV = 0;
    // Set branch addresses and branch pointers
    if (!tree) return;
    fChain = tree;
@@ -1127,42 +1143,6 @@ void ZprimeJetsClass_MC_ZJets::Init(TTree *tree)
    fChain->SetBranchAddress("HLTPhoIsPrescaled", &HLTPhoIsPrescaled, &b_HLTPhoIsPrescaled);
    fChain->SetBranchAddress("HLTJetIsPrescaled", &HLTJetIsPrescaled, &b_HLTJetIsPrescaled);
    fChain->SetBranchAddress("phoPrescale", &phoPrescale, &b_phoPrescale);
-   fChain->SetBranchAddress("pdf", &pdf, &b_pdf);
-   fChain->SetBranchAddress("pthat", &pthat, &b_pthat);
-   fChain->SetBranchAddress("processID", &processID, &b_processID);
-   fChain->SetBranchAddress("genWeight", &genWeight, &b_genWeight);
-   fChain->SetBranchAddress("genHT", &genHT, &b_genHT);
-   fChain->SetBranchAddress("EventTag", &EventTag, &b_EventTag);
-   fChain->SetBranchAddress("nPUInfo", &nPUInfo, &b_nPUInfo);
-   fChain->SetBranchAddress("nPU", &nPU, &b_nPU);
-   fChain->SetBranchAddress("puBX", &puBX, &b_puBX);
-   fChain->SetBranchAddress("puTrue", &puTrue, &b_puTrue);
-   fChain->SetBranchAddress("nMC", &nMC, &b_nMC);
-   fChain->SetBranchAddress("mcPID", &mcPID, &b_mcPID);
-   fChain->SetBranchAddress("mcVtx", &mcVtx, &b_mcVtx);
-   fChain->SetBranchAddress("mcVty", &mcVty, &b_mcVty);
-   fChain->SetBranchAddress("mcVtz", &mcVtz, &b_mcVtz);
-   fChain->SetBranchAddress("mcPt", &mcPt, &b_mcPt);
-   fChain->SetBranchAddress("mcMass", &mcMass, &b_mcMass);
-   fChain->SetBranchAddress("mcEta", &mcEta, &b_mcEta);
-   fChain->SetBranchAddress("mcPhi", &mcPhi, &b_mcPhi);
-   fChain->SetBranchAddress("mcE", &mcE, &b_mcE);
-   fChain->SetBranchAddress("mcEt", &mcEt, &b_mcEt);
-   fChain->SetBranchAddress("mcGMomPID", &mcGMomPID, &b_mcGMomPID);
-   fChain->SetBranchAddress("mcMomPID", &mcMomPID, &b_mcMomPID);
-   fChain->SetBranchAddress("mcMomPt", &mcMomPt, &b_mcMomPt);
-   fChain->SetBranchAddress("mcMomMass", &mcMomMass, &b_mcMomMass);
-   fChain->SetBranchAddress("mcMomEta", &mcMomEta, &b_mcMomEta);
-   fChain->SetBranchAddress("mcMomPhi", &mcMomPhi, &b_mcMomPhi);
-   fChain->SetBranchAddress("mcStatusFlag", &mcStatusFlag, &b_mcStatusFlag);
-   fChain->SetBranchAddress("mcParentage", &mcParentage, &b_mcParentage);
-   fChain->SetBranchAddress("mcStatus", &mcStatus, &b_mcStatus);
-   fChain->SetBranchAddress("mcCalIsoDR03", &mcCalIsoDR03, &b_mcCalIsoDR03);
-   fChain->SetBranchAddress("mcTrkIsoDR03", &mcTrkIsoDR03, &b_mcTrkIsoDR03);
-   fChain->SetBranchAddress("mcCalIsoDR04", &mcCalIsoDR04, &b_mcCalIsoDR04);
-   fChain->SetBranchAddress("mcTrkIsoDR04", &mcTrkIsoDR04, &b_mcTrkIsoDR04);
-   fChain->SetBranchAddress("genMET", &genMET, &b_genMET);
-   fChain->SetBranchAddress("genMETPhi", &genMETPhi, &b_genMETPhi);
    fChain->SetBranchAddress("metFilters", &metFilters, &b_metFilters);
    fChain->SetBranchAddress("pfMET", &pfMET, &b_pfMET);
    fChain->SetBranchAddress("caloMET", &caloMET, &b_caloMET);
@@ -1395,21 +1375,6 @@ void ZprimeJetsClass_MC_ZJets::Init(TTree *tree)
    fChain->SetBranchAddress("jetCSV2BJetTags", &jetCSV2BJetTags, &b_jetCSV2BJetTags);
    fChain->SetBranchAddress("jetJetProbabilityBJetTags", &jetJetProbabilityBJetTags, &b_jetJetProbabilityBJetTags);
    fChain->SetBranchAddress("jetpfCombinedMVAV2BJetTags", &jetpfCombinedMVAV2BJetTags, &b_jetpfCombinedMVAV2BJetTags);
-   fChain->SetBranchAddress("jetPartonID", &jetPartonID, &b_jetPartonID);
-   fChain->SetBranchAddress("jetHadFlvr", &jetHadFlvr, &b_jetHadFlvr);
-   fChain->SetBranchAddress("jetGenJetEn", &jetGenJetEn, &b_jetGenJetEn);
-   fChain->SetBranchAddress("jetGenJetPt", &jetGenJetPt, &b_jetGenJetPt);
-   fChain->SetBranchAddress("jetGenJetEta", &jetGenJetEta, &b_jetGenJetEta);
-   fChain->SetBranchAddress("jetGenJetPhi", &jetGenJetPhi, &b_jetGenJetPhi);
-   fChain->SetBranchAddress("jetGenPartonID", &jetGenPartonID, &b_jetGenPartonID);
-   fChain->SetBranchAddress("jetGenEn", &jetGenEn, &b_jetGenEn);
-   fChain->SetBranchAddress("jetGenPt", &jetGenPt, &b_jetGenPt);
-   fChain->SetBranchAddress("jetGenEta", &jetGenEta, &b_jetGenEta);
-   fChain->SetBranchAddress("jetGenPhi", &jetGenPhi, &b_jetGenPhi);
-   fChain->SetBranchAddress("jetGenPartonMomID", &jetGenPartonMomID, &b_jetGenPartonMomID);
-   fChain->SetBranchAddress("jetP4Smear", &jetP4Smear, &b_jetP4Smear);
-   fChain->SetBranchAddress("jetP4SmearUp", &jetP4SmearUp, &b_jetP4SmearUp);
-   fChain->SetBranchAddress("jetP4SmearDo", &jetP4SmearDo, &b_jetP4SmearDo);
    fChain->SetBranchAddress("jetPFLooseId", &jetPFLooseId, &b_jetPFLooseId);
    fChain->SetBranchAddress("jetID", &jetID, &b_jetID);
    fChain->SetBranchAddress("jetPUID", &jetPUID, &b_jetPUID);
@@ -1428,10 +1393,68 @@ void ZprimeJetsClass_MC_ZJets::Init(TTree *tree)
    fChain->SetBranchAddress("jetVtxNtrks", &jetVtxNtrks, &b_jetVtxNtrks);
    fChain->SetBranchAddress("jetVtx3DVal", &jetVtx3DVal, &b_jetVtx3DVal);
    fChain->SetBranchAddress("jetVtx3DSig", &jetVtx3DSig, &b_jetVtx3DSig);
+   fChain->SetBranchAddress("nAK8Jet", &nAK8Jet, &b_nAK8Jet);
+   fChain->SetBranchAddress("AK8JetPt", &AK8JetPt, &b_AK8JetPt);
+   fChain->SetBranchAddress("AK8JetEn", &AK8JetEn, &b_AK8JetEn);
+   fChain->SetBranchAddress("AK8JetRawPt", &AK8JetRawPt, &b_AK8JetRawPt);
+   fChain->SetBranchAddress("AK8JetRawEn", &AK8JetRawEn, &b_AK8JetRawEn);
+   fChain->SetBranchAddress("AK8JetEta", &AK8JetEta, &b_AK8JetEta);
+   fChain->SetBranchAddress("AK8JetPhi", &AK8JetPhi, &b_AK8JetPhi);
+   fChain->SetBranchAddress("AK8JetMass", &AK8JetMass, &b_AK8JetMass);
+   fChain->SetBranchAddress("AK8Jet_tau1", &AK8Jet_tau1, &b_AK8Jet_tau1);
+   fChain->SetBranchAddress("AK8Jet_tau2", &AK8Jet_tau2, &b_AK8Jet_tau2);
+   fChain->SetBranchAddress("AK8Jet_tau3", &AK8Jet_tau3, &b_AK8Jet_tau3);
+   fChain->SetBranchAddress("AK8JetCHF", &AK8JetCHF, &b_AK8JetCHF);
+   fChain->SetBranchAddress("AK8JetNHF", &AK8JetNHF, &b_AK8JetNHF);
+   fChain->SetBranchAddress("AK8JetCEF", &AK8JetCEF, &b_AK8JetCEF);
+   fChain->SetBranchAddress("AK8JetNEF", &AK8JetNEF, &b_AK8JetNEF);
+   fChain->SetBranchAddress("AK8JetNCH", &AK8JetNCH, &b_AK8JetNCH);
+   fChain->SetBranchAddress("AK8JetNNP", &AK8JetNNP, &b_AK8JetNNP);
+   fChain->SetBranchAddress("AK8JetMUF", &AK8JetMUF, &b_AK8JetMUF);
+   fChain->SetBranchAddress("AK8Jetnconstituents", &AK8Jetnconstituents, &b_AK8Jetnconstituents);
+   fChain->SetBranchAddress("AK8JetPFLooseId", &AK8JetPFLooseId, &b_AK8JetPFLooseId);
+   fChain->SetBranchAddress("AK8JetPFTightLepVetoId", &AK8JetPFTightLepVetoId, &b_AK8JetPFTightLepVetoId);
+   fChain->SetBranchAddress("AK8JetSoftDropMass", &AK8JetSoftDropMass, &b_AK8JetSoftDropMass);
+   fChain->SetBranchAddress("AK8JetSoftDropMassCorr", &AK8JetSoftDropMassCorr, &b_AK8JetSoftDropMassCorr);
+   fChain->SetBranchAddress("AK8JetPrunedMass", &AK8JetPrunedMass, &b_AK8JetPrunedMass);
+   fChain->SetBranchAddress("AK8JetPrunedMassCorr", &AK8JetPrunedMassCorr, &b_AK8JetPrunedMassCorr);
+   fChain->SetBranchAddress("AK8JetpfBoostedDSVBTag", &AK8JetpfBoostedDSVBTag, &b_AK8JetpfBoostedDSVBTag);
+   fChain->SetBranchAddress("AK8JetDSVnewV4", &AK8JetDSVnewV4, &b_AK8JetDSVnewV4);
+   fChain->SetBranchAddress("AK8JetCSV", &AK8JetCSV, &b_AK8JetCSV);
+   fChain->SetBranchAddress("AK8JetJECUnc", &AK8JetJECUnc, &b_AK8JetJECUnc);
+   fChain->SetBranchAddress("AK8JetL2L3corr", &AK8JetL2L3corr, &b_AK8JetL2L3corr);
+   fChain->SetBranchAddress("AK8puppiPt", &AK8puppiPt, &b_AK8puppiPt);
+   fChain->SetBranchAddress("AK8puppiMass", &AK8puppiMass, &b_AK8puppiMass);
+   fChain->SetBranchAddress("AK8puppiEta", &AK8puppiEta, &b_AK8puppiEta);
+   fChain->SetBranchAddress("AK8puppiPhi", &AK8puppiPhi, &b_AK8puppiPhi);
+   fChain->SetBranchAddress("AK8puppiTau1", &AK8puppiTau1, &b_AK8puppiTau1);
+   fChain->SetBranchAddress("AK8puppiTau2", &AK8puppiTau2, &b_AK8puppiTau2);
+   fChain->SetBranchAddress("AK8puppiTau3", &AK8puppiTau3, &b_AK8puppiTau3);
+   fChain->SetBranchAddress("AK8puppiSDL2L3corr", &AK8puppiSDL2L3corr, &b_AK8puppiSDL2L3corr);
+   fChain->SetBranchAddress("AK8puppiSDMass", &AK8puppiSDMass, &b_AK8puppiSDMass);
+   fChain->SetBranchAddress("AK8puppiSDMassL2L3Corr", &AK8puppiSDMassL2L3Corr, &b_AK8puppiSDMassL2L3Corr);
+   fChain->SetBranchAddress("nAK8SDSJ", &nAK8SDSJ, &b_nAK8SDSJ);
+   fChain->SetBranchAddress("AK8SDSJPt", &AK8SDSJPt, &b_AK8SDSJPt);
+   fChain->SetBranchAddress("AK8SDSJEta", &AK8SDSJEta, &b_AK8SDSJEta);
+   fChain->SetBranchAddress("AK8SDSJPhi", &AK8SDSJPhi, &b_AK8SDSJPhi);
+   fChain->SetBranchAddress("AK8SDSJMass", &AK8SDSJMass, &b_AK8SDSJMass);
+   fChain->SetBranchAddress("AK8SDSJE", &AK8SDSJE, &b_AK8SDSJE);
+   fChain->SetBranchAddress("AK8SDSJCharge", &AK8SDSJCharge, &b_AK8SDSJCharge);
+   fChain->SetBranchAddress("AK8SDSJFlavour", &AK8SDSJFlavour, &b_AK8SDSJFlavour);
+   fChain->SetBranchAddress("AK8SDSJCSV", &AK8SDSJCSV, &b_AK8SDSJCSV);
+   fChain->SetBranchAddress("nAK8puppiSDSJ", &nAK8puppiSDSJ, &b_nAK8puppiSDSJ);
+   fChain->SetBranchAddress("AK8puppiSDSJPt", &AK8puppiSDSJPt, &b_AK8puppiSDSJPt);
+   fChain->SetBranchAddress("AK8puppiSDSJEta", &AK8puppiSDSJEta, &b_AK8puppiSDSJEta);
+   fChain->SetBranchAddress("AK8puppiSDSJPhi", &AK8puppiSDSJPhi, &b_AK8puppiSDSJPhi);
+   fChain->SetBranchAddress("AK8puppiSDSJMass", &AK8puppiSDSJMass, &b_AK8puppiSDSJMass);
+   fChain->SetBranchAddress("AK8puppiSDSJE", &AK8puppiSDSJE, &b_AK8puppiSDSJE);
+   fChain->SetBranchAddress("AK8puppiSDSJCharge", &AK8puppiSDSJCharge, &b_AK8puppiSDSJCharge);
+   fChain->SetBranchAddress("AK8puppiSDSJFlavour", &AK8puppiSDSJFlavour, &b_AK8puppiSDSJFlavour);
+   fChain->SetBranchAddress("AK8puppiSDSJCSV", &AK8puppiSDSJCSV, &b_AK8puppiSDSJCSV);
    Notify();
 }
 
-Bool_t ZprimeJetsClass_MC_ZJets::Notify()
+Bool_t ZprimeJetsClass::Notify()
 {
    // The Notify() function is called when a new file is opened. This
    // can be either for a new TTree in a TChain or when when a new TTree
@@ -1442,18 +1465,18 @@ Bool_t ZprimeJetsClass_MC_ZJets::Notify()
    return kTRUE;
 }
 
-void ZprimeJetsClass_MC_ZJets::Show(Long64_t entry)
+void ZprimeJetsClass::Show(Long64_t entry)
 {
 // Print contents of entry.
 // If entry is not specified, print current entry
    if (!fChain) return;
    fChain->Show(entry);
 }
-Int_t ZprimeJetsClass_MC_ZJets::Cut(Long64_t entry)
+Int_t ZprimeJetsClass::Cut(Long64_t entry)
 {
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
 // returns -1 otherwise.
    return 1;
 }
-#endif // #ifdef ZprimeJetsClass_MC_ZJets_cxx
+#endif // #ifdef ZprimeJetsClass_cxx

@@ -71,8 +71,8 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
   std::vector<int> jetveto;
   jetveto.clear();
 
-  double nTotalEvents,nFilters, nHLT, nCRSelection, nMET200, nlepton, nNoMuons, nMETcut,nbtagVeto, nDphiJetMET,nJetSelection;
-  nTotalEvents = nFilters = nHLT = nCRSelection = nMET200 = nlepton = nNoMuons = nMETcut = nDphiJetMET = nbtagVeto = nJetSelection = 0;
+  double nTotalEvents,nFilters, nHLT, nCRSelection, nMET200, lepMET_MT160, nNoMuons, nMETcut,nbtagVeto, nDphiJetMET,nJetSelection;
+  nTotalEvents = nFilters = nHLT = nCRSelection = nMET200 = lepMET_MT160 = nNoMuons = nMETcut = nDphiJetMET = nbtagVeto = nJetSelection = 0;
 
   //getPFCandidates
   std::vector<int>PFCandidates;
@@ -100,7 +100,7 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 
     //fillHistos(0);
     float metcut= 0.0;
-    metcut = (fabs(pfMET-caloMET))/pfMET;
+    //metcut = (fabs(pfMET-caloMET))/pfMET;
    
     //getPFCandidatesMethod
     TotalPFCandidates=ChargedPFCandidates=NeutralPFCandidates=GammaPFCandidates=0;
@@ -112,7 +112,7 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 
     if(PFCandidates.size()>1){
       ChargedPFCandidates=PFCandidates.at(1);}
-      //std::cout<<"TotalChargedPFCandidates: "<<ChargedPFCandidates<<std::endl;}
+    //std::cout<<"TotalChargedPFCandidates: "<<ChargedPFCandidates<<std::endl;}
     
     if(PFCandidates.size()>2){
       GammaPFCandidates=PFCandidates.at(2);}
@@ -206,7 +206,6 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 	PF123PtFrac_ID_2 = (j1PFPosConsPt+j1PFNegConsPt+j1PFPhoConsPt)/(jetPt->at(0));
       }
     }//closing the pfMET>300 and goodJets condition
-    //std::cout<<"|caloMET-pfMET|/pfMET: "<<metcut<<std::endl;
     //CR Variables
     lepindex = -1;
     nTotalEvents++;
@@ -215,18 +214,15 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
       { 
         nFilters++;
         //h_cutflow->SetBinContent(2,nFilters);
-	//std::cout<<"First Histogram Fill"<<std::endl;
         fillHistos(0);
 	if ((HLTEleMuX>>4&1 == 1) || (HLTEleMuX>>38&1 == 1)) //"HLT_Ele27_WPTight_Gsf_v or HLT_Ele115_CaloIdVT_GsfTrkIdT_v"
 	  //if (HLTJet>>8&1 == 1) //"HLT_PFMET170_HBHECleaned_v"
 	  {
 	    nHLT++;
 	    //h_cutflow->SetBinContent(3,nHLT);
-	    //std::cout<<"Second Histogram Fill"<<std::endl;
 	    fillHistos(1);
 	    if(jetCand.size()>0)
 	      {
-		//std::cout << "Found Jet Cand" << std::endl;
 		nJetSelection++;
 		//CR code
 		//At least one of the one electrons passes the tight selection
@@ -236,22 +232,14 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 		mulist.clear();   
 		if(elelist.size() == 1 && looseEles.size() == 1)
                   {
-		    //std::cout << "Found One Electron" << std::endl;
 		    lepindex = elelist[0];
-		    //std::cout << "Set Lepton Index" << std::endl;
-		    //std::cout << "Jet Index: " << jetCand[0];
 		    mulist = muon_veto_looseID(jetCand[0],elelist[0],10.0);
-		    //std::cout << "Set Muon Loose Veto" <<std::endl;
 		    jetveto = JetVetoDecision(jetCand[0],elelist[0]);
-		    //std::cout << "Set Jet Veto" <<std::endl;
                     
 		    TLorentzVector lep_4vec;
 		    lep_4vec.SetPtEtaPhiE(elePt->at(elelist[0]),eleEta->at(elelist[0]),elePhi->at(elelist[0]),eleEn->at(elelist[0]));
-		    //std::cout << "Set Lepton 4 Vector" << std::endl;
 
-		    lepton_mass = lep_4vec.M();
 		    lepton_pt = lep_4vec.Pt();
-		    Double_t lepton_pt = lep_4vec.Pt(); 
 		    TLorentzVector met_4vec;
 		    met_4vec.SetPtEtaPhiE(pfMET,0.,pfMETPhi,pfMET);
 		    TLorentzVector leptoMET_4vec = lep_4vec+met_4vec;
@@ -259,123 +247,111 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 		    Double_t leptoMET_phi = leptoMET_4vec.Phi();
 		    nCRSelection++;
 		    Recoil = leptoMET;
+		    metcut = (fabs(pfMET-caloMET))/Recoil;
 		    //h_cutflow->SetBinContent(4,nCRSelection);
-		    //std::cout << "Third Histogram Fill" << std::endl;
 		    fillHistos(2);
 		    if (leptoMET>250)
 		      {
 			//leptoMET_phi_to_use = leptoMET_phi;
 			nMET200++;
 			//h_cutflow->SetBinContent(5,nMET200);
-			//std::cout << "Fourth Histogram Fill" << std::endl;
 			fillHistos(3);
-			nlepton++;
-			//h_cutflow->SetBinContent(6,ndilepton);
-			//std::cout << "Fifth Histogram Fill" << std::endl;
-			fillHistos(4);
 			if(mulist.size() == 0)
 			  {
 			    nNoMuons++;
 			    //h_cutflow->SetBinContent(7,nNoMuons);
-			    //std::cout << "Sixth Histogram Fill" << std::endl;
-			    fillHistos(5);
-			    h_metcut->Fill(metcut);
-			    if(metcut<0.5)
+			    fillHistos(4);
+			    Float_t dPhi_lepMET = DeltaPhi(muPhi->at(lepindex),pfMETPhi);
+			    Float_t lepMET_MT = sqrt(2*muPt->at(lepindex)*pfMET*(1-TMath::Cos(dPhi_lepMET)));
+			    h_lepMET_MT->Fill(lepMET_MT);
+			    if(lepMET_MT < 160)
 			      {
-				nMETcut++;
-				//h_cutflow->SetBinContent(8,nMETcut);
-				//std::cout << "Seventh Histogram Fill" << std::endl;
-				fillHistos(6);
-				if(btagVeto())
+				lepMET_MT160++;
+				fillHistos(5);
+				h_metcut->Fill(metcut);
+				if(metcut<0.5)
 				  {
-				    nbtagVeto++;
-				    //std::cout << "Eigth Histogram Fill" << std::endl;
-				    fillHistos(7);
-				    double minDPhiJetMET = TMath::Pi();
-				    double minDPhiJetMET_first4 = TMath::Pi();
-				    //std::cout<<"JetVetoSize: "<<jetveto.size()<<std::endl;
-				    for(int j = 0; j < jetveto.size(); j++)
+				    nMETcut++;
+				    //h_cutflow->SetBinContent(8,nMETcut);
+				    fillHistos(6);
+				    if(btagVeto())
 				      {
-					if(DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi) < minDPhiJetMET)
+					nbtagVeto++;
+					//std::cout << "Eigth Histogram Fill" << std::endl;
+					fillHistos(7);
+					double minDPhiJetMET = TMath::Pi();
+					double minDPhiJetMET_first4 = TMath::Pi();
+					for(int j = 0; j < jetveto.size(); j++)
 					  {
-					    minDPhiJetMET = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);
-					    if(j < 4){
-					      minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);}
-					  } 
-				      }
-				    h_dphimin->Fill(minDPhiJetMET_first4);
-				    if(dPhiJetMETcut(jetveto))
-				      {
-					nDphiJetMET++;
-					//std::cout << "Ninth Histogram Fill" << std::endl;
-					fillHistos(8);
-					//Category 1: Exactly Two Charged Hadrons
-					if(TwoChPFCons==1)
-					  {
-					    //std::cout << "Tenth Histogram Fill" << std::endl;
-					    fillHistos(9);
-					    //Effectiveness of this cut in Category 1 Events
-					    if(PF12PtFrac_ID_1>0.7)
+					    if(DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi) < minDPhiJetMET)
 					      {
-						//std::cout << "Eleventh Histogram Fill" << std::endl;
-						fillHistos(10);}
-					  } 
-					//Category 2: Two charged Hadrons + Photon
-					if(TwoChPFConsPlusPho==1)
-					  {
-					    //std::cout << "Twelvth Histogram Fill" << std::endl;
-					    fillHistos(11);
-					    //Effectiveness of this cut in Category 2 Events
-					    if(PF123PtFrac_ID_2>0.7)
-					      {
-						//std::cout << "Thirteenth Histogram Fill" << std::endl;
-						fillHistos(12);}
+						minDPhiJetMET = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);
+						if(j < 4){
+						  minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);}
+					      } 
 					  }
-					//Category of events with < 2 charged Hadrons
-					if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
+					h_dphimin->Fill(minDPhiJetMET_first4);
+					if(dPhiJetMETcut(jetveto))
 					  {
-					    //std::cout << "Fourteenth Histogram Fill" << std::endl;
-					    fillHistos(13);
-					    //Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
-					    if(j1etaWidth<0.04)
+					    nDphiJetMET++;
+					    fillHistos(8);
+					    //Category 1: Exactly Two Charged Hadrons
+					    if(TwoChPFCons==1)
 					      {
-						//std::cout << "Fifthteenth Histogram Fill" << std::endl;
-						fillHistos(14);
-					      }}
-					//This is for comparison with previous results (for all events)
-					if (j1etaWidth<0.04)
-					  {
-					    //std::cout << "Sixteenth Histogram Fill" << std::endl;
-					    fillHistos(15);
+						fillHistos(9);
+						//Effectiveness of this cut in Category 1 Events
+						if(PF12PtFrac_ID_1>0.7)
+						  {
+						    fillHistos(10);}
+					      } 
+					    //Category 2: Two charged Hadrons + Photon
+					    if(TwoChPFConsPlusPho==1)
+					      {
+						fillHistos(11);
+						//Effectiveness of this cut in Category 2 Events
+						if(PF123PtFrac_ID_2>0.7)
+						  {
+						    fillHistos(12);}
+					      }
+					    //Category of events with < 2 charged Hadrons
+					    if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
+					      {
+						fillHistos(13);
+						//Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
+						if(j1etaWidth<0.04)
+						  {
+						    fillHistos(14);
+						  }}
+					    //This is for comparison with previous results (for all events)
+					    if (j1etaWidth<0.04)
+					      {
+						fillHistos(15);
+					      }
 					  }
-				      }
-				  }   
-			      }	
+				      }   
+				  }
+			      }
 			  }
 		      }
 		  }
 	      }
 	  }
       }
-    //std::cout<<"Tree Fill"<<std::endl;
     tree->Fill();
     
     if (jentry%reportEvery == 0)
       {
 	std::cout<<"Finished entry "<<jentry<<"/"<<(nentriesToCheck-1)<<std::endl;
       }
-  }  
-  // std::cout<<"ntest: "<<ntest<<std::endl;
-  // std::cout<<"nbtagVeto: "<<nbtagVeto<<std::endl;
-  //std::cout<<"Error"<<std::endl;
+  }
   h_cutflow->SetBinContent(1,nTotalEvents); 
   h_cutflow->SetBinContent(2,nFilters);
   h_cutflow->SetBinContent(3,nHLT);
   h_cutflow->SetBinContent(4,nJetSelection);
   h_cutflow->SetBinContent(5,nCRSelection);
   h_cutflow->SetBinContent(6,nMET200);
-  h_cutflow->SetBinContent(7,nlepton);
-  h_cutflow->SetBinContent(8,nNoMuons);
+  h_cutflow->SetBinContent(7,nNoMuons);
+  h_cutflow->SetBinContent(8,lepMET_MT160);
   h_cutflow->SetBinContent(9,nMETcut);
   h_cutflow->SetBinContent(10,nbtagVeto);
   h_cutflow->SetBinContent(11,nDphiJetMET);
@@ -398,8 +374,8 @@ void ZprimeJetsClass::BookHistos(const char* file2)
   h_cutflow->GetXaxis()->SetBinLabel(4,"GoodJet");
   h_cutflow->GetXaxis()->SetBinLabel(5,"CRSelection"); 
   h_cutflow->GetXaxis()->SetBinLabel(6,"leptoMetCut");
-  h_cutflow->GetXaxis()->SetBinLabel(7,"leptonMassCut");
-  h_cutflow->GetXaxis()->SetBinLabel(8,"NoMuons");
+  h_cutflow->GetXaxis()->SetBinLabel(7,"NoMuons");
+  h_cutflow->GetXaxis()->SetBinLabel(8,"lepMT160");
   h_cutflow->GetXaxis()->SetBinLabel(9,"caloMET cut");
   h_cutflow->GetXaxis()->SetBinLabel(10,"B-JetVeto");
   h_cutflow->GetXaxis()->SetBinLabel(11,"DeltaPhiCut");
@@ -415,6 +391,7 @@ void ZprimeJetsClass::BookHistos(const char* file2)
   
   h_metcut  = new TH1F("h_metcut","h_metcut; |pfMET-caloMET|/pfMET", 50,0,1.2);h_metcut->Sumw2();
   h_dphimin = new TH1F("h_dphimin","h_dphimin; Minimum dPhiJetMET",50,0,3.2);h_dphimin->Sumw2();
+  h_lepMET_MT = new TH1F("h_lepMET_MT","h_lepMET_MT; transverse mass of the lepton-Emiss system",40,0,400);h_lepMET_MT->Sumw2();
   for(int i=0; i<16; i++){
 
     char ptbins[100];
@@ -450,12 +427,10 @@ void ZprimeJetsClass::BookHistos(const char* file2)
     h_j1Mt[i]  = new TH1F(("j1Mt"+histname).c_str(), "j1Mt;M_{T} of Leading Jet (GeV)", 50,MtBins);h_j1Mt[i]->Sumw2(); 
     h_nVtx[i] = new TH1F(("nVtx"+histname).c_str(),"nVtx;nVtx",70,0,70);h_nVtx[i]->Sumw2(); 
     //CR Histograms
-    h_LeptonPt[i] = new TH1F(("h_LeptonPt"+histname).c_str(),"h_LeptonPt",10,10.,400.);h_LeptonPt[i]->Sumw2();
-    h_LeptonEta[i] = new TH1F(("h_LeptonEta"+histname).c_str(),"h_LeptonEta",10,-2.5,2.5);h_LeptonEta[i]->Sumw2();
-    h_LeptonPhi[i] = new TH1F(("h_LeptonPhi"+histname).c_str(),"h_LeptonPhi",10,0.,3.1416);h_LeptonPhi[i]->Sumw2();
+    h_LeptonPt[i] = new TH1F(("h_LeptonPt"+histname).c_str(),"h_LeptonPt",30,0.,1500.);h_LeptonPt[i]->Sumw2();
+    h_LeptonEta[i] = new TH1F(("h_LeptonEta"+histname).c_str(),"h_LeptonEta",30,-3.0,3.0);h_LeptonEta[i]->Sumw2();
+    h_LeptonPhi[i] = new TH1F(("h_LeptonPhi"+histname).c_str(),"h_LeptonPhi",30,0.,3.1416);h_LeptonPhi[i]->Sumw2();
     h_recoil[i] = new TH1F(("h_recoil"+histname).c_str(), "Recoil (GeV)",50,MetBins);h_recoil[i] ->Sumw2();
-    h_leptonPt[i] = new TH1F(("h_leptonPt"+histname).c_str(),"h_leptonPt",10,0.,400.);h_leptonPt[i]->Sumw2();
-    h_leptonM[i] = new TH1F(("h_leptonM"+histname).c_str(),"h_leptonM",30,0.,60.);h_leptonM[i]->Sumw2();
   }
 }
 
@@ -500,15 +475,13 @@ void ZprimeJetsClass::fillHistos(int histoNumber)
   h_j1phiWidth[histoNumber]->Fill(j1phiWidth);
   h_j1nCons[histoNumber]->Fill(j1nPhotons+j1nCHPions+j1nMisc);
   //CR Histograms
-  if(lepindex > 0){ 
+  if(lepindex >= 0){ 
     h_LeptonPt[histoNumber]->Fill(elePt->at(lepindex));
     h_LeptonEta[histoNumber]->Fill(eleEta->at(lepindex));
     h_LeptonPhi[histoNumber]->Fill(elePhi->at(lepindex));
   }
-  if(lepton_pt > 0 && lepton_mass > 0){
-    h_recoil[histoNumber]->Fill(Recoil);
-    h_leptonPt[histoNumber]->Fill(lepton_pt);
-    h_leptonM[histoNumber]->Fill(lepton_mass);}
+  if(lepton_pt > 0){
+    h_recoil[histoNumber]->Fill(Recoil);}
 }
 
 //Function to calculate regular deltaR separate from jet width variable 'dR'

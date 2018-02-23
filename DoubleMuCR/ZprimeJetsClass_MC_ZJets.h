@@ -58,31 +58,19 @@ public :
    double PF12PtFrac_ID_1,PF12PtFrac_ID_2,dR_PF12_ID_1,dR_PF12_ID_2,PF123PtFrac_ID_2;
 
    //CR variables
-   int lepindex;
-<<<<<<< HEAD
-   double lepton_mass,lepton_pt,Recoil;
+   int lepindex_leading, lepindex_subleading;
+   double dilepton_mass,dilepton_pt,Recoil;
    float leptoMET_phi_to_use;
-=======
-   double lepton_pt,Recoil;
-   //float leptoMET_phi_to_use;
->>>>>>> 97d6dc6ebfa65ee0fe2c4d0fe2e98a261137cf6c
+   TLorentzVector m1, m2;
    
    //getPFCandidates
    int TotalPFCandidates, ChargedPFCandidates,NeutralPFCandidates,GammaPFCandidates;
    
-<<<<<<< HEAD
    TH1F *h_nVtx[16], *h_metcut, *h_dphimin,*h_metFilters[16],*h_pfMETall[16],*h_pfMET200[16],*h_nJets[16],*h_pfMET[16],*h_pfMETPhi[16],*h_j1nCategory1[16],*h_j1nCategory2[16],*h_j1dRPF12_ID_1[16],*h_j1dRPF12_ID_2[16];
    TH1F *h_j1Pt[16], *h_j1Eta[16], *h_j1Phi[16], *h_j1etaWidth[16], *h_j1phiWidth[16],*h_j1nCons[16], *h_j1PF12PtFrac_ID_1[16], *h_j1PF12PtFrac_ID_2[16],*h_j1PFPtFrac_ID_2[16];  
    TH1F *h_j1TotPFCands[16], *h_j1ChPFCands[16], *h_j1NeutPFCands[16], *h_j1GammaPFCands[16], *h_j1CHF[16], *h_j1NHF[16], *h_j1ChMultiplicity[16], *h_j1NeutMultiplicity[16],*h_j1Mt[16];  
    //CR histograms
-   TH1F *h_LeptonPt[16], *h_LeptonEta[16],*h_LeptonPhi[16],*h_leptonPt[16],*h_leptonM[16];
-=======
-   TH1F *h_nVtx[16], *h_metcut,*h_lepMET_MT,*h_dphimin,*h_metFilters[16],*h_pfMETall[16],*h_pfMET200[16],*h_nJets[16],*h_pfMET[16],*h_pfMETPhi[16],*h_j1nCategory1[16],*h_j1nCategory2[16],*h_j1dRPF12_ID_1[16],*h_j1dRPF12_ID_2[16];
-   TH1F *h_j1Pt[16], *h_j1Eta[16], *h_j1Phi[16], *h_j1etaWidth[16], *h_j1phiWidth[16],*h_j1nCons[16], *h_j1PF12PtFrac_ID_1[16], *h_j1PF12PtFrac_ID_2[16],*h_j1PFPtFrac_ID_2[16];  
-   TH1F *h_j1TotPFCands[16], *h_j1ChPFCands[16], *h_j1NeutPFCands[16], *h_j1GammaPFCands[16], *h_j1CHF[16], *h_j1NHF[16], *h_j1ChMultiplicity[16], *h_j1NeutMultiplicity[16],*h_j1Mt[16];  
-   //CR histograms
-   TH1F *h_LeptonPt[16], *h_LeptonEta[16],*h_LeptonPhi[16];
->>>>>>> 97d6dc6ebfa65ee0fe2c4d0fe2e98a261137cf6c
+   TH1F *h_leadingLeptonPt[16], *h_leadingLeptonEta[16],*h_leadingLeptonPhi[16],*h_subleadingLeptonPt[16],*h_subleadingLeptonEta[16], *h_subleadingLeptonPhi[16],*h_dileptonPt[16],*h_dileptonM[16];
    // Fixed size dimensions of array or collections stored in the TTree if any.
    TH1F *h_recoil[16];
    TH1D *h_cutflow;
@@ -748,14 +736,14 @@ public :
    virtual void fillHistos(int histoNumber,double event_weight);
    virtual float DeltaPhi(float phi1, float phi2);
    virtual vector<int> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut);
-   virtual vector<int> JetVetoDecision(int jet_index, int mu_index);
+   virtual vector<int> JetVetoDecision(int leading_ele_index, int subleading_ele_index);
    virtual bool btagVeto();
    virtual bool dPhiJetMETcut(std::vector<int> jets);
    virtual float dPhiJetMETmin(std::vector<int> jets);
    virtual vector<int> electron_veto_tightID(int jet_index, float elePtCut);
-   virtual vector<int> electron_veto_looseID(int jet_index, int mu_index, float elePtCut);
+   virtual vector<int> electron_veto_looseID(int jet_index, int leading_mu_index, int subleading_mu_index, float elePtCut);
    virtual vector<int> muon_veto_tightID(int jet_index, float muPtCut);
-   virtual vector<int> muon_veto_looseID(int jet_index, int ele_index, float muPtCut);
+   virtual vector<int> muon_veto_looseID(int jet_index, int leading_ele_index, int subleading_ele_index, float muPtCut);
    virtual vector<int>getPFCandidates();
 };
 

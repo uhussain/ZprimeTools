@@ -59,17 +59,17 @@ public :
 
    //CR variables
    int lepindex;
-   double lepton_mass,lepton_pt,Recoil;
-   float leptoMET_phi_to_use;
+   double lepton_pt,Recoil;
+   //float leptoMET_phi_to_use;
    
    //getPFCandidates
    int TotalPFCandidates, ChargedPFCandidates,NeutralPFCandidates,GammaPFCandidates;
    
-   TH1F *h_nVtx[16], *h_metcut, *h_dphimin,*h_metFilters[16],*h_pfMETall[16],*h_pfMET200[16],*h_nJets[16],*h_pfMET[16],*h_pfMETPhi[16],*h_j1nCategory1[16],*h_j1nCategory2[16],*h_j1dRPF12_ID_1[16],*h_j1dRPF12_ID_2[16];
+   TH1F *h_nVtx[16], *h_metcut,*h_lepMET_MT, *h_dphimin,*h_metFilters[16],*h_pfMETall[16],*h_pfMET200[16],*h_nJets[16],*h_pfMET[16],*h_pfMETPhi[16],*h_j1nCategory1[16],*h_j1nCategory2[16],*h_j1dRPF12_ID_1[16],*h_j1dRPF12_ID_2[16];
    TH1F *h_j1Pt[16], *h_j1Eta[16], *h_j1Phi[16], *h_j1etaWidth[16], *h_j1phiWidth[16],*h_j1nCons[16], *h_j1PF12PtFrac_ID_1[16], *h_j1PF12PtFrac_ID_2[16],*h_j1PFPtFrac_ID_2[16];  
    TH1F *h_j1TotPFCands[16], *h_j1ChPFCands[16], *h_j1NeutPFCands[16], *h_j1GammaPFCands[16], *h_j1CHF[16], *h_j1NHF[16], *h_j1ChMultiplicity[16], *h_j1NeutMultiplicity[16],*h_j1Mt[16];  
    //CR histograms
-   TH1F *h_LeptonPt[16], *h_LeptonEta[16],*h_LeptonPhi[16],*h_leptonPt[16],*h_leptonM[16];
+   TH1F *h_LeptonPt[16], *h_LeptonEta[16],*h_LeptonPhi[16];
    // Fixed size dimensions of array or collections stored in the TTree if any.
    TH1F *h_recoil[16];
    TH1D *h_cutflow;
