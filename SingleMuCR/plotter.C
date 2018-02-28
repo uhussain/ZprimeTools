@@ -9,6 +9,7 @@
 #include <fstream>
 #include <vector>
 #include <iomanip>
+#include <algorithm>
 #include "TFile.h"
 #include "TH1.h"
 #include "TH2.h"
@@ -60,6 +61,29 @@ std::string SampleName(const char * variable)
   return name;
 }
 
+std::vector<int> hs_sort(std::vector<TH1F*> hs_list)
+{
+  std::vector<int> hs_index;
+  std::vector<float> hs_order;
+  for (int i = 0; i < hs_list.size(); i++)
+    {
+      hs_order.push_back(hs_list[i]->Integral());
+    }
+  std::sort(hs_order.begin(),hs_order.end());
+  for (int i = 0; hs_index.size() != hs_list.size(); i++)
+    {
+      for (int j = 0; j < hs_list.size(); j++)
+        {
+          if (fabs(hs_order[i] - hs_list[j]->Integral()) < sqrt(hs_order[i]))
+            {
+              hs_index.push_back(i);
+              break;
+            }
+        }
+    }
+  return hs_index;
+}
+
 void plotter(const char * variable,std::string name)
 {
   double lumi_1 = 3723.664;
@@ -73,7 +97,7 @@ void plotter(const char * variable,std::string name)
     }
   else
     {
-      system("hadd -f postSingleMuo_final.root postSingleMu_{0..19}.root");
+      system("hadd -f postSingleMu_final.root postSingleMuo_{0..19}.root");
     }
 
   TCanvas *c = new TCanvas("c", "canvas",800,800);
@@ -480,6 +504,8 @@ void plotter(const char * variable,std::string name)
 
   //Stack histograms using THStack
   THStack *hs_datamc = new THStack("hs_datamc","Data/MC comparison");
+  std::vector<TH1F*> hs_list = {histo_j1EtaWidth_100to200,histo_j1EtaWidth_G1Jets,histo_j1EtaWidth_TTJets,histo_j1EtaWidth_Q1Jets,histo_j1EtaWidth_WW,histo_j1EtaWidth_DY1Jets,histo_j1EtaWidth_WJets_0};
+  std::vector<int> hs_index = hs_sort(hs_list);
   //hs_datamc->Add(histo_j1EtaWidth_WW);
   //hs_datamc->Add(histo_j1EtaWidth_100to200);
   //hs_datamc->Add(histo_j1EtaWidth_DY1Jets);
@@ -488,13 +514,10 @@ void plotter(const char * variable,std::string name)
   //hs_datamc->Add(histo_j1EtaWidth_WJets_0);
   //hs_datamc->Add(histo_j1EtaWidth_DY1Jets); 
   //hs_datamc->Add(histo_j1EtaWidth_Q1Jets);
-  hs_datamc->Add(histo_j1EtaWidth_100to200); 
-  hs_datamc->Add(histo_j1EtaWidth_G1Jets);
-  hs_datamc->Add(histo_j1EtaWidth_TTJets);
-  hs_datamc->Add(histo_j1EtaWidth_Q1Jets);
-  hs_datamc->Add(histo_j1EtaWidth_WW);
-  hs_datamc->Add(histo_j1EtaWidth_DY1Jets);
-  hs_datamc->Add(histo_j1EtaWidth_WJets_0);
+  for (int i = 0; i < hs_list.size(); i++)
+    {
+      hs_datamc->Add(hs_list[hs_index[i]]);
+    }
   //hs_datamc->Add(histo_j1EtaWidth_WJets_0);
   //hs_datamc->Add(histo_j1EtaWidth_G1Jets);
   hs_datamc->SetTitle("");
@@ -502,7 +525,7 @@ void plotter(const char * variable,std::string name)
   //hs_datamc->SetMinimum(0);
   //hs_datamc->SetMaximum(500);
   hs_datamc->SetMinimum(0.1);
-  hs_datamc->SetMaximum(hs_datamc->GetMaximum()*pow(10,1.2));
+  hs_datamc->SetMaximum(hs_datamc->GetMaximum()*pow(10,2.5));
   hs_datamc->Draw("HIST");
   histo_j1EtaWidth_data_0->SetLineColor(kBlack);
   histo_j1EtaWidth_data_0->SetMarkerStyle(20);
@@ -755,8 +778,8 @@ void plotter(const char * variable,std::string name)
   yaxis_right->Draw("SAME");  
  
 */
-  c->SaveAs((std::string("../../Plots/SinMuoCRPlots_EWK/datamc_")+std::string(variable)+std::string("_extra_G.pdf")).c_str());
-  c->SaveAs((std::string("../../Plots/SinMuoCRPlots_EWK/datamc_")+std::string(variable)+std::string("_extra_G.png")).c_str());
+  c->SaveAs((std::string("../../Plots/SinMuoCRPlots_EWK/datamc_")+std::string(variable)+std::string(".pdf")).c_str());
+  c->SaveAs((std::string("../../Plots/SinMuoCRPlots_EWK/datamc_")+std::string(variable)+std::string(".png")).c_str());
 }
 
 int main(int argc, const char *argv[])
