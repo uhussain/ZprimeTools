@@ -260,13 +260,15 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 			  {
 			    nNoMuons++;
 			    //h_cutflow->SetBinContent(7,nNoMuons);
+			    std::cout << 5 << std::endl;
 			    fillHistos(4);
-			    Float_t dPhi_lepMET = DeltaPhi(muPhi->at(lepindex),pfMETPhi);
-			    Float_t lepMET_MT = sqrt(2*muPt->at(lepindex)*pfMET*(1-TMath::Cos(dPhi_lepMET)));
+			    Float_t dPhi_lepMET = DeltaPhi(elePhi->at(lepindex),pfMETPhi);
+			    Float_t lepMET_MT = sqrt(2*elePt->at(lepindex)*pfMET*(1-TMath::Cos(dPhi_lepMET)));
 			    h_lepMET_MT->Fill(lepMET_MT);
 			    if(lepMET_MT < 160)
 			      {
 				lepMET_MT160++;
+				std::cout << 6 << std::endl;
 				fillHistos(5);
 				h_metcut->Fill(metcut);
 				if(metcut<0.5)
@@ -277,7 +279,6 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 				    if(btagVeto())
 				      {
 					nbtagVeto++;
-					//std::cout << "Eigth Histogram Fill" << std::endl;
 					fillHistos(7);
 					double minDPhiJetMET = TMath::Pi();
 					double minDPhiJetMET_first4 = TMath::Pi();
@@ -398,7 +399,7 @@ void ZprimeJetsClass::BookHistos(const char* file2)
     sprintf(ptbins, "_%d", i);
     std::string histname(ptbins);
     h_metFilters[i] = new TH1F(("metFilters"+histname).c_str(),"metFilters",50,0,3000); h_metFilters[i]->Sumw2();
-    h_nJets[i]   = new TH1F(("nJets"+histname).c_str(), "nJets;Number of Jets", 50, 0, 100);h_nJets[i]->Sumw2();
+    h_nJets[i]   = new TH1F(("nJets"+histname).c_str(), "nJets;Number of Jets", 10, 0, 10);h_nJets[i]->Sumw2();
     h_pfMETall[i] =  new TH1F(("pfMETall"+histname).c_str(), "pfMET",50,0,2000);h_pfMETall[i] ->Sumw2(); 
     h_pfMET200[i] = new TH1F(("pfMET200"+histname).c_str(), "pfMET",50,170,1500);h_pfMET200[i] ->Sumw2(); 
     h_pfMET[i] = new TH1F(("pfMET"+histname).c_str(), "E_{T}^{miss} (GeV)",50,MetBins);h_pfMET[i] ->Sumw2();

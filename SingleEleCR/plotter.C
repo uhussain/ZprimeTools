@@ -9,6 +9,7 @@
 #include <fstream>
 #include <vector>
 #include <iomanip>
+#include <algorithm>
 #include "TFile.h"
 #include "TH1.h"
 #include "TH2.h"
@@ -58,6 +59,29 @@ std::string SampleName(const char * variable)
     }
   else {std::cout << "samplenames.txt could not be found" << std::endl;}
   return name;
+}
+
+std::vector<int> hs_sort(std::vector<TH1F*> hs_list)
+{
+  std::vector<int> hs_index;
+  std::vector<float> hs_order;
+  for (int i = 0; i < hs_list.size(); i++)
+    {
+      hs_order.push_back(hs_list[i]->Integral());
+    }
+  std::sort(hs_order.begin(),hs_order.end());
+  for (int i = 0; hs_index.size() != hs_list.size(); i++)
+    {
+      for (int j = 0; j < hs_list.size(); j++)
+        {
+          if (fabs(hs_order[i] - hs_list[j]->Integral()) < sqrt(hs_order[i]))
+            {
+              hs_index.push_back(i);
+              break;
+            }
+        }
+    }
+  return hs_index;
 }
 
 void plotter(const char * variable,std::string name)
@@ -139,14 +163,14 @@ void plotter(const char * variable,std::string name)
   std::cout<<"raw WJets events: "<<rawWJets<<std::endl;
 
    // Scaling = (1/Totalevents)*Luminosity*NNLO-cross-section
-  histo_j1EtaWidth_WJets_0->Scale((1.0/WJets_Total[0])*lumi_2*50690);
-  histo_j1EtaWidth_W1Jets->Scale((1.0/WJets_Total[1])*lumi_2*1345);
-  histo_j1EtaWidth_W2Jets->Scale((1.0/WJets_Total[2])*lumi_2*359.7);
-  histo_j1EtaWidth_W3Jets->Scale((1.0/WJets_Total[3])*lumi_2*48.91);
-  histo_j1EtaWidth_W4Jets->Scale((1.0/WJets_Total[4])*lumi_2*12.05);
-  histo_j1EtaWidth_W5Jets->Scale((1.0/WJets_Total[5])*lumi_2*5.501);
-  histo_j1EtaWidth_W6Jets->Scale((1.0/WJets_Total[6])*lumi_2*1.329);
-  histo_j1EtaWidth_W7Jets->Scale((1.0/WJets_Total[7])*lumi_2*0.03216);
+  histo_j1EtaWidth_WJets_0->Scale((1.0/WJets_Total[0])*35900*50690);
+  histo_j1EtaWidth_W1Jets->Scale((1.0/WJets_Total[1])*35900*1345);
+  histo_j1EtaWidth_W2Jets->Scale((1.0/WJets_Total[2])*35900*359.7);
+  histo_j1EtaWidth_W3Jets->Scale((1.0/WJets_Total[3])*35900*48.91);
+  histo_j1EtaWidth_W4Jets->Scale((1.0/WJets_Total[4])*35900*12.05);
+  histo_j1EtaWidth_W5Jets->Scale((1.0/WJets_Total[5])*35900*5.501);
+  histo_j1EtaWidth_W6Jets->Scale((1.0/WJets_Total[6])*35900*1.329);
+  histo_j1EtaWidth_W7Jets->Scale((1.0/WJets_Total[7])*35900*0.03216);
   
   histo_j1EtaWidth_WJets_0->Add(histo_j1EtaWidth_W1Jets);
   histo_j1EtaWidth_WJets_0->Add(histo_j1EtaWidth_W2Jets);
@@ -192,13 +216,13 @@ void plotter(const char * variable,std::string name)
   std::cout<<"raw ZvvJets bkg:"<<rawZvvJets<<std::endl;
   
   // Scaling = (1/Totalevents)*Luminosity*LO-cross-section
-  histo_j1EtaWidth_100to200->Scale((1.0/Zvv_Total[0])*lumi_2*280.35);
-  histo_j1EtaWidth_200to400->Scale((1.0/Zvv_Total[1])*lumi_2*77.67);
-  histo_j1EtaWidth_400to600->Scale((1.0/Zvv_Total[2])*lumi_2*10.73);
-  histo_j1EtaWidth_600to800->Scale((1.0/Zvv_Total[3])*lumi_2*2.559);
-  histo_j1EtaWidth_800to1200->Scale((1.0/Zvv_Total[4])*lumi_2*1.1796);
-  histo_j1EtaWidth_1200to2500->Scale((1.0/Zvv_Total[5])*lumi_2*0.28833);
-  histo_j1EtaWidth_2500toInf->Scale((1.0/Zvv_Total[6])*lumi_2*0.006945);
+  histo_j1EtaWidth_100to200->Scale((1.0/Zvv_Total[0])*35900*280.35);
+  histo_j1EtaWidth_200to400->Scale((1.0/Zvv_Total[1])*35900*77.67);
+  histo_j1EtaWidth_400to600->Scale((1.0/Zvv_Total[2])*35900*10.73);
+  histo_j1EtaWidth_600to800->Scale((1.0/Zvv_Total[3])*35900*2.559);
+  histo_j1EtaWidth_800to1200->Scale((1.0/Zvv_Total[4])*35900*1.1796);
+  histo_j1EtaWidth_1200to2500->Scale((1.0/Zvv_Total[5])*35900*0.28833);
+  histo_j1EtaWidth_2500toInf->Scale((1.0/Zvv_Total[6])*35900*0.006945);
 
   //Add the ZJetsToNuNu histograms to the first one
   histo_j1EtaWidth_100to200->Add(histo_j1EtaWidth_200to400);
@@ -243,11 +267,11 @@ void plotter(const char * variable,std::string name)
   double rawGJets = (histo_j1EtaWidth_G1Jets->Integral())+ (histo_j1EtaWidth_G2Jets->Integral())+ (histo_j1EtaWidth_G3Jets->Integral())+ (histo_j1EtaWidth_G4Jets->Integral())+ (histo_j1EtaWidth_G5Jets->Integral()); 
   std::cout<<"raw GJets bkg:"<<rawGJets<<std::endl;
   //Scaling
-  histo_j1EtaWidth_G1Jets->Scale((1.0/GJets_Total[0])*lumi_2*17420);
-  histo_j1EtaWidth_G2Jets->Scale((1.0/GJets_Total[1])*lumi_2*5391);
-  histo_j1EtaWidth_G3Jets->Scale((1.0/GJets_Total[2])*lumi_2*1168);
-  histo_j1EtaWidth_G4Jets->Scale((1.0/GJets_Total[3])*lumi_2*132.5);
-  histo_j1EtaWidth_G5Jets->Scale((1.0/GJets_Total[4])*lumi_2*44.05);
+  histo_j1EtaWidth_G1Jets->Scale((1.0/GJets_Total[0])*35900*17420);
+  histo_j1EtaWidth_G2Jets->Scale((1.0/GJets_Total[1])*35900*5391);
+  histo_j1EtaWidth_G3Jets->Scale((1.0/GJets_Total[2])*35900*1168);
+  histo_j1EtaWidth_G4Jets->Scale((1.0/GJets_Total[3])*35900*132.5);
+  histo_j1EtaWidth_G5Jets->Scale((1.0/GJets_Total[4])*35900*44.05);
   
   histo_j1EtaWidth_G1Jets->Add(histo_j1EtaWidth_G2Jets);
   histo_j1EtaWidth_G1Jets->Add(histo_j1EtaWidth_G3Jets);
@@ -293,15 +317,15 @@ void plotter(const char * variable,std::string name)
   double rawDY = (histo_j1EtaWidth_DY1Jets->Integral()) + (histo_j1EtaWidth_DY2Jets->Integral())+ (histo_j1EtaWidth_DY3Jets->Integral())+ (histo_j1EtaWidth_DY4Jets->Integral())+ (histo_j1EtaWidth_DY5Jets->Integral()) + (histo_j1EtaWidth_DY6Jets->Integral()) + (histo_j1EtaWidth_DY7Jets->Integral()) + (histo_j1EtaWidth_DY8Jets->Integral());  
   std::cout<<"raw DYJets bkg:"<<rawDY<<std::endl;
 
-  //histo_j1EtaWidth_DY1Jets->Scale((1.0/96657400)*lumi_2*4895);
-  histo_j1EtaWidth_DY1Jets->Scale((1.0/DYJets_Total[0])*lumi_2*4895);
-  histo_j1EtaWidth_DY2Jets->Scale((1.0/DYJets_Total[1])*lumi_2*148);
-  histo_j1EtaWidth_DY3Jets->Scale((1.0/DYJets_Total[2])*lumi_2*40.94);
-  histo_j1EtaWidth_DY4Jets->Scale((1.0/DYJets_Total[3])*lumi_2*5.497);
-  histo_j1EtaWidth_DY5Jets->Scale((1.0/DYJets_Total[4])*lumi_2*1.354);
-  histo_j1EtaWidth_DY6Jets->Scale((1.0/DYJets_Total[5])*lumi_2*0.6250);
-  histo_j1EtaWidth_DY7Jets->Scale((1.0/DYJets_Total[6])*lumi_2*0.1511);
-  histo_j1EtaWidth_DY8Jets->Scale((1.0/DYJets_Total[7])*lumi_2*0.003647);
+  //histo_j1EtaWidth_DY1Jets->Scale((1.0/96657400)*35900*4895);
+  histo_j1EtaWidth_DY1Jets->Scale((1.0/DYJets_Total[0])*35900*4895);
+  histo_j1EtaWidth_DY2Jets->Scale((1.0/DYJets_Total[1])*35900*148);
+  histo_j1EtaWidth_DY3Jets->Scale((1.0/DYJets_Total[2])*35900*40.94);
+  histo_j1EtaWidth_DY4Jets->Scale((1.0/DYJets_Total[3])*35900*5.497);
+  histo_j1EtaWidth_DY5Jets->Scale((1.0/DYJets_Total[4])*35900*1.354);
+  histo_j1EtaWidth_DY6Jets->Scale((1.0/DYJets_Total[5])*35900*0.6250);
+  histo_j1EtaWidth_DY7Jets->Scale((1.0/DYJets_Total[6])*35900*0.1511);
+  histo_j1EtaWidth_DY8Jets->Scale((1.0/DYJets_Total[7])*35900*0.003647);
 
   histo_j1EtaWidth_DY1Jets->Add(histo_j1EtaWidth_DY2Jets);
   histo_j1EtaWidth_DY1Jets->Add(histo_j1EtaWidth_DY3Jets);
@@ -335,7 +359,7 @@ void plotter(const char * variable,std::string name)
   double rawTTJets = histo_j1EtaWidth_TTJets->Integral();
   std::cout<<"raw TTJets here:"<<rawTTJets<<std::endl;
 
-  histo_j1EtaWidth_TTJets->Scale((1.0/TTJets_Total[0])*lumi_2*502.2);
+  histo_j1EtaWidth_TTJets->Scale((1.0/TTJets_Total[0])*35900*502.2);
   histo_j1EtaWidth_TTJets->SetTitle("");
   histo_j1EtaWidth_TTJets->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_TTJets->GetXaxis()->SetTickLength(0);
@@ -357,7 +381,7 @@ void plotter(const char * variable,std::string name)
 
   TH1F *histo_j1EtaWidth_WW = (TH1F*)WW_Files[0]->Get(variable);
   histo_j1EtaWidth_WW->SetStats(0);
-  histo_j1EtaWidth_WW->Scale((1.0/WW_Total[0])*lumi_2*118.7);
+  histo_j1EtaWidth_WW->Scale((1.0/WW_Total[0])*35900*118.7);
   /*histo_j1EtaWidth_WW->SetTitle("");
   histo_j1EtaWidth_WW->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_WW->GetXaxis()->SetTickLength(0);
@@ -377,7 +401,7 @@ void plotter(const char * variable,std::string name)
   
   TH1F *histo_j1EtaWidth_WZ = (TH1F*)WZ_Files[0]->Get(variable);
   histo_j1EtaWidth_WZ->SetStats(0);
-  histo_j1EtaWidth_WZ->Scale((1.0/WZ_Total[0])*lumi_2*47.2);
+  histo_j1EtaWidth_WZ->Scale((1.0/WZ_Total[0])*35900*47.2);
 /*  histo_j1EtaWidth_WZ->SetTitle("");
   histo_j1EtaWidth_WZ->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_WZ->GetXaxis()->SetTickLength(0);
@@ -397,7 +421,7 @@ void plotter(const char * variable,std::string name)
 
   TH1F *histo_j1EtaWidth_ZZ = (TH1F*)ZZ_Files[0]->Get(variable);
   histo_j1EtaWidth_ZZ->SetStats(0);
-  histo_j1EtaWidth_ZZ->Scale((1.0/ZZ_Total[0])*lumi_2*16.6);
+  histo_j1EtaWidth_ZZ->Scale((1.0/ZZ_Total[0])*35900*16.6);
 /*  histo_j1EtaWidth_ZZ->SetTitle("");
   histo_j1EtaWidth_ZZ->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_ZZ->GetXaxis()->SetTickLength(0);
@@ -425,7 +449,7 @@ void plotter(const char * variable,std::string name)
   double TotintegralDiBoson = histo_j1EtaWidth_WW->Integral();
   std::cout<<"integral of WW/WZ/ZZ bkg here:"<<TotintegralDiBoson<<std::endl;
 
- //opening QCD background files (METValue-binned samples)
+ //opening QCD background files (HT-binned samples)
   std::vector<const char *> QJets_FileNames = {"postQCD100to200_0.root","postQCD200to300_0.root","postQCD300to500_0.root","postQCD500to700_0.root","postQCD700to1000_0.root","postQCD1000to1500_0.root","postQCD1500to2000_0.root","postQCD2000toInf_0.root"};
   std::vector<TFile *> QJets_Files;
   for (int i = 0; i < QJets_FileNames.size(); i++) {QJets_Files.push_back(new TFile(QJets_FileNames[i]));}
@@ -449,14 +473,14 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_Q7Jets->SetStats(0);
   histo_j1EtaWidth_Q8Jets->SetStats(0);
 
-  histo_j1EtaWidth_Q1Jets->Scale((1.0/QJets_Total[0])*lumi_2*27500000);
-  histo_j1EtaWidth_Q2Jets->Scale((1.0/QJets_Total[1])*lumi_2*1735000);
-  histo_j1EtaWidth_Q3Jets->Scale((1.0/QJets_Total[2])*lumi_2*367000);
-  histo_j1EtaWidth_Q4Jets->Scale((1.0/QJets_Total[3])*lumi_2*29370);
-  histo_j1EtaWidth_Q5Jets->Scale((1.0/QJets_Total[4])*lumi_2*6524);
-  histo_j1EtaWidth_Q6Jets->Scale((1.0/QJets_Total[5])*lumi_2*1064);
-  histo_j1EtaWidth_Q7Jets->Scale((1.0/QJets_Total[6])*lumi_2*121.5);
-  histo_j1EtaWidth_Q8Jets->Scale((1.0/QJets_Total[7])*lumi_2*25.42);  
+  histo_j1EtaWidth_Q1Jets->Scale((1.0/QJets_Total[0])*35900*27500000);
+  histo_j1EtaWidth_Q2Jets->Scale((1.0/QJets_Total[1])*35900*1735000);
+  histo_j1EtaWidth_Q3Jets->Scale((1.0/QJets_Total[2])*35900*367000);
+  histo_j1EtaWidth_Q4Jets->Scale((1.0/QJets_Total[3])*35900*29370);
+  histo_j1EtaWidth_Q5Jets->Scale((1.0/QJets_Total[4])*35900*6524);
+  histo_j1EtaWidth_Q6Jets->Scale((1.0/QJets_Total[5])*35900*1064);
+  histo_j1EtaWidth_Q7Jets->Scale((1.0/QJets_Total[6])*35900*121.5);
+  histo_j1EtaWidth_Q8Jets->Scale((1.0/QJets_Total[7])*35900*25.42);
 
   histo_j1EtaWidth_Q1Jets->Add(histo_j1EtaWidth_Q2Jets);
   histo_j1EtaWidth_Q1Jets->Add(histo_j1EtaWidth_Q3Jets);
@@ -479,28 +503,29 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_Q1Jets->SetFillColor(kGray);
 
   //Stack histograms using THStack
-  THStack *hs_datamc = new THStack("hs_datamc","Data/MC comparison"); 
-  //hs_datamc->Add(histo_j1EtaWidth_Q1Jets);
+  THStack *hs_datamc = new THStack("hs_datamc","Data/MC comparison");
+  std::vector<TH1F*> hs_list = {histo_j1EtaWidth_100to200,histo_j1EtaWidth_G1Jets,histo_j1EtaWidth_TTJets,histo_j1EtaWidth_Q1Jets,histo_j1EtaWidth_WW,histo_j1EtaWidth_DY1Jets,histo_j1EtaWidth_WJets_0};
+  std::vector<int> hs_index = hs_sort(hs_list);
   //hs_datamc->Add(histo_j1EtaWidth_WW);
   //hs_datamc->Add(histo_j1EtaWidth_100to200);
   //hs_datamc->Add(histo_j1EtaWidth_DY1Jets);
-  hs_datamc->Add(histo_j1EtaWidth_G1Jets); 
-  hs_datamc->Add(histo_j1EtaWidth_WJets_0);
-  hs_datamc->Add(histo_j1EtaWidth_TTJets);
   //hs_datamc->Add(histo_j1EtaWidth_G1Jets);
-  hs_datamc->Add(histo_j1EtaWidth_WW);
   //hs_datamc->Add(histo_j1EtaWidth_TTJets);
   //hs_datamc->Add(histo_j1EtaWidth_WJets_0);
   //hs_datamc->Add(histo_j1EtaWidth_DY1Jets); 
   //hs_datamc->Add(histo_j1EtaWidth_Q1Jets);
-  //hs_datamc->Add(histo_j1EtaWidth_100to200); 
-  hs_datamc->Add(histo_j1EtaWidth_DY1Jets);
+  for (int i = 0; i < hs_list.size(); i++)
+    {
+      hs_datamc->Add(hs_list[hs_index[i]]);
+    }
   //hs_datamc->Add(histo_j1EtaWidth_WJets_0);
   //hs_datamc->Add(histo_j1EtaWidth_G1Jets);
   hs_datamc->SetTitle("");
   hs_datamc->Draw("HIST");
+  //hs_datamc->SetMinimum(0);
+  //hs_datamc->SetMaximum(500);
   hs_datamc->SetMinimum(0.1);
-  hs_datamc->SetMaximum(hs_datamc->GetMaximum()*pow(10,0.5));
+  hs_datamc->SetMaximum(hs_datamc->GetMaximum()*pow(10,2.5));
   hs_datamc->Draw("HIST");
   histo_j1EtaWidth_data_0->SetLineColor(kBlack);
   histo_j1EtaWidth_data_0->SetMarkerStyle(20);
@@ -509,7 +534,7 @@ void plotter(const char * variable,std::string name)
  
   //TFile *f_signal_1GeVfile = new TFile("postSignal_mchi1GeV.root");
   //TH1F *histo_signal_1GeV = (TH1F*)f_signal_1GeVfile ->Get(variable);
-  //histo_signal_1GeV->Scale((1.0/629)*lumi_2*0.056);
+  //histo_signal_1GeV->Scale((1.0/629)*35900*0.056);
   //histo_signal_1GeV->SetLineColor(kRed);
   //histo_signal_1GeV->SetLineWidth(2);
   //histo_signal_1GeV->Draw("HIST SAME");
@@ -519,7 +544,7 @@ void plotter(const char * variable,std::string name)
 
   //TFile *f_signal_5GeVfile = new TFile("postSignal.root");
   //TH1F *histo_signal_5GeV = (TH1F*)f_signal_5GeVfile ->Get(variable);
-  //histo_signal_5GeV->Scale((1.0/2133)*lumi_2*0.047);
+  //histo_signal_5GeV->Scale((1.0/2133)*35900*0.047);
   //histo_signal_5GeV->SetLineColor(kBlue);
   //histo_signal_5GeV->SetLineWidth(2);
   //histo_signal_5GeV->Draw("HIST SAME");
@@ -530,7 +555,7 @@ void plotter(const char * variable,std::string name)
 
   //TFile *f_signal_10GeVfile = new TFile("postSignal_mchi10GeV.root");
   //TH1F *histo_signal_10GeV = (TH1F*)f_signal_10GeVfile ->Get(variable);
-  //histo_signal_10GeV->Scale((1.0/4052)*lumi_2*0.04);
+  //histo_signal_10GeV->Scale((1.0/4052)*35900*0.04);
   //histo_signal_10GeV->SetLineColor(kViolet+1);
   //histo_signal_10GeV->SetLineWidth(2);
   //histo_signal_10GeV->Draw("HIST SAME");
@@ -540,7 +565,7 @@ void plotter(const char * variable,std::string name)
 
   //TFile *f_signal_20GeVfile = new TFile("postSignal_mchi20GeV.root");
   //TH1F *histo_signal_20GeV = (TH1F*)f_signal_20GeVfile ->Get(variable);
-  //histo_signal_20GeV->Scale((1.0/9998)*lumi_2*0.034);
+  //histo_signal_20GeV->Scale((1.0/9998)*35900*0.034);
   //histo_signal_20GeV->SetLineColor(kMagenta);
   //histo_signal_20GeV->SetLineWidth(2);
   //histo_signal_20GeV->Draw("HIST SAME");
@@ -550,7 +575,7 @@ void plotter(const char * variable,std::string name)
  
   //TFile *f_signal_50GeVfile = new TFile("postSignal_mchi50GeV.root");
   //TH1F *histo_signal_50GeV = (TH1F*)f_signal_50GeVfile ->Get(variable);
-  //histo_signal_50GeV->Scale((1.0/9999)*lumi_2*0.025);
+  //histo_signal_50GeV->Scale((1.0/9999)*35900*0.025);
   //histo_signal_50GeV->SetLineColor(kSpring-1);
   //histo_signal_50GeV->SetLineWidth(2);
   //histo_signal_50GeV->Draw("HIST SAME");
@@ -561,7 +586,7 @@ void plotter(const char * variable,std::string name)
 ////  
   //TFile *f_signal_100GeVfile = new TFile("postSignal_mchi100GeV.root");
   //TH1F *histo_signal_100GeV = (TH1F*)f_signal_100GeVfile ->Get(variable);
-  //histo_signal_100GeV->Scale((1.0/9994)*lumi_2*0.019);
+  //histo_signal_100GeV->Scale((1.0/9994)*35900*0.019);
   //histo_signal_100GeV->SetLineColor(kAzure+1);
   //histo_signal_100GeV->SetLineWidth(2);
   //histo_signal_100GeV->Draw("HIST SAME");
@@ -577,8 +602,9 @@ void plotter(const char * variable,std::string name)
   //leg->AddEntry(histo_signal_10GeV, "ZprimeSignal_mchi10GeV");
   //leg->AddEntry(histo_signal_20GeV, "ZprimeSignal_mchi20GeV"); 
   //leg->AddEntry(histo_signal_50GeV, "ZprimeSignal_mchi50GeV");
-  //leg->AddEntry(histo_signal_100GeV, "ZprimeSignal_mchi100GeV"); 
-  leg->AddEntry(histo_j1EtaWidth_DY1Jets,"Z#rightarrow l","F");  
+  //leg->AddEntry(histo_signal_100GeV, "ZprimeSignal_mchi100GeV");  
+  leg->AddEntry(histo_j1EtaWidth_WJets_0,"W#rightarrowl#nu","f");
+  leg->AddEntry(histo_j1EtaWidth_DY1Jets,"Z#rightarrow ll","F"); 
   //leg->AddEntry(histo_j1EtaWidth_100to200,"Z#rightarrow#nu#nu","F"); 
   //leg->AddEntry(histo_j1EtaWidth_G1Jets,"#gamma+jets", "F");
   //leg->AddEntry(histo_j1EtaWidth_Q1Jets, "QCD","F");
@@ -587,14 +613,13 @@ void plotter(const char * variable,std::string name)
   //leg->AddEntry(histo_j1EtaWidth_Q1Jets, "QCD","F");
   //leg->AddEntry(histo_j1EtaWidth_TTJets, "Top Quark", "F");
   leg->AddEntry(histo_j1EtaWidth_WW,"WW/WZ/ZZ","F");
+  leg->AddEntry(histo_j1EtaWidth_Q1Jets, "QCD","F");
   //leg->AddEntry(histo_j1EtaWidth_G1Jets,"#gamma+jets", "F");
   leg->AddEntry(histo_j1EtaWidth_TTJets, "Top Quark", "F"); 
-  leg->AddEntry(histo_j1EtaWidth_WJets_0,"W#rightarrowl#nu","f");
   leg->AddEntry(histo_j1EtaWidth_G1Jets,"#gamma+jets", "F");
   //leg->AddEntry(histo_j1EtaWidth_DY1Jets,"DYJets#rightarrowLL","F");  
-  //leg->AddEntry(histo_j1EtaWidth_100to200,"Z#rightarrow#nu#nu","F");
+  leg->AddEntry(histo_j1EtaWidth_100to200,"Z#rightarrow#nu#nu","F");
   //leg->AddEntry(histo_j1EtaWidth_WW,"WW/WZ/ZZ","F");
-  leg->AddEntry(histo_j1EtaWidth_Q1Jets, "QCD","F");
   leg->SetFillColor(kWhite);
   leg->SetFillStyle(0);
   leg->SetTextSize(0.025);
@@ -676,10 +701,10 @@ void plotter(const char * variable,std::string name)
   line->SetLineColor(kBlack);
   line->Draw("same");
 
-  int xmin = hs_datamc->GetXaxis()->GetXmin();
-  int xmax = hs_datamc->GetXaxis()->GetXmax();
-  int xwmin = xmin;
-  int xwmax = xmax;
+  double xmin = hs_datamc->GetXaxis()->GetXmin();
+  double xmax = hs_datamc->GetXaxis()->GetXmax();
+  double xwmin = xmin;
+  double xwmax = xmax;
 
   TGaxis *xaxis = new TGaxis(xmin,0,xmax,0,xwmin,xwmax,510);
   xaxis->SetTitle(name.c_str());
@@ -753,8 +778,8 @@ void plotter(const char * variable,std::string name)
   yaxis_right->Draw("SAME");  
  
 */
-  c->SaveAs((std::string("../../Plots/SinEleCRPlots_EWK/datamc_")+std::string(variable)+std::string("_extra_G.pdf")).c_str());
-  c->SaveAs((std::string("../../Plots/SinEleCRPlots_EWK/datamc_")+std::string(variable)+std::string("_extra_G.png")).c_str());
+  c->SaveAs((std::string("../../Plots/SinEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".pdf")).c_str());
+  c->SaveAs((std::string("../../Plots/SinEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".png")).c_str());
 }
 
 int main(int argc, const char *argv[])
