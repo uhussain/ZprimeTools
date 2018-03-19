@@ -26,7 +26,6 @@
 #include "iostream"
 #include "stdlib.h"
 #include "fstream"
-#include "float.h"
 
 std::vector<float> GetTotal(std::vector<TFile*> Files)
 {
@@ -65,8 +64,8 @@ std::string SampleName(const char * variable)
 void hs_save(const char * variable, std::vector<TH1F*> hs_list)
 {
   const char* hs_root = "../../Plots/Histogram.root";
-  const char* region = "ControlRegion";
-  const char* type = "ControlRegion/DoubleEle";
+  const char* region = "SignalRegion/";
+  const char* type = "SignalRegion/";
   std::ifstream file(hs_root);
   if (file){file.close();}
   else
@@ -95,28 +94,20 @@ void hs_save(const char * variable, std::vector<TH1F*> hs_list)
 std::vector<int> hs_sort(std::vector<TH1F*> hs_list)
 {
   std::vector<int> hs_index;
-  std::vector<Double_t> hs_order;
+  std::vector<float> hs_order;
   for (int i = 0; i < hs_list.size(); i++)
     {
-      if (hs_list[i]->Integral() != 0)
-	{
-	  hs_order.push_back(hs_list[i]->Integral());
-	}
-      else if(hs_list[i]->Integral() == 0)
-	{
-	  hs_index.push_back(i);
-	}
+      hs_order.push_back(hs_list[i]->Integral());
     }
   std::sort(hs_order.begin(),hs_order.end());
   for (int i = 0; hs_index.size() != hs_list.size(); i++)
     {
       for (int j = 0; j < hs_list.size(); j++)
         {
-	  float max = std::max(hs_order[i],hs_list[j]->Integral());
-	  if (fabs(hs_order[i] - hs_list[j]->Integral()) <= (FLT_EPSILON*max) && hs_list[j]->Integral() != 0)
-	    {
-	      hs_index.push_back(j);
-	      break;
+          if (fabs(hs_order[i] - hs_list[j]->Integral()) < sqrt(hs_order[i]))
+            {
+              hs_index.push_back(i);
+              break;
             }
         }
     }
@@ -129,14 +120,14 @@ void plotter(const char * variable,std::string name)
   double lumi_2 = 35900.;
 
   std::cout << name << std::endl;
-  std::ifstream file("postSingleEle_final.root");
+  std::ifstream file("postMETdata_final.root");
   if (file)
     {
       file.close();
     }
   else
     {
-      system("hadd -f postSingleEle_final.root postSingleEle_{0..19}.root");
+      system("hadd -f postMETdata_final.root postMETdata_{9..14}.root");
     }
 
   TCanvas *c = new TCanvas("c", "canvas",800,800);
@@ -153,7 +144,7 @@ void plotter(const char * variable,std::string name)
   pad1->SetBottomMargin(0.);
   
   //opening the data file and adding "h_dileptonM_8" histogram
-  TFile *f_datafile_0 = new TFile("postSingleEle_final.root");
+  TFile *f_datafile_0 = new TFile("postMETdata_final.root");
   //TFile *f_datafile_1 = new TFile("postMETdata_1.root");
   TH1F *histo_j1EtaWidth_data_0 = (TH1F*)f_datafile_0->Get(variable);
   //TH1F *histo_j1EtaWidth_data_1 = (TH1F*)f_datafile_1->Get(variable);
@@ -210,7 +201,7 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_W5Jets->Scale((1.0/WJets_Total[5])*35900*5.501);
   histo_j1EtaWidth_W6Jets->Scale((1.0/WJets_Total[6])*35900*1.329);
   histo_j1EtaWidth_W7Jets->Scale((1.0/WJets_Total[7])*35900*0.03216);
-
+  
   histo_j1EtaWidth_WJets_0->Add(histo_j1EtaWidth_W1Jets);
   histo_j1EtaWidth_WJets_0->Add(histo_j1EtaWidth_W2Jets);
   histo_j1EtaWidth_WJets_0->Add(histo_j1EtaWidth_W3Jets);
@@ -556,8 +547,8 @@ void plotter(const char * variable,std::string name)
 
   //Stack histograms using THStack
   THStack *hs_datamc = new THStack("hs_datamc","Data/MC comparison");
-  std::vector<TH1F*> hs_list = {histo_j1EtaWidth_WW,histo_j1EtaWidth_100to200,histo_j1EtaWidth_DY1Jets,histo_j1EtaWidth_G1Jets,histo_j1EtaWidth_TTJets,histo_j1EtaWidth_WJets_0,histo_j1EtaWidth_Q1Jets};
-  hs_save(variable,hs_list);
+  std::vector<TH1F*> hs_list = {histo_j1EtaWidth_100to200,histo_j1EtaWidth_G1Jets,histo_j1EtaWidth_TTJets,histo_j1EtaWidth_Q1Jets,histo_j1EtaWidth_WW,histo_j1EtaWidth_DY1Jets,histo_j1EtaWidth_WJets_0};
+  //hs_save(variable,hs_list);
   std::vector<int> hs_index = hs_sort(hs_list);
   //hs_datamc->Add(histo_j1EtaWidth_WW);
   //hs_datamc->Add(histo_j1EtaWidth_100to200);
@@ -831,8 +822,8 @@ void plotter(const char * variable,std::string name)
   yaxis_right->Draw("SAME");  
  
 */
-  c->SaveAs((std::string("../../Plots/DouEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".pdf")).c_str());
-  c->SaveAs((std::string("../../Plots/DouEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".png")).c_str());
+  c->SaveAs((std::string("../../Plots/SinEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".pdf")).c_str());
+  c->SaveAs((std::string("../../Plots/SinEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".png")).c_str());
 }
 
 int main(int argc, const char *argv[])

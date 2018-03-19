@@ -544,13 +544,9 @@ void ZprimeJetsClass_MC_ZJets::fillHistos(int histoNumber,double event_weight)
   h_subleadingLeptonEta[histoNumber]->Fill(eleEta->at(lepindex_subleading),event_weight);
   h_subleadingLeptonPhi[histoNumber]->Fill(elePhi->at(lepindex_subleading),event_weight);}
   if(dilepton_pt > 0 && dilepton_mass > 0){
-<<<<<<< HEAD:DoubleEleCR/ZprimeJetsClass_MC_ZJets.C
     h_recoil[histoNumber]->Fill(Recoil,event_weight);
-=======
-  h_recoil[histoNumber]->Fill(Recoil,event_weight);
->>>>>>> 97d6dc6ebfa65ee0fe2c4d0fe2e98a261137cf6c:ControlRegion/ZprimeJetsClass_MC_ZJets.C
-  h_dileptonPt[histoNumber]->Fill(dilepton_pt,event_weight);
-  h_dileptonM[histoNumber]->Fill(dilepton_mass,event_weight);}
+    h_dileptonPt[histoNumber]->Fill(dilepton_pt,event_weight);
+    h_dileptonM[histoNumber]->Fill(dilepton_mass,event_weight);}
 }
 //Function to calculate regular deltaR separate from jet width variable 'dR'
 double ZprimeJetsClass_MC_ZJets::deltaR(double eta1, double phi1, double eta2, double phi2)

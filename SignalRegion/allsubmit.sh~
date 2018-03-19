@@ -1,4 +1,0 @@
-#!/bin/sh
-./submit.sh
-./submitDY.sh
-./submit_data.sh

@@ -61,6 +61,36 @@ std::string SampleName(const char * variable)
   return name;
 }
 
+void hs_save(const char * variable, std::vector<TH1F*> hs_list)
+{
+  const char* hs_root = "../../Plots/Histogram.root";
+  const char* region = "ControlRegion";
+  const char* type = "ControlRegion/SingleMu";
+  std::ifstream file(hs_root);
+  if (file){file.close();}
+  else
+    {
+      TFile* hs_file = TFile::Open(hs_root,"RECREATE");
+      hs_file->Close();
+    }
+  TFile* hs_file = TFile::Open(hs_root,"UPDATE");
+  if (!(hs_file->GetDirectory(region)))
+    {
+      hs_file->mkdir(region);
+    }
+  hs_file->cd(region);
+  if (!(hs_file->GetDirectory(type)))
+    {
+      hs_file->mkdir(type);
+    }
+  hs_file->cd(type);
+  for (int i = 0; i < hs_list.size(); i++)
+    {
+      hs_list[i]->Write();
+    }
+  hs_file->Close();
+}
+  
 std::vector<int> hs_sort(std::vector<TH1F*> hs_list)
 {
   std::vector<int> hs_index;
@@ -74,9 +104,10 @@ std::vector<int> hs_sort(std::vector<TH1F*> hs_list)
     {
       for (int j = 0; j < hs_list.size(); j++)
         {
-          if (fabs(hs_order[i] - hs_list[j]->Integral()) < sqrt(hs_order[i]))
+          float max = std::max(hs_order[i],hs_list[j]->Integral());
+          if (fabs(hs_order[i] - hs_list[j]->Integral()) <= (FLT_EPSILON*max) && hs_list[j]->Integral() != 0)
             {
-              hs_index.push_back(i);
+              hs_index.push_back(j);
               break;
             }
         }
@@ -97,7 +128,7 @@ void plotter(const char * variable,std::string name)
     }
   else
     {
-      system("hadd -f postSingleMu_final.root postSingleMuo_{0..19}.root");
+      system("hadd -f postSingleMu_final.root postSingleMu_{0..19}.root");
     }
 
   TCanvas *c = new TCanvas("c", "canvas",800,800);
@@ -178,11 +209,12 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_WJets_0->Add(histo_j1EtaWidth_W4Jets);
   histo_j1EtaWidth_WJets_0->Add(histo_j1EtaWidth_W5Jets);
   histo_j1EtaWidth_WJets_0->Add(histo_j1EtaWidth_W6Jets);
-  histo_j1EtaWidth_WJets_0->Add(histo_j1EtaWidth_W7Jets);  
+  histo_j1EtaWidth_WJets_0->Add(histo_j1EtaWidth_W7Jets);
 
   double integralWJets = histo_j1EtaWidth_WJets_0->Integral();
   std::cout<<"integral of WJets bkg here:"<<integralWJets<<std::endl;
 
+  histo_j1EtaWidth_WJets_0->SetName(((std::string(variable))+(std::string("_WJets"))).c_str());
   histo_j1EtaWidth_WJets_0->SetTitle("");
   histo_j1EtaWidth_WJets_0->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_WJets_0->GetXaxis()->SetTickLength(0);
@@ -232,7 +264,7 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_100to200->Add(histo_j1EtaWidth_1200to2500);
   histo_j1EtaWidth_100to200->Add(histo_j1EtaWidth_2500toInf);
 
-
+  histo_j1EtaWidth_100to200->SetName(((std::string(variable))+(std::string("_Zvv"))).c_str());
   histo_j1EtaWidth_100to200->SetTitle("");
   histo_j1EtaWidth_100to200->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_100to200->GetXaxis()->SetTickLength(0);
@@ -278,6 +310,7 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_G1Jets->Add(histo_j1EtaWidth_G4Jets);
   histo_j1EtaWidth_G1Jets->Add(histo_j1EtaWidth_G5Jets);
 
+  histo_j1EtaWidth_G1Jets->SetName(((std::string(variable))+(std::string("_GJets"))).c_str());
   histo_j1EtaWidth_G1Jets->SetTitle("");
   histo_j1EtaWidth_G1Jets->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_G1Jets->GetXaxis()->SetTickLength(0);
@@ -335,6 +368,7 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_DY1Jets->Add(histo_j1EtaWidth_DY7Jets);
   histo_j1EtaWidth_DY1Jets->Add(histo_j1EtaWidth_DY8Jets);
   
+  histo_j1EtaWidth_DY1Jets->SetName(((std::string(variable))+(std::string("_DYJets"))).c_str());
   histo_j1EtaWidth_DY1Jets->SetTitle("");
   histo_j1EtaWidth_DY1Jets->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_DY1Jets->GetXaxis()->SetTickLength(0);
@@ -360,6 +394,8 @@ void plotter(const char * variable,std::string name)
   std::cout<<"raw TTJets here:"<<rawTTJets<<std::endl;
 
   histo_j1EtaWidth_TTJets->Scale((1.0/TTJets_Total[0])*35900*502.2);
+
+  histo_j1EtaWidth_TTJets->SetName(((std::string(variable))+(std::string("_TTJets"))).c_str());
   histo_j1EtaWidth_TTJets->SetTitle("");
   histo_j1EtaWidth_TTJets->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_TTJets->GetXaxis()->SetTickLength(0);
@@ -382,6 +418,7 @@ void plotter(const char * variable,std::string name)
   TH1F *histo_j1EtaWidth_WW = (TH1F*)WW_Files[0]->Get(variable);
   histo_j1EtaWidth_WW->SetStats(0);
   histo_j1EtaWidth_WW->Scale((1.0/WW_Total[0])*35900*118.7);
+  histo_j1EtaWidth_WW->SetName(((std::string(variable))+(std::string("_WW"))).c_str());
   /*histo_j1EtaWidth_WW->SetTitle("");
   histo_j1EtaWidth_WW->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_WW->GetXaxis()->SetTickLength(0);
@@ -402,6 +439,8 @@ void plotter(const char * variable,std::string name)
   TH1F *histo_j1EtaWidth_WZ = (TH1F*)WZ_Files[0]->Get(variable);
   histo_j1EtaWidth_WZ->SetStats(0);
   histo_j1EtaWidth_WZ->Scale((1.0/WZ_Total[0])*35900*47.2);
+
+  histo_j1EtaWidth_WZ->SetName(((std::string(variable))+(std::string("_WZ"))).c_str());
 /*  histo_j1EtaWidth_WZ->SetTitle("");
   histo_j1EtaWidth_WZ->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_WZ->GetXaxis()->SetTickLength(0);
@@ -422,6 +461,8 @@ void plotter(const char * variable,std::string name)
   TH1F *histo_j1EtaWidth_ZZ = (TH1F*)ZZ_Files[0]->Get(variable);
   histo_j1EtaWidth_ZZ->SetStats(0);
   histo_j1EtaWidth_ZZ->Scale((1.0/ZZ_Total[0])*35900*16.6);
+
+  histo_j1EtaWidth_ZZ->SetName(((std::string(variable))+(std::string("_ZZ"))).c_str());
 /*  histo_j1EtaWidth_ZZ->SetTitle("");
   histo_j1EtaWidth_ZZ->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_ZZ->GetXaxis()->SetTickLength(0);
@@ -437,6 +478,8 @@ void plotter(const char * variable,std::string name)
   //Ading WW, WZ, ZZ together
   histo_j1EtaWidth_WW->Add(histo_j1EtaWidth_WZ);
   histo_j1EtaWidth_WW->Add(histo_j1EtaWidth_ZZ);
+  
+  histo_j1EtaWidth_WW->SetName(((std::string(variable))+(std::string("_WW_WZ_ZZ"))).c_str());
   histo_j1EtaWidth_WW->SetTitle("");
   histo_j1EtaWidth_WW->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_WW->GetXaxis()->SetTickLength(0);
@@ -493,6 +536,7 @@ void plotter(const char * variable,std::string name)
   double integral = histo_j1EtaWidth_Q1Jets->Integral();
   std::cout<<"integral of QCD bkg here:"<<integral<<std::endl;
 
+  histo_j1EtaWidth_Q1Jets->SetName(((std::string(variable))+(std::string("_QJets"))).c_str());
   histo_j1EtaWidth_Q1Jets->SetTitle("");
   histo_j1EtaWidth_Q1Jets->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_Q1Jets->GetXaxis()->SetTickLength(0);
@@ -505,6 +549,7 @@ void plotter(const char * variable,std::string name)
   //Stack histograms using THStack
   THStack *hs_datamc = new THStack("hs_datamc","Data/MC comparison");
   std::vector<TH1F*> hs_list = {histo_j1EtaWidth_100to200,histo_j1EtaWidth_G1Jets,histo_j1EtaWidth_TTJets,histo_j1EtaWidth_Q1Jets,histo_j1EtaWidth_WW,histo_j1EtaWidth_DY1Jets,histo_j1EtaWidth_WJets_0};
+  hs_save(variable,hs_list);
   std::vector<int> hs_index = hs_sort(hs_list);
   //hs_datamc->Add(histo_j1EtaWidth_WW);
   //hs_datamc->Add(histo_j1EtaWidth_100to200);
@@ -778,8 +823,8 @@ void plotter(const char * variable,std::string name)
   yaxis_right->Draw("SAME");  
  
 */
-  c->SaveAs((std::string("../../Plots/SinMuoCRPlots_EWK/datamc_")+std::string(variable)+std::string(".pdf")).c_str());
-  c->SaveAs((std::string("../../Plots/SinMuoCRPlots_EWK/datamc_")+std::string(variable)+std::string(".png")).c_str());
+  c->SaveAs((std::string("../../Plots/SinEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".pdf")).c_str());
+  c->SaveAs((std::string("../../Plots/SinEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".png")).c_str());
 }
 
 int main(int argc, const char *argv[])

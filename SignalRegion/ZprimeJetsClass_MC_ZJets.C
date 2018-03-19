@@ -246,8 +246,8 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
           kfactor = (EWK_corrected_weight/NNLO_weight);}
         else{kfactor=1.23;}
         event_weight*=kfactor;
-        std::cout<<"kfactor: "<<kfactor<<std::endl; 
-        std::cout<<"event_weight: "<<event_weight<<std::endl;
+        //std::cout<<"kfactor: "<<kfactor<<std::endl; 
+        //std::cout<<"event_weight: "<<event_weight<<std::endl;
 	      fillHistos(1,event_weight); 
     	  if (pfMET>170) 
       	  {

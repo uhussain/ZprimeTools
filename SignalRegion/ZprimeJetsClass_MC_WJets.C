@@ -34,18 +34,6 @@
 using namespace std;
 using std::vector;
 
-bool Inclusive(int include, float genHT)
-{
-  if (include)
-    {
-      return genHT < 100;
-    }
-  else
-    {
-      return true;
-    }
-}
-
 int main(int argc, const char* argv[])
 { 
   Long64_t maxEvents = atof(argv[3]);
@@ -64,11 +52,11 @@ int main(int argc, const char* argv[])
 
   ZprimeJetsClass_MC_WJets t(argv[1],argv[2]);
   
-  t.Loop(maxEvents,reportEvery,include);
+  t.Loop(maxEvents,reportEvery);
   return 0;
 }
 
-void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery,int include)
+void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery)
 {
   if (fChain == 0) return;
   int nTotal;
@@ -125,7 +113,7 @@ void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery,int incl
     //binContent as event_weight
     int bin = PU->GetXaxis()->FindBin(puTrue->at(0));
     event_weight = PU->GetBinContent(bin);
-    std::cout<<"event_weight: "<<event_weight<<std::endl;
+    //std::cout<<"event_weight: "<<event_weight<<std::endl;
     int bosonPID;
     double bosonPt;
     bool Wfound = false;
@@ -252,7 +240,7 @@ void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery,int incl
     float metcut= 0.0;
     metcut = (fabs(pfMET-caloMET))/pfMET;
     //std::cout<<"|caloMET-pfMET|/pfMET: "<<metcut<<std::endl;
-    if (Inclusive(include,genHT) && (metFilters==0))
+    if (metFilters==0)
       {
         EWK_corrected_weight = 1.0*(ewkCorrection->GetBinContent(ewkCorrection->GetXaxis()->FindBin(bosonPt)));
         NNLO_weight = 1.0*(NNLOCorrection->GetBinContent(NNLOCorrection->GetXaxis()->FindBin(bosonPt)));
@@ -260,8 +248,8 @@ void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery,int incl
           kfactor = (EWK_corrected_weight/NNLO_weight);}
         else{kfactor=1.21;}
         event_weight*=kfactor;
-        std::cout<<"kfactor: "<<kfactor<<std::endl; 
-        std::cout<<"event_weight: "<<event_weight<<std::endl;
+        //std::cout<<"kfactor: "<<kfactor<<std::endl; 
+        //std::cout<<"event_weight: "<<event_weight<<std::endl;
 	      fillHistos(1,event_weight); 
          if (pfMET>170) 
       	    {

@@ -6,45 +6,45 @@ echo "Do the CR data samples"
 
 ./rootcom ZprimeJetsClass analyzedata
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset1/171113_142010/0000/ postSingleMuo_0.root -1 10000 Muo_0
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset1/171113_142010/0000/ postSingleMu_0.root -1 10000 Mu_0
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset1/171113_142010/0001/ postSingleMuo_1.root -1 10000 Muo_1
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset1/171113_142010/0001/ postSingleMu_1.root -1 10000 Mu_1
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset1/171113_142010/0002/ postSingleMuo_2.root -1 10000 Muo_2
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset1/171113_142010/0002/ postSingleMu_2.root -1 10000 Mu_2
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset1/171113_142010/0003/ postSingleMuo_3.root -1 10000 Muo_3
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset1/171113_142010/0003/ postSingleMu_3.root -1 10000 Mu_3
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset2/171113_142044/0000/ postSingleMuo_4.root -1 10000 Muo_4
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset2/171113_142044/0000/ postSingleMu_4.root -1 10000 Mu_4
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset2/171113_142044/0001/ postSingleMuo_5.root -1 10000 Muo_5
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset2/171113_142044/0001/ postSingleMu_5.root -1 10000 Mu_5
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset3/171113_142112/0000/ postSingleMuo_6.root -1 10000 Muo_6
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset3/171113_142112/0000/ postSingleMu_6.root -1 10000 Mu_6
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset3/171113_142112/0001/ postSingleMuo_7.root -1 10000 Muo_7
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset3/171113_142112/0001/ postSingleMu_7.root -1 10000 Mu_7
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset4/171113_142141/0000/ postSingleMuo_8.root -1 10000 Muo_8
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset4/171113_142141/0000/ postSingleMu_8.root -1 10000 Mu_8
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset4/171113_142141/0001/ postSingleMuo_9.root -1 10000 Muo_9
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset4/171113_142141/0001/ postSingleMu_9.root -1 10000 Mu_9
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset5/171113_142209/0000/ postSingleMuo_10.root -1 10000 Muo_10
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset5/171113_142209/0000/ postSingleMu_10.root -1 10000 Mu_10
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset5/171113_142209/0001/ postSingleMuo_11.root -1 10000 Muo_11
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset5/171113_142209/0001/ postSingleMu_11.root -1 10000 Mu_11
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset6/171113_142238/0000/ postSingleMuo_12.root -1 10000 Muo_12
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset6/171113_142238/0000/ postSingleMu_12.root -1 10000 Mu_12
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset6/171113_142238/0001/ postSingleMuo_13.root -1 10000 Muo_13
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset6/171113_142238/0001/ postSingleMu_13.root -1 10000 Mu_13
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset6/171113_142238/0002/ postSingleMuo_14.root -1 10000 Muo_14
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset6/171113_142238/0002/ postSingleMu_14.root -1 10000 Mu_14
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset7/171113_142459/0000/ postSingleMuo_15.root -1 10000 Muo_15  
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset7/171113_142459/0000/ postSingleMu_15.root -1 10000 Mu_15  
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset7/171113_142459/0001/ postSingleMuo_16.root -1 10000 Muo_16  
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset7/171113_142459/0001/ postSingleMu_16.root -1 10000 Mu_16  
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset7/171113_142459/0002/ postSingleMuo_17.root -1 10000 Muo_17  
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset7/171113_142459/0002/ postSingleMu_17.root -1 10000 Mu_17  
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset7/171113_142459/0003/ postSingleMuo_18.root -1 10000 Muo_18  
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset7/171113_142459/0003/ postSingleMu_18.root -1 10000 Mu_18  
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset8/171113_142527/0000/ postSingleMuo_19.root -1 10000 Muo_19 
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset8/171113_142527/0000/ postSingleMu_19.root -1 10000 Mu_19 
 
 echo "Do the MC samples"
 
