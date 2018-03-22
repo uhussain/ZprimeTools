@@ -2,7 +2,7 @@
 ////Required arguments: 1 is folder containing input files, 2 is output file path, 3 is maxEvents (-1 to run over all events), 4 is reportEvery
 ////
 ////To compile using rootcom to an executable named 'analyze':
-////$ ./rootcom ZprimeJetsClass_MC_ZJets analyze
+////$ ./rootcom ZprimeJetsClass_MC_WJets analyze
 ////
 ////To run, assuming this is compiled to an executable named 'analyze':
 ////$ ./analyze /hdfs/store/user/uhussain/Zprime_Ntuples/ /cms/uhussain/MonoZprimeJet/CMSSW_8_0_8/src/LightZPrimeAnalysis/JetAnalyzer/test/output.root -1 10000
@@ -10,8 +10,8 @@
 ////and storing the resulting histograms in the file output.root.
 ////
 //
-#define ZprimeJetsClass_MC_ZJets_cxx
-#include "ZprimeJetsClass_MC_ZJets.h"
+#define ZprimeJetsClass_MC_WJets_cxx
+#include "ZprimeJetsClass_MC_WJets.h"
 #include <TH2.h>
 #include<TH1.h>
 #include <TStyle.h>
@@ -48,13 +48,13 @@ int main(int argc, const char* argv[])
     std::cout<<"Please enter a valid value for reportEvery (parameter 4)."<<std::endl;
     return 1;
   }
-  ZprimeJetsClass_MC_ZJets t(argv[1],argv[2]);
+  ZprimeJetsClass_MC_WJets t(argv[1],argv[2]);
   
   t.Loop(maxEvents,reportEvery);
   return 0;
 }
 
-void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
+void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery)
 {
   if (fChain == 0) return;
   int nTotal;
@@ -78,20 +78,19 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
 
   //getPFCandidates
   std::vector<int>PFCandidates;
-  
+
   //jetCandidate that passes dPhiJetMET cut out of the above jetCand
   std::vector<int> jetCand1;
   jetCand1.clear();
-
+ 
   //This is the PU histogram obtained from Nick's recipe
   TFile *weights = TFile::Open("PU_Central.root");
   TH1D* PU = (TH1D*)weights->Get("pileup");
-  
-  //This is the file with EWK and NNLO corrections
+
+  //This is the root file with EWK Corrections
   TFile *file = new TFile("kfactors.root");
-  TH1D *ewkCorrection = (TH1D*)file->Get("EWKcorr/Z");
-  TH1D *NNLOCorrection = (TH1D*)file->Get("ZJets_LO/inv_pt");
- 
+  TH1D *ewkCorrection = (TH1D*)file->Get("EWKcorr/W");
+  TH1D *NNLOCorrection = (TH1D*)file->Get("WJets_LO/inv_pt");
   float dphimin=-99;
   //Event is rejected if it contains a HighPtMuon faking MET
 
@@ -114,22 +113,22 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
     //For each event we find the bin in the PU histogram that corresponds to puTrue->at(0) and store
     //binContent as event_weight
     int bin = PU->GetXaxis()->FindBin(puTrue->at(0));
-    event_weight = PU->GetBinContent(bin); 
-    //std::cout<<"event_weight: "<<event_weight<<std::endl;
+    event_weight = PU->GetBinContent(bin);
+    std::cout<<"event_weight: "<<event_weight<<std::endl;
     int bosonPID;
     double bosonPt;
-    bool Zfound = false;
+    bool Wfound = false;
     //check which mc particle is W boson
     for(int i=0; i<nMC;i++){
-      if((*mcPID)[i] == 23){
-        Zfound=true;
+      if((*mcPID)[i] == 24){
+        Wfound=true;
         bosonPID = (*mcPID)[i];
         bosonPt = (*mcPt)[i];
       }
     }
-    //if(Zfound){
-    //std::cout<<"bosonPID: "<<bosonPID<<std::endl;
-    //std::cout<<"bosonPt: "<<bosonPt<<std::endl;
+    //if(Wfound){
+    ////std::cout<<"bosonPID: "<<bosonPID<<std::endl;
+    ////std::cout<<"bosonPt: "<<bosonPt<<std::endl;
     //}
     jetCand = getJetCand(200,2.4,0.8,0.1);
     
@@ -137,6 +136,7 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
     TotalPFCandidates=ChargedPFCandidates=NeutralPFCandidates=GammaPFCandidates=0;
     PFCandidates = getPFCandidates();
     //std::cout<<"Vector of Pairs should have size 4: "<<PFCandidates.size()<<std::endl;
+    
     if(PFCandidates.size()>0){
       TotalPFCandidates=PFCandidates.at(0);}
       //std::cout<<"TotalPFCandidates: "<<TotalPFCandidates<<std::endl;}
@@ -152,7 +152,7 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
     if(PFCandidates.size()>3){
       NeutralPFCandidates=PFCandidates.at(3);}
       //std::cout<<"TotalNeutralPFCandidates: "<<NeutralPFCandidates<<std::endl;}
-    
+
     TwoChPFCons=TwoChPFConsPlusPho=0; 
     PF12PtFrac_ID_1=PF12PtFrac_ID_2=dR_PF12_ID_1=dR_PF12_ID_2=PF123PtFrac_ID_2=0.0;
     NoPosPFCons=NoNegPFCons=NoPhoPFCons=0;
@@ -244,24 +244,24 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
     metcut = (fabs(pfMET-caloMET))/pfMET;
     //std::cout<<"|caloMET-pfMET|/pfMET: "<<metcut<<std::endl;
     nTotalEvents+=event_weight;
-    if (metFilters==0)
+    if ((genHT<100) && metFilters==0)
       {
         EWK_corrected_weight = 1.0*(ewkCorrection->GetBinContent(ewkCorrection->GetXaxis()->FindBin(bosonPt)));
         NNLO_weight = 1.0*(NNLOCorrection->GetBinContent(NNLOCorrection->GetXaxis()->FindBin(bosonPt)));
         if(EWK_corrected_weight!=0 && NNLO_weight!=0){
           kfactor = (EWK_corrected_weight/NNLO_weight);}
-        else{kfactor=1.23;}
+        else{kfactor=1.21;}
         event_weight*=kfactor;
         nFilters+=event_weight;
 	      fillHistos(1,event_weight); 
-    	  if (true) 
-      	  {
-            nHLT+=event_weight;
-	          fillHistos(2,event_weight);
-	          if (jetCand.size()>0)
-	            {
-                nJetSelection+=event_weight;
-		            fillHistos(3,event_weight);
+         if (true) 
+      	    {
+              nHLT+=event_weight;
+	            fillHistos(2,event_weight);
+	            if (jetCand.size()>0)
+	              {
+                  nJetSelection+=event_weight;
+		              fillHistos(3,event_weight);
                   jetveto = JetVetoDecision();
 	    	          if (pfMET>250)
 	                   {
@@ -361,7 +361,7 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
    
 }//Closing the Loop function
 
-void ZprimeJetsClass_MC_ZJets::BookHistos(const char* file2)
+void ZprimeJetsClass_MC_WJets::BookHistos(const char* file2)
 {
   fileName = new TFile(file2, "RECREATE");
   tree = new TTree("ZprimeJet","ZprimeJet");
@@ -386,7 +386,7 @@ void ZprimeJetsClass_MC_ZJets::BookHistos(const char* file2)
 
   float PtBins[49]={200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,420.,440.,460.,480.,500.,520.,540.,560.,580.,600.,620.,640.,660.,680.,700.,720.,740.,760.,
     780.,800.,820.,840.,860.,880.,900.,920.,940.,960.,980.,1000.,1050.,1100.,1200.,1300.,1400.,1500.,2000.,2500.};
-
+ 
   h_dphimin = new TH1F("h_dphimin","h_dphimin; Minimum dPhiJetMET",50,0,3.2);h_dphimin->Sumw2();
   h_metcut  = new TH1F("h_metcut","h_metcut; |pfMET-caloMET|/pfMET", 50,0,1.2);h_metcut->Sumw2();
   for(int i=0; i<16; i++){
@@ -394,7 +394,7 @@ void ZprimeJetsClass_MC_ZJets::BookHistos(const char* file2)
      char ptbins[100];
      sprintf(ptbins, "_%d", i);
      std::string histname(ptbins);
-     h_nJets[i]   = new TH1F(("nJets"+histname).c_str(), "nJets;Number of Jets", 50, 0, 100);h_nJets[i]->Sumw2();
+     h_nJets[i]   = new TH1F(("nJets"+histname).c_str(), "nJets;Number of Jets", 50, 0, 100);h_nJets[i]->Sumw2(); 
      h_pfMETall[i] =  new TH1F(("pfMETall"+histname).c_str(), "pfMET",50,0,2000);h_pfMETall[i] ->Sumw2(); 
      h_pfMET200[i] = new TH1F(("pfMET200"+histname).c_str(), "pfMET",50,170,1500);h_pfMET200[i] ->Sumw2(); 
      h_pfMET[i] = new TH1F(("pfMET"+histname).c_str(), "E_{T}^{miss} (GeV)",48,MetBins);h_pfMET[i] ->Sumw2();
@@ -425,14 +425,14 @@ void ZprimeJetsClass_MC_ZJets::BookHistos(const char* file2)
   }
 }
 
-//double ZprimeJetsClass_MC_ZJets::dR(double jetetaWidth, double jetphiWidth)
+//double ZprimeJetsClass_MC_WJets::dR(double jetetaWidth, double jetphiWidth)
 //{
 //  double deltar = sqrt(jetetaWidth*jetetaWidth + jetphiWidth*jetphiWidth);
 //  return deltar;
 //}
 
 
-void ZprimeJetsClass_MC_ZJets::fillHistos(int histoNumber,double event_weight)
+void ZprimeJetsClass_MC_WJets::fillHistos(int histoNumber,double event_weight)
 {
   h_nVtx[histoNumber]->Fill(nVtx,event_weight);
   h_nJets[histoNumber]->Fill(nJet,event_weight);
@@ -466,7 +466,7 @@ void ZprimeJetsClass_MC_ZJets::fillHistos(int histoNumber,double event_weight)
   h_j1nCons[histoNumber]->Fill((j1nPhotons+j1nCHPions+j1nMisc),event_weight);
 }
 //Function to calculate regular deltaR separate from jet width variable 'dR'
-double ZprimeJetsClass_MC_ZJets::deltaR(double eta1, double phi1, double eta2, double phi2)
+double ZprimeJetsClass_MC_WJets::deltaR(double eta1, double phi1, double eta2, double phi2)
 {
   double deltaeta = abs(eta1 - eta2);
   double deltaphi = DeltaPhi(phi1, phi2);
@@ -476,7 +476,7 @@ double ZprimeJetsClass_MC_ZJets::deltaR(double eta1, double phi1, double eta2, d
 
 //Gives the (minimum) separation in phi between the specified phi values
 ////Must return a positive value
-float ZprimeJetsClass_MC_ZJets::DeltaPhi(float phi1, float phi2)
+float ZprimeJetsClass_MC_WJets::DeltaPhi(float phi1, float phi2)
 {
   float pi = TMath::Pi();
   float dphi = fabs(phi1-phi2);
@@ -485,7 +485,7 @@ float ZprimeJetsClass_MC_ZJets::DeltaPhi(float phi1, float phi2)
   return dphi;
 }
 
-float ZprimeJetsClass_MC_ZJets::dPhiJetMETmin(std::vector<int> jets)
+float ZprimeJetsClass_MC_WJets::dPhiJetMETmin(std::vector<int> jets)
 {
   float dPhimin=TMath::Pi();
   int njetsMax = jets.size();
@@ -501,7 +501,7 @@ float ZprimeJetsClass_MC_ZJets::dPhiJetMETmin(std::vector<int> jets)
    }
   return dPhimin;
 }
-std::vector<int> ZprimeJetsClass_MC_ZJets::getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut){
+std::vector<int> ZprimeJetsClass_MC_WJets::getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut){
 
   std::vector<int> tmpCand;
   tmpCand.clear();
@@ -520,7 +520,7 @@ std::vector<int> ZprimeJetsClass_MC_ZJets::getJetCand(double jetPtCut, double je
 
 }
 
-std::vector<int> ZprimeJetsClass_MC_ZJets::JetVetoDecision() {
+std::vector<int> ZprimeJetsClass_MC_WJets::JetVetoDecision() {
 
   bool jetVeto=true;
   std::vector<int> jetindex;
@@ -538,8 +538,9 @@ std::vector<int> ZprimeJetsClass_MC_ZJets::JetVetoDecision() {
   return jetindex;
 
 }
+
 //Return a vector of pairs. "0" = #pfCands, "1"=#chargedPFCands , "3"=#neutralPFCands,"2"=#photonPFCands
-std::vector<int>ZprimeJetsClass_MC_ZJets::getPFCandidates(){
+std::vector<int>ZprimeJetsClass_MC_WJets::getPFCandidates(){
   std::vector<int>PFCands;
   for(int i=0;i<nJet;i++)
   {
@@ -568,7 +569,7 @@ std::vector<int>ZprimeJetsClass_MC_ZJets::getPFCandidates(){
   }
   return PFCands;
 }
-bool ZprimeJetsClass_MC_ZJets::btagVeto() {
+bool ZprimeJetsClass_MC_WJets::btagVeto() {
 
   bool btagVeto = true;
   for(int i = 0; i < nJet; i++)
@@ -579,7 +580,7 @@ bool ZprimeJetsClass_MC_ZJets::btagVeto() {
   return btagVeto;
 }
 
-bool ZprimeJetsClass_MC_ZJets::dPhiJetMETcut(std::vector<int> jets)
+bool ZprimeJetsClass_MC_WJets::dPhiJetMETcut(std::vector<int> jets)
 {
   //reject jet if it is found within DeltaPhi(jet,MET) < 0.5                                                                                              \
   
@@ -604,7 +605,7 @@ bool ZprimeJetsClass_MC_ZJets::dPhiJetMETcut(std::vector<int> jets)
   return passes;
 
 }
-bool ZprimeJetsClass_MC_ZJets::electron_veto_looseID(int jet_index, float elePtCut)
+bool ZprimeJetsClass_MC_WJets::electron_veto_looseID(int jet_index, float elePtCut)
 {
   bool veto_passed = true; //pass veto if no good electron found
   
@@ -693,7 +694,7 @@ bool ZprimeJetsClass_MC_ZJets::electron_veto_looseID(int jet_index, float elePtC
     }             
   return veto_passed;
 }                  
-bool ZprimeJetsClass_MC_ZJets::muon_veto_looseID(int jet_index, float muPtCut)
+bool ZprimeJetsClass_MC_WJets::muon_veto_looseID(int jet_index, float muPtCut)
 {
   bool veto_passed = true; //pass veto if no good muon found 
   bool pass_iso = false;  

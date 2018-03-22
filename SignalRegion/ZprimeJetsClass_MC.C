@@ -73,6 +73,9 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
   std::vector<int> jetveto;
   jetveto.clear();
 
+  double nTotalEvents,nFilters, nHLT, nMET200, nMETcut,nLeptonIDs,nbtagVeto, nDphiJetMET,nJetSelection;
+  nTotalEvents = nFilters = nHLT = nMET200 = nMETcut = nLeptonIDs = nDphiJetMET = nbtagVeto = nJetSelection = 0;
+
   //getPFCandidates
   std::vector<int>PFCandidates;
   
@@ -106,7 +109,7 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
     int bin = PU->GetXaxis()->FindBin(puTrue->at(0));
     event_weight = PU->GetBinContent(bin);
     std::cout<<"event_weight: "<<event_weight<<std::endl; 
-    jetCand = getJetCand(100,2.4,0.8,0.1);
+    jetCand = getJetCand(200,2.4,0.8,0.1);
 
     //getPFCandidatesMethod
     TotalPFCandidates=ChargedPFCandidates=NeutralPFCandidates=GammaPFCandidates=0;
@@ -136,7 +139,7 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
     //We are using these conditions so we only calculate the following quantities for the signal we are interested in
     //This will also make it faster to process the events
     //std::cout<<"size of j1PFConsPID: "<<j1PFConsPID->size()<<std::endl;
-    if(pfMET>300 && jetCand.size()>0){
+    if(pfMET>250 && jetCand.size()>0){
     //Positively charged hadron Cons of the Pencil Jet
        if(j1PFConsPID->size()>0 && j1PFConsPID->at(0)==+211)
        {
@@ -218,28 +221,36 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
     float metcut= 0.0;
     metcut = (fabs(pfMET-caloMET))/pfMET;
     //std::cout<<"|caloMET-pfMET|/pfMET: "<<metcut<<std::endl;
-    if ((genHT<100) && (metFilters==0))
-      {
+    nTotalEvents+=event_weight;
+    if (metFilters==0)
+      { 
+        nFilters+=event_weight;
 	      fillHistos(1,event_weight); 
-    	  if (pfMET>170) 
+    	  if (true) 
       	  {
+            nHLT+=event_weight;
 	          fillHistos(2,event_weight);
 	          if (jetCand.size()>0)
 	              {
+                  nJetSelection+=event_weight;
 		              fillHistos(3,event_weight);
                   jetveto = JetVetoDecision();
-	    	          if (pfMET>200)
+	    	          if (pfMET>250)
 	                   {
+                       nMET200+=event_weight;
 		                   fillHistos(4,event_weight);
-                       h_metcut->Fill(metcut);
+                       h_metcut->Fill(metcut,event_weight);
 		                   if(metcut<0.5)
 		                      {
+                            nMETcut+=event_weight;
 			                      fillHistos(5,event_weight);
 			                      if(electron_veto_looseID(jetCand[0],10) &&  muon_veto_looseID(jetCand[0],10))
 			                         {
+                                nLeptonIDs+=event_weight;
 				                        fillHistos(6,event_weight);
                                 if(btagVeto())
 				                          {
+                                    nbtagVeto+=event_weight;
 				                            fillHistos(7,event_weight);
 			                              double minDPhiJetMET = TMath::Pi();
 			                              double minDPhiJetMET_first4 = TMath::Pi();
@@ -252,9 +263,10 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
                                                 minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);}
                                                    } 
                                                   }
-  		                                            h_dphimin->Fill(minDPhiJetMET_first4);	
-			                                            if(dPhiJetMETcut(jetveto) && jetPt->at(0) >=200)
+  		                                            h_dphimin->Fill(minDPhiJetMET_first4,event_weight);	
+			                                            if(dPhiJetMETcut(jetveto))
 			                                              {
+                                                      nDphiJetMET+=event_weight;
 			                                                fillHistos(8,event_weight);
                                                       //Category 1: Exactly Two Charged Hadrons
                                                       if(TwoChPFCons==1)
@@ -305,6 +317,15 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
   
   }
    
+  h_cutflow->SetBinContent(1,nTotalEvents); 
+  h_cutflow->SetBinContent(2,nFilters);
+  h_cutflow->SetBinContent(3,nHLT);
+  h_cutflow->SetBinContent(4,nJetSelection);
+  h_cutflow->SetBinContent(5,nMET200);
+  h_cutflow->SetBinContent(6,nMETcut);
+  h_cutflow->SetBinContent(7,nLeptonIDs);
+  h_cutflow->SetBinContent(8,nbtagVeto);
+  h_cutflow->SetBinContent(9,nDphiJetMET);
    
    //save the histograms
 //   histFile->Write();
@@ -318,13 +339,24 @@ void ZprimeJetsClass_MC::BookHistos(const char* file2)
   tree = new TTree("ZprimeJet","ZprimeJet");
   fileName->cd();
 
+  h_cutflow = new TH1D("h_cutflow","h_cutflow",9,0,9);h_cutflow->Sumw2();
+  h_cutflow->GetXaxis()->SetBinLabel(1,"Total Events");
+  h_cutflow->GetXaxis()->SetBinLabel(2,"metFilters");
+  h_cutflow->GetXaxis()->SetBinLabel(3,"Trigger");
+  h_cutflow->GetXaxis()->SetBinLabel(4,"GoodJet");
+  h_cutflow->GetXaxis()->SetBinLabel(5,"MetCut");
+  h_cutflow->GetXaxis()->SetBinLabel(6,"caloMET cut");
+  h_cutflow->GetXaxis()->SetBinLabel(7,"LeptonIDs");
+  h_cutflow->GetXaxis()->SetBinLabel(8,"B-JetVeto");
+  h_cutflow->GetXaxis()->SetBinLabel(9,"DeltaPhiCut");
+
   float MtBins[51]={180.,200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,420.,440.,460.,480.,500.,520.,540.,560.,580.,600.,620.,640.,660.,680.,700.,720.,740.,760.,
     780.,800.,820.,840.,860.,880.,900.,920.,940.,960.,980.,1000.,1050.,1100.,1200.,1300.,1400.,1500.,2000.,2500.,3000.};
   
-  float MetBins[51]={160,180.,200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,420.,440.,460.,480.,500.,520.,540.,560.,580.,600.,620.,640.,660.,680.,700.,720.,740.,760.,
+  float MetBins[49]={200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,420.,440.,460.,480.,500.,520.,540.,560.,580.,600.,620.,640.,660.,680.,700.,720.,740.,760.,
     780.,800.,820.,840.,860.,880.,900.,920.,940.,960.,980.,1000.,1050.,1100.,1200.,1300.,1400.,1500.,2000.,2500.};
 
-  float PtBins[51]={160,180.,200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,420.,440.,460.,480.,500.,520.,540.,560.,580.,600.,620.,640.,660.,680.,700.,720.,740.,760.,
+  float PtBins[49]={200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,420.,440.,460.,480.,500.,520.,540.,560.,580.,600.,620.,640.,660.,680.,700.,720.,740.,760.,
     780.,800.,820.,840.,860.,880.,900.,920.,940.,960.,980.,1000.,1050.,1100.,1200.,1300.,1400.,1500.,2000.,2500.};
 
   h_dphimin = new TH1F("h_dphimin","h_dphimin; Minimum dPhiJetMET",50,0,3.2);h_dphimin->Sumw2();
@@ -337,9 +369,9 @@ void ZprimeJetsClass_MC::BookHistos(const char* file2)
      h_nJets[i]   = new TH1F(("nJets"+histname).c_str(), "nJets;Number of Jets", 50, 0, 100);h_nJets[i]->Sumw2();
      h_pfMETall[i] =  new TH1F(("pfMETall"+histname).c_str(), "pfMET",50,0,2000);h_pfMETall[i] ->Sumw2(); 
      h_pfMET200[i] = new TH1F(("pfMET200"+histname).c_str(), "pfMET",50,170,1500);h_pfMET200[i] ->Sumw2(); 
-     h_pfMET[i] = new TH1F(("pfMET"+histname).c_str(), "E_{T}^{miss} (GeV)",50,MetBins);h_pfMET[i] ->Sumw2();
+     h_pfMET[i] = new TH1F(("pfMET"+histname).c_str(), "E_{T}^{miss} (GeV)",48,MetBins);h_pfMET[i] ->Sumw2();
      h_pfMETPhi[i] = new TH1F(("pfMETPhi"+histname).c_str(), "pfMETPhi",50,-4,4);h_pfMETPhi[i]->Sumw2();
-     h_j1Pt[i]  = new TH1F(("j1pT"+histname).c_str(), "j1pT;p_{T} of Leading Jet (GeV)", 50,PtBins);h_j1Pt[i]->Sumw2();
+     h_j1Pt[i]  = new TH1F(("j1pT"+histname).c_str(), "j1pT;p_{T} of Leading Jet (GeV)", 48,PtBins);h_j1Pt[i]->Sumw2();
      h_j1Eta[i] = new TH1F(("j1Eta"+histname).c_str(), "j1Eta; #eta of Leading Jet", 50, -2.5, 2.5);h_j1Eta[i]->Sumw2();
      h_j1Phi[i] = new TH1F(("j1Phi"+histname).c_str(), "j1Phi; #phi of Leading Jet", 50, -3.0, 3.0);h_j1Phi[i]->Sumw2();     
      h_j1etaWidth[i] = new TH1F(("j1etaWidth"+histname).c_str(),"j1etaWidh; #eta width of Leading Jet", 50,0,0.25);h_j1etaWidth[i] ->Sumw2();

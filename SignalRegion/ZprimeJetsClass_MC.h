@@ -64,6 +64,7 @@ public :
    TH1F *h_j1Pt[16], *h_j1Eta[16], *h_j1Phi[16], *h_j1etaWidth[16], *h_j1phiWidth[16],*h_j1nCons[16], *h_j1PF12PtFrac_ID_1[16], *h_j1PF12PtFrac_ID_2[16],*h_j1PFPtFrac_ID_2[16];  
    TH1F *h_j1TotPFCands[16], *h_j1ChPFCands[16], *h_j1NeutPFCands[16], *h_j1GammaPFCands[16], *h_j1CHF[16], *h_j1NHF[16], *h_j1ChMultiplicity[16], *h_j1NeutMultiplicity[16],*h_j1Mt[16]; 
    
+   TH1D *h_cutflow;
    // Fixed size dimensions of array or collections stored in the TTree if any.
 
    // Declaration of leaf types

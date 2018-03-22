@@ -65,6 +65,7 @@ public :
    TH1F *h_j1TotPFCands[16], *h_j1ChPFCands[16], *h_j1NeutPFCands[16], *h_j1GammaPFCands[16], *h_j1CHF[16], *h_j1NHF[16], *h_j1ChMultiplicity[16], *h_j1NeutMultiplicity[16],*h_j1Mt[16]; 
    // Fixed size dimensions of array or collections stored in the TTree if any.
 
+   TH1D *h_cutflow;
    // Declaration of leaf types
    Int_t           run;
    Long64_t        event;
