@@ -59,12 +59,16 @@ public :
 
    //getPFCandidates
    int TotalPFCandidates, ChargedPFCandidates,NeutralPFCandidates,GammaPFCandidates;
+
+   //JetEneregyScale
+   Float_t MET_to_use, METPhi_to_use;
    
-   TH1F *h_nVtx[16], *h_metcut, *h_dphimin,*h_metFilters[16],*h_pfMETall[16],*h_pfMET200[16],*h_nJets[16],*h_pfMET[16],*h_pfMETPhi[16],*h_j1nCategory1[16],*h_j1nCategory2[16],*h_j1dRPF12_ID_1[16],*h_j1dRPF12_ID_2[16];
-   TH1F *h_j1Pt[16], *h_j1Eta[16], *h_j1Phi[16], *h_j1etaWidth[16], *h_j1phiWidth[16],*h_j1nCons[16], *h_j1PF12PtFrac_ID_1[16], *h_j1PF12PtFrac_ID_2[16],*h_j1PFPtFrac_ID_2[16];  
-   TH1F *h_j1TotPFCands[16], *h_j1ChPFCands[16], *h_j1NeutPFCands[16], *h_j1GammaPFCands[16], *h_j1CHF[16], *h_j1NHF[16], *h_j1ChMultiplicity[16], *h_j1NeutMultiplicity[16],*h_j1Mt[16]; 
+   TH1F *h_nVtx[39], *h_metcut, *h_dphimin,*h_metFilters[39],*h_pfMETall[39],*h_pfMET200[39],*h_nJets[39],*h_pfMET[39],*h_pfMETPhi[39],*h_j1nCategory1[39],*h_j1nCategory2[39],*h_j1dRPF12_ID_1[39],*h_j1dRPF12_ID_2[39];
+   TH1F *h_j1Pt[39], *h_j1Eta[39], *h_j1Phi[39], *h_j1etaWidth[39], *h_j1phiWidth[39],*h_j1nCons[39], *h_j1PF12PtFrac_ID_1[39], *h_j1PF12PtFrac_ID_2[39],*h_j1PFPtFrac_ID_2[39];  
+   TH1F *h_j1TotPFCands[39], *h_j1ChPFCands[39], *h_j1NeutPFCands[39], *h_j1GammaPFCands[39], *h_j1CHF[39], *h_j1NHF[39], *h_j1ChMultiplicity[39], *h_j1NeutMultiplicity[39],*h_j1Mt[39]; 
    // Fixed size dimensions of array or collections stored in the TTree if any.
 
+   TH1D *h_cutflow;
    // Declaration of leaf types
    Int_t           run;
    Long64_t        event;
