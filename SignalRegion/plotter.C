@@ -64,8 +64,7 @@ std::string SampleName(const char * variable)
 void hs_save(const char * variable, std::vector<TH1F*> hs_list)
 {
   const char* hs_root = "../../Plots/Histogram.root";
-  const char* region = "SignalRegion/";
-  const char* type = "SignalRegion/";
+  const char* region = "SignalRegion";
   std::ifstream file(hs_root);
   if (file){file.close();}
   else
@@ -79,11 +78,6 @@ void hs_save(const char * variable, std::vector<TH1F*> hs_list)
       hs_file->mkdir(region);
     }
   hs_file->cd(region);
-  if (!(hs_file->GetDirectory(type)))
-    {
-      hs_file->mkdir(type);
-    }
-  hs_file->cd(type);
   for (int i = 0; i < hs_list.size(); i++)
     {
       hs_list[i]->Write();
@@ -94,7 +88,7 @@ void hs_save(const char * variable, std::vector<TH1F*> hs_list)
 std::vector<int> hs_sort(std::vector<TH1F*> hs_list)
 {
   std::vector<int> hs_index;
-  std::vector<float> hs_order;
+  std::vector<Double_t> hs_order;
   for (int i = 0; i < hs_list.size(); i++)
     {
       hs_order.push_back(hs_list[i]->Integral());
@@ -104,9 +98,10 @@ std::vector<int> hs_sort(std::vector<TH1F*> hs_list)
     {
       for (int j = 0; j < hs_list.size(); j++)
         {
-          if (fabs(hs_order[i] - hs_list[j]->Integral()) < sqrt(hs_order[i]))
+          float max = std::max(hs_order[i],hs_list[j]->Integral());
+          if (fabs(hs_order[i] - hs_list[j]->Integral()) <= (FLT_EPSILON*max) && hs_list[j]->Integral() != 0)
             {
-              hs_index.push_back(i);
+              hs_index.push_back(j);
               break;
             }
         }
@@ -127,7 +122,7 @@ void plotter(const char * variable,std::string name)
     }
   else
     {
-      system("hadd -f postMETdata_final.root postMETdata_{9..14}.root");
+      system("hadd -f postMETdata_final.root postMETdata_{0..2}.root");
     }
 
   TCanvas *c = new TCanvas("c", "canvas",800,800);
@@ -548,7 +543,7 @@ void plotter(const char * variable,std::string name)
   //Stack histograms using THStack
   THStack *hs_datamc = new THStack("hs_datamc","Data/MC comparison");
   std::vector<TH1F*> hs_list = {histo_j1EtaWidth_100to200,histo_j1EtaWidth_G1Jets,histo_j1EtaWidth_TTJets,histo_j1EtaWidth_Q1Jets,histo_j1EtaWidth_WW,histo_j1EtaWidth_DY1Jets,histo_j1EtaWidth_WJets_0};
-  //hs_save(variable,hs_list);
+  hs_save(variable,hs_list);
   std::vector<int> hs_index = hs_sort(hs_list);
   //hs_datamc->Add(histo_j1EtaWidth_WW);
   //hs_datamc->Add(histo_j1EtaWidth_100to200);
@@ -586,16 +581,16 @@ void plotter(const char * variable,std::string name)
   //double integralsignal_1GeV = histo_signal_1GeV->Integral(); 
   //std::cout<<"integral of signal_1GeV here:"<<integralsignal_1GeV<<std::endl;
 
-  //TFile *f_signal_5GeVfile = new TFile("postSignal.root");
-  //TH1F *histo_signal_5GeV = (TH1F*)f_signal_5GeVfile ->Get(variable);
-  //histo_signal_5GeV->Scale((1.0/2133)*35900*0.047);
-  //histo_signal_5GeV->SetLineColor(kBlue);
-  //histo_signal_5GeV->SetLineWidth(2);
-  //histo_signal_5GeV->Draw("HIST SAME");
-////
-  //double integralsignal_5GeV = histo_signal_5GeV->Integral(); 
-  //std::cout<<"integral of signal_5GeV here:"<<integralsignal_5GeV<<std::endl;
+  TFile *f_signal_5GeVfile = new TFile("postSignal.root");
+  TH1F *histo_signal_5GeV = (TH1F*)f_signal_5GeVfile ->Get(variable);
+  histo_signal_5GeV->Scale((1.0/2133)*35900*0.047);
+  histo_signal_5GeV->SetLineColor(kBlue);
+  histo_signal_5GeV->SetLineWidth(2);
+  histo_signal_5GeV->Draw("HIST SAME");
 
+  double integralsignal_5GeV = histo_signal_5GeV->Integral(); 
+  std::cout<<"integral of signal_5GeV here:"<<integralsignal_5GeV<<std::endl;
+  std::vector<TH1F*> signal = {histo_signal_5GeV};
 
   //TFile *f_signal_10GeVfile = new TFile("postSignal_mchi10GeV.root");
   //TH1F *histo_signal_10GeV = (TH1F*)f_signal_10GeVfile ->Get(variable);
@@ -640,9 +635,9 @@ void plotter(const char * variable,std::string name)
 
   //TLegend *leg = new TLegend(0.181948,0.663948,0.567335,0.836868,"");
   TLegend *leg = new TLegend(0.62,0.60,0.86,0.887173,"");
-  leg->AddEntry(histo_j1EtaWidth_data_0,"Data");
+  //leg->AddEntry(histo_j1EtaWidth_data_0,"Data");
   //leg->AddEntry(histo_signal_1GeV, "ZprimeSignal_mchi1GeV");
-  //leg->AddEntry(histo_signal_5GeV, "ZprimeSignal_mchi5GeV"); 
+  leg->AddEntry(histo_signal_5GeV, "ZprimeSignal_mchi5GeV"); 
   //leg->AddEntry(histo_signal_10GeV, "ZprimeSignal_mchi10GeV");
   //leg->AddEntry(histo_signal_20GeV, "ZprimeSignal_mchi20GeV"); 
   //leg->AddEntry(histo_signal_50GeV, "ZprimeSignal_mchi50GeV");
@@ -822,8 +817,8 @@ void plotter(const char * variable,std::string name)
   yaxis_right->Draw("SAME");  
  
 */
-  c->SaveAs((std::string("../../Plots/SinEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".pdf")).c_str());
-  c->SaveAs((std::string("../../Plots/SinEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".png")).c_str());
+  c->SaveAs((std::string("../../Plots/SignalRegionPlots_EWK/datamc_")+std::string(variable)+std::string(".pdf")).c_str());
+  c->SaveAs((std::string("../../Plots/SignalRegionPlots_EWK/datamc_")+std::string(variable)+std::string(".png")).c_str());
 }
 
 int main(int argc, const char *argv[])

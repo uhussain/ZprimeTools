@@ -247,31 +247,31 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
       {    
         nFilters+=event_weight;
         fillHistos(0,event_weight);
-	      //if ((HLTEleMuX>>4&1 == 1) || (HLTEleMuX>>38&1 == 1)) //"HLT_Ele27_WPTight_Gsf_v or HLT_Ele115_CaloIdVT_GsfTrkIdT_v"
+	//if ((HLTEleMuX>>4&1 == 1) || (HLTEleMuX>>38&1 == 1)) //"HLT_Ele27_WPTight_Gsf_v or HLT_Ele115_CaloIdVT_GsfTrkIdT_v"
         if (true)
-	        {
-	          nHLT+=event_weight;
-	          fillHistos(1,event_weight);
-	          if(jetCand.size()>0)
-	            {
-		            nJetSelection+=event_weight;
-		            EWK_corrected_weight = 1.0*(ewkCorrection->GetBinContent(ewkCorrection->GetXaxis()->FindBin(bosonPt)));
-		            NNLO_weight = 1.0*(NNLOCorrection->GetBinContent(NNLOCorrection->GetXaxis()->FindBin(bosonPt)));
-		            if(EWK_corrected_weight!=0 && NNLO_weight!=0){
-		              kfactor = (EWK_corrected_weight/NNLO_weight);}
-		            else{kfactor=1.23;}
-		            event_weight*=kfactor;
-		            //std::cout<<"kfactor: "<<kfactor<<std::endl; 
-		            //std::cout<<"event_weight: "<<event_weight<<std::endl;
-	      	      //CR code
-	      	      //At least one of the two electrons passes the tight selection
-	      	      std::vector<int> elelist;
-	      	      elelist.clear();
-	      	      std::vector<int> mulist = muon_veto_tightID(jetCand[0],30.0);
-	      	      std::vector<int> looseMus = muon_veto_looseID(jetCand[0],0,10.0);      
-	      	      if(mulist.size() == 1 && looseMus.size() == 1)
+	  {
+	    nHLT+=event_weight;
+	    fillHistos(1,event_weight);
+	    if(jetCand.size()>0)
+	      {
+		nJetSelection+=event_weight;
+		EWK_corrected_weight = 1.0*(ewkCorrection->GetBinContent(ewkCorrection->GetXaxis()->FindBin(bosonPt)));
+		NNLO_weight = 1.0*(NNLOCorrection->GetBinContent(NNLOCorrection->GetXaxis()->FindBin(bosonPt)));
+		if(EWK_corrected_weight!=0 && NNLO_weight!=0){
+		  kfactor = (EWK_corrected_weight/NNLO_weight);}
+		else{kfactor=1.23;}
+		event_weight*=kfactor;
+		//std::cout<<"kfactor: "<<kfactor<<std::endl;
+		//std::cout<<"event_weight: "<<event_weight<<std::endl;
+		//CR code
+		//At least one of the two electrons passes the tight selection
+		std::vector<int> elelist;
+		elelist.clear();
+		std::vector<int> mulist = muon_veto_tightID(jetCand[0],30.0);
+		std::vector<int> looseMus = muon_veto_looseID(jetCand[0],0,10.0);      
+		if(mulist.size() == 1 && looseMus.size() == 1)
                   { 
-	      	          lepindex = mulist[0];
+		    lepindex = mulist[0];
                     elelist = electron_veto_looseID(jetCand[0],lepindex,10.0);
                     jetveto = JetVetoDecision(jetCand[0],lepindex);
 
@@ -279,97 +279,97 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
                     lep_4vec.SetPtEtaPhiE(muPt->at(lepindex),muEta->at(lepindex),muPhi->at(lepindex),muEn->at(lepindex));
 
                     lepton_pt = lep_4vec.Pt();         
-	      	          TLorentzVector met_4vec;
-	      	          met_4vec.SetPtEtaPhiE(pfMET,0.,pfMETPhi,pfMET);
-	      	          TLorentzVector leptoMET_4vec = lep_4vec+met_4vec;
-	      	          Double_t leptoMET = fabs(leptoMET_4vec.Pt());
-	      	          Double_t leptoMET_phi = leptoMET_4vec.Phi();
-	      	          nCRSelection+=event_weight;
-	      	          Recoil = leptoMET;
+		    TLorentzVector met_4vec;
+		    met_4vec.SetPtEtaPhiE(pfMET,0.,pfMETPhi,pfMET);
+		    TLorentzVector leptoMET_4vec = lep_4vec+met_4vec;
+		    Double_t leptoMET = fabs(leptoMET_4vec.Pt());
+		    Double_t leptoMET_phi = leptoMET_4vec.Phi();
+		    nCRSelection+=event_weight;
+		    Recoil = leptoMET;
                     metcut = (fabs(pfMET-caloMET))/Recoil;
-	      	          fillHistos(2,event_weight);
-	      	          if (leptoMET>250)
-	      	            {
-	      	      	      //leptoMET_phi_to_use = leptoMET_phi;
-	      	      	      nMET200+=event_weight;
-	      	      	      fillHistos(3,event_weight);
-	      	      	      if(elelist.size() == 0)
-	      	      	        {
+		    fillHistos(2,event_weight);
+		    if (leptoMET>250)
+		      {
+			//leptoMET_phi_to_use = leptoMET_phi;
+			nMET200+=event_weight;
+			fillHistos(3,event_weight);
+			if(elelist.size() == 0)
+			  {
                             nNoElectrons+=event_weight;
-	      	      	          fillHistos(4,event_weight);
+			    fillHistos(4,event_weight);
                             Float_t dPhi_lepMET = DeltaPhi(muPhi->at(lepindex),pfMETPhi);
                             Float_t lepMET_MT = sqrt(2*muPt->at(lepindex)*pfMET*(1-TMath::Cos(dPhi_lepMET)));
                             h_lepMET_MT->Fill(lepMET_MT,event_weight);
                             if(lepMET_MT < 160)
                               {
 				lepMET_MT160+=event_weight;
-		          	              fillHistos(5,event_weight);
-	      	      	            h_metcut->Fill(metcut,event_weight);
-	      	      	            if(metcut<0.5)
-	      	      	              {
-	      	      		              nMETcut+=event_weight;
-	      	      		              fillHistos(6,event_weight);
-	      	      		              if(btagVeto())
-	      	      		                {
-	      	      		                  nbtagVeto+=event_weight;
-	      	      		                  fillHistos(7,event_weight);
-	      	      		                  double minDPhiJetMET = TMath::Pi();
-	      	      		                  double minDPhiJetMET_first4 = TMath::Pi();
-	      	      		                  for(int j = 0; j < jetveto.size(); j++)
-	      	      		                    {
-	      	      		              	      if(DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi) < minDPhiJetMET)
-	      	      		              	        {
-	      	      		              	          minDPhiJetMET = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);
-	      	      		              	          if(j < 4){
-	      	      		              	            minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);}
-	      	      		              	        } 
-	      	      		                    }
-	      	      		                  h_dphimin->Fill(minDPhiJetMET_first4,event_weight);	
-	      	      		                  if(dPhiJetMETcut(jetveto))
-	      	      		                    {
-	      	      		              	      nDphiJetMET+=event_weight;
-	      	      		              	      fillHistos(8,event_weight);
-	      	      		              	      //Category 1: Exactly Two Charged Hadrons
-	      	      		              	      if(TwoChPFCons==1)
-	      	      		              	        {
-	      	      		              	          fillHistos(9,event_weight);
-	      	      		              	          //Effectiveness of this cut in Category 1 Events
-	      	      		              	          if(PF12PtFrac_ID_1>0.7)
-	      	      		              	            {
-	      	      		              	      	      fillHistos(10,event_weight);}
-	      	      		              	        } 
-	      	      		              	      //Category 2: Two charged Hadrons + Photon
-	      	      		              	      if(TwoChPFConsPlusPho==1)
-	      	      		              	        {
-	      	      		              	          fillHistos(11,event_weight);
-	      	      		              	          //Effectiveness of this cut in Category 2 Events
-	      	      		              	          if(PF123PtFrac_ID_2>0.7)
-	      	      		              	            {
-	      	      		              	      	      fillHistos(12,event_weight);}
-	      	      		              	        }
-	      	      		              	      //Category of events with < 2 charged Hadrons
-	      	      		              	      if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
-	      	      		              	        {
-	      	      		              	          fillHistos(13,event_weight);
-	      	      		              	          //Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
-	      	      		              	          if(j1etaWidth<0.04)
-	      	      		              	            {
-	      	      		              	      	      fillHistos(14,event_weight);
-	      	      		              	            }}
-	      	      		              	      //This is for comparison with previous results (for all events)
-	      	      		              	      if (j1etaWidth<0.04)
-	      	      		              	        {
-	      	      		              	          fillHistos(15,event_weight);
-	      	      		              	        }
-	      	      		                          }
-	      	      		                      }   
-	      	      	                          }	
-	      	      	                }
-	      	                          }
-	      	        }
-	                  }
-	              }
-                  }
+				fillHistos(5,event_weight);
+				h_metcut->Fill(metcut,event_weight);
+				if(metcut<0.5)
+				  {
+				    nMETcut+=event_weight;
+				    fillHistos(6,event_weight);
+				    if(btagVeto())
+				      {
+					nbtagVeto+=event_weight;
+					fillHistos(7,event_weight);
+					double minDPhiJetMET = TMath::Pi();
+					double minDPhiJetMET_first4 = TMath::Pi();
+					for(int j = 0; j < jetveto.size(); j++)
+					  {
+					    if(DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi) < minDPhiJetMET)
+					      {
+						minDPhiJetMET = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);
+						if(j < 4){
+						  minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);}
+					      } 
+					  }
+					h_dphimin->Fill(minDPhiJetMET_first4,event_weight);	
+					if(dPhiJetMETcut(jetveto))
+					  {
+					    nDphiJetMET+=event_weight;
+					    fillHistos(8,event_weight);
+					    //Category 1: Exactly Two Charged Hadrons
+					    if(TwoChPFCons==1)
+					      {
+						fillHistos(9,event_weight);
+						//Effectiveness of this cut in Category 1 Events
+						if(PF12PtFrac_ID_1>0.7)
+						  {
+						    fillHistos(10,event_weight);}
+					      } 
+					    //Category 2: Two charged Hadrons + Photon
+					    if(TwoChPFConsPlusPho==1)
+					      {
+						fillHistos(11,event_weight);
+						//Effectiveness of this cut in Category 2 Events
+						if(PF123PtFrac_ID_2>0.7)
+						  {
+						    fillHistos(12,event_weight);}
+					      }
+					    //Category of events with < 2 charged Hadrons
+					    if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
+					      {
+						fillHistos(13,event_weight);
+						//Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
+						if(j1etaWidth<0.04)
+						  {
+						    fillHistos(14,event_weight);
+						  }}
+					    //This is for comparison with previous results (for all events)
+					    if (j1etaWidth<0.04)
+					      {
+						fillHistos(15,event_weight);
+					      }
+					  }
+				      }   
+				  }	
+			      }
+			  }
+		      }
+		  }
+	      }
+	  }
       }
     tree->Fill();
     

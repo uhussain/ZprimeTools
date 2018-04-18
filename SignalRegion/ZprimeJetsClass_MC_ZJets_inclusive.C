@@ -246,7 +246,7 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
     METPhi_to_use = pfMETPhi;
     //std::cout<<"|caloMET-pfMET|/pfMET: "<<metcut<<std::endl;
     nTotalEvents+=event_weight;
-    if (genHT<100 && metFilters==0)
+    if (genHT < 100 && metFilters==0)
       {
         EWK_corrected_weight = 1.0*(ewkCorrection->GetBinContent(ewkCorrection->GetXaxis()->FindBin(bosonPt)));
         NNLO_weight = 1.0*(NNLOCorrection->GetBinContent(NNLOCorrection->GetXaxis()->FindBin(bosonPt)));
@@ -695,8 +695,7 @@ bool ZprimeJetsClass_MC_ZJets::btagVeto() {
 
 bool ZprimeJetsClass_MC_ZJets::dPhiJetMETcut(std::vector<int> jets)
 {
-  //reject jet if it is found within DeltaPhi(jet,MET) < 0.5                                                                                              \
-  
+  //reject jet if it is found within DeltaPhi(jet,MET) < 0.5
   bool passes = false;
 
   int njetsMax = jets.size();

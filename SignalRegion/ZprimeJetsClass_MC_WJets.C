@@ -48,8 +48,6 @@ int main(int argc, const char* argv[])
       std::cout<<"Please enter a valid value for reportEvery (parameter 4)."<<std::endl;
       return 1;
     }
-  int include = atof(argv[5]);
-
   ZprimeJetsClass_MC_WJets t(argv[1],argv[2]);
   
   t.Loop(maxEvents,reportEvery);

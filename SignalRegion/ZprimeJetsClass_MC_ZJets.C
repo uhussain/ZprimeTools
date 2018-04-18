@@ -695,8 +695,7 @@ bool ZprimeJetsClass_MC_ZJets::btagVeto() {
 
 bool ZprimeJetsClass_MC_ZJets::dPhiJetMETcut(std::vector<int> jets)
 {
-  //reject jet if it is found within DeltaPhi(jet,MET) < 0.5                                                                                              \
-  
+  //reject jet if it is found within DeltaPhi(jet,MET) < 0.5
   bool passes = false;
 
   int njetsMax = jets.size();

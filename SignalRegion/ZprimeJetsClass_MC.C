@@ -48,15 +48,13 @@ int main(int argc, const char* argv[])
       std::cout<<"Please enter a valid value for reportEvery (parameter 4)."<<std::endl;
       return 1;
     }
-  int  include = atof(argv[5]);
-
   ZprimeJetsClass_MC t(argv[1],argv[2]);
   
-  t.Loop(maxEvents,reportEvery,include);
+  t.Loop(maxEvents,reportEvery);
   return 0;
 }
 
-void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery,int include)
+void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
 {
   if (fChain == 0) return;
   int nTotal;
@@ -151,8 +149,7 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery,int include)
     //For each event we find the bin in the PU histogram that corresponds to puTrue->at(0) and store
     //binContent as event_weight
     int bin = PU->GetXaxis()->FindBin(puTrue->at(0));
-    event_weight = PU->GetBinContent(bin);
-    std::cout<<"event_weight: "<<event_weight<<std::endl; 
+    event_weight = PU->GetBinContent(bin); 
     jetCand = getJetCand(200,2.4,0.8,0.1);
 
     //getPFCandidatesMethod

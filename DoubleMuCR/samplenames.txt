@@ -10,11 +10,13 @@ nJets
 Number of Jets
 j1pT
 Leading Jet P_{T} (GeV)
-LeptonPt
+subleadingLeptonPt
+Trailing Lepton P_{T} (GeV)
+subleadingLeptonEta
+Trailing Lepton #eta
+leadingLeptonPt
 Leading Lepton P_{T} (GeV)
-LeptonEta
+leadingLeptonEta
 Leading Lepton #eta
 j1etaWidth
 Leading Jet #eta Width
-LeptonPhi
-Leading Lepton #phi

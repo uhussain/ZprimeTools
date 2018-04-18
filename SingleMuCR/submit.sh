@@ -44,7 +44,7 @@ echo "Do the CR data samples"
 
 ./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset7/171113_142459/0003/ postSingleMu_18.root -1 10000 Mu_18  
 
-./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset8/171113_142527/0000/ postSingleMu_19.root -1 10000 Mu_19 
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_13Nov_SR/MET/crab_dataset8/171113_142527/0000/ postSingleMu_19.root -1 10000 Mu_19
 
 echo "Do the MC samples"
 

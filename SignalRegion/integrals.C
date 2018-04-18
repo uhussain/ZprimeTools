@@ -23,7 +23,6 @@
 #include "TLegend.h"
 #include "TLatex.h"
 #include "TGaxis.h"
-#include "TKey.h"
 #include "iostream"
 #include "stdlib.h"
 #include "fstream"
@@ -62,10 +61,11 @@ std::string SampleName(const char * variable)
   return name;
 }
 
-void hs_save(const char * variable, TH1F* histo)
+void hs_save(const char * variable, std::vector<TH1F*> hs_list)
 {
   const char* hs_root = "../../Plots/Histogram.root";
-  const char* region = "SingleEleCR";
+  const char* region = "ControlRegion";
+  const char* type = "ControlRegion/SingleEle";
   std::ifstream file(hs_root);
   if (file){file.close();}
   else
@@ -79,11 +79,15 @@ void hs_save(const char * variable, TH1F* histo)
       hs_file->mkdir(region);
     }
   hs_file->cd(region);
-  if (gDirectory->GetListOfKeys()->Contains(histo->GetName()))
+  if (!(hs_file->GetDirectory(type)))
     {
-      gDirectory->Delete((std::string(histo->GetName())+";1").c_str());
+      hs_file->mkdir(type);
     }
-  histo->Write();
+  hs_file->cd(type);
+  for (int i = 0; i < hs_list.size(); i++)
+    {
+      hs_list[i]->Write();
+    }
   hs_file->Close();
 }
   
@@ -115,16 +119,15 @@ void plotter(const char * variable,std::string name)
 {
   double lumi_1 = 3723.664;
   double lumi_2 = 35900.;
-
-  std::cout << name << std::endl;
-  std::ifstream file("postSingleEle_final.root");
+  std::cout<<name<<std::endl;
+  std::ifstream file("postMETdata_final.root");
   if (file)
     {
       file.close();
     }
   else
     {
-      system("hadd -f postSingleEle_final.root postSingleEle_{0..19}.root");
+      system("hadd -f postMETdata_final.root postMETdata_{0..2}.root");
     }
 
   TCanvas *c = new TCanvas("c", "canvas",800,800);
@@ -141,7 +144,7 @@ void plotter(const char * variable,std::string name)
   pad1->SetBottomMargin(0.);
   
   //opening the data file and adding "h_dileptonM_8" histogram
-  TFile *f_datafile_0 = new TFile("postSingleEle_final.root");
+  TFile *f_datafile_0 = new TFile("postMETdata_final.root");
   //TFile *f_datafile_1 = new TFile("postMETdata_1.root");
   TH1F *histo_j1EtaWidth_data_0 = (TH1F*)f_datafile_0->Get(variable);
   //TH1F *histo_j1EtaWidth_data_1 = (TH1F*)f_datafile_1->Get(variable);
@@ -219,7 +222,7 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_WJets_0->GetYaxis()->SetTickLength(0);
   histo_j1EtaWidth_WJets_0->GetYaxis()->SetLabelOffset(999);
   histo_j1EtaWidth_WJets_0->SetFillColor(kRed-10);
-
+  
   std::vector<const char *> Zvv_FileNames = {"postZ100to200_0.root","postZ200to400_0.root","postZ400to600_0.root","postZ600to800_0.root","postZ800to1200_0.root","postZ1200to2500_0.root","postZ2500toInf_0.root"};
   std::vector<TFile *> Zvv_Files;
   for (int i = 0; i < Zvv_FileNames.size(); i++) {Zvv_Files.push_back(new TFile(Zvv_FileNames[i]));}
@@ -376,7 +379,7 @@ void plotter(const char * variable,std::string name)
 
   double integralDY = histo_j1EtaWidth_DY1Jets->Integral();
   std::cout<<"integral of DYJets bkg here:"<<integralDY<<std::endl;
-
+  
   //opening background TTJets
   std::vector<const char *> TTJets_FileNames = {"postTTJets_MLM.root"};
   std::vector<TFile *> TTJets_Files;
@@ -521,6 +524,15 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_Q7Jets->Scale((1.0/QJets_Total[6])*35900*121.5);
   histo_j1EtaWidth_Q8Jets->Scale((1.0/QJets_Total[7])*35900*25.42);
 
+  std::cout<<QJets_FileNames[0]<<": "<<histo_j1EtaWidth_Q1Jets->Integral()<<" | "<<QJets_Total[0]<<std::endl;
+  std::cout<<QJets_FileNames[1]<<": "<<histo_j1EtaWidth_Q2Jets->Integral()<<" | "<<QJets_Total[1]<<std::endl;
+  std::cout<<QJets_FileNames[2]<<": "<<histo_j1EtaWidth_Q3Jets->Integral()<<" | "<<QJets_Total[2]<<std::endl;
+  std::cout<<QJets_FileNames[3]<<": "<<histo_j1EtaWidth_Q4Jets->Integral()<<" | "<<QJets_Total[3]<<std::endl;
+  std::cout<<QJets_FileNames[4]<<": "<<histo_j1EtaWidth_Q5Jets->Integral()<<" | "<<QJets_Total[4]<<std::endl;
+  std::cout<<QJets_FileNames[5]<<": "<<histo_j1EtaWidth_Q6Jets->Integral()<<" | "<<QJets_Total[5]<<std::endl;
+  std::cout<<QJets_FileNames[6]<<": "<<histo_j1EtaWidth_Q7Jets->Integral()<<" | "<<QJets_Total[6]<<std::endl;
+  std::cout<<QJets_FileNames[7]<<": "<<histo_j1EtaWidth_Q8Jets->Integral()<<" | "<<QJets_Total[7]<<std::endl;
+
   histo_j1EtaWidth_Q1Jets->Add(histo_j1EtaWidth_Q2Jets);
   histo_j1EtaWidth_Q1Jets->Add(histo_j1EtaWidth_Q3Jets);
   histo_j1EtaWidth_Q1Jets->Add(histo_j1EtaWidth_Q4Jets);
@@ -543,8 +555,9 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_Q1Jets->SetFillColor(kGray);
 
   //Stack histograms using THStack
-  THStack *hs_datamc = new THStack("hs_datamc","Data/MC comparison");
+  /*THStack *hs_datamc = new THStack("hs_datamc","Data/MC comparison");
   std::vector<TH1F*> hs_list = {histo_j1EtaWidth_100to200,histo_j1EtaWidth_G1Jets,histo_j1EtaWidth_TTJets,histo_j1EtaWidth_Q1Jets,histo_j1EtaWidth_WW,histo_j1EtaWidth_DY1Jets,histo_j1EtaWidth_WJets_0};
+  //hs_save(variable,hs_list);
   std::vector<int> hs_index = hs_sort(hs_list);
   //hs_datamc->Add(histo_j1EtaWidth_WW);
   //hs_datamc->Add(histo_j1EtaWidth_100to200);
@@ -582,15 +595,15 @@ void plotter(const char * variable,std::string name)
   //double integralsignal_1GeV = histo_signal_1GeV->Integral(); 
   //std::cout<<"integral of signal_1GeV here:"<<integralsignal_1GeV<<std::endl;
 
-  //TFile *f_signal_5GeVfile = new TFile("postSignal.root");
-  //TH1F *histo_signal_5GeV = (TH1F*)f_signal_5GeVfile ->Get(variable);
-  //histo_signal_5GeV->Scale((1.0/2133)*35900*0.047);
-  //histo_signal_5GeV->SetLineColor(kBlue);
-  //histo_signal_5GeV->SetLineWidth(2);
-  //histo_signal_5GeV->Draw("HIST SAME");
-////
-  //double integralsignal_5GeV = histo_signal_5GeV->Integral(); 
-  //std::cout<<"integral of signal_5GeV here:"<<integralsignal_5GeV<<std::endl;
+  TFile *f_signal_5GeVfile = new TFile("postSignal.root");
+  TH1F *histo_signal_5GeV = (TH1F*)f_signal_5GeVfile ->Get(variable);
+  histo_signal_5GeV->Scale((1.0/2133)*35900*0.047);
+  histo_signal_5GeV->SetLineColor(kBlue);
+  histo_signal_5GeV->SetLineWidth(2);
+  histo_signal_5GeV->Draw("HIST SAME");
+
+  double integralsignal_5GeV = histo_signal_5GeV->Integral(); 
+  std::cout<<"integral of signal_5GeV here:"<<integralsignal_5GeV<<std::endl;
 
 
   //TFile *f_signal_10GeVfile = new TFile("postSignal_mchi10GeV.root");
@@ -636,9 +649,9 @@ void plotter(const char * variable,std::string name)
 
   //TLegend *leg = new TLegend(0.181948,0.663948,0.567335,0.836868,"");
   TLegend *leg = new TLegend(0.62,0.60,0.86,0.887173,"");
-  leg->AddEntry(histo_j1EtaWidth_data_0,"Data");
+  //leg->AddEntry(histo_j1EtaWidth_data_0,"Data");
   //leg->AddEntry(histo_signal_1GeV, "ZprimeSignal_mchi1GeV");
-  //leg->AddEntry(histo_signal_5GeV, "ZprimeSignal_mchi5GeV"); 
+  leg->AddEntry(histo_signal_5GeV, "ZprimeSignal_mchi5GeV"); 
   //leg->AddEntry(histo_signal_10GeV, "ZprimeSignal_mchi10GeV");
   //leg->AddEntry(histo_signal_20GeV, "ZprimeSignal_mchi20GeV"); 
   //leg->AddEntry(histo_signal_50GeV, "ZprimeSignal_mchi50GeV");
@@ -818,20 +831,17 @@ void plotter(const char * variable,std::string name)
   yaxis_right->Draw("SAME");  
  
 */
-  c->SaveAs((std::string("../../Plots/SinEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".pdf")).c_str());
-  c->SaveAs((std::string("../../Plots/SinEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".png")).c_str());
+  //c->SaveAs((std::string("../../Plots/SignalRegionPlots_EWK/datamc_")+std::string(variable)+std::string(".pdf")).c_str());
+  //c->SaveAs((std::string("../../Plots/SignalRegionPlots_EWK/datamc_")+std::string(variable)+std::string(".png")).c_str());
 }
 
 int main(int argc, const char *argv[])
 {
-  std::vector<const char*> variable;
-  for (int i = 1; i < argc; i++)
-    {
-      variable.push_back(argv[i]);
-    }
+  std::vector<const char*> variable = {"pfMET_8","pfMET_20","pfMET_32"};
+  std::vector<std::string> type = {"Base","Up","Down"};
   for (int i = 0; i < variable.size(); i++)
     {
-      std::string name = SampleName(variable[i]);
+      std::string name = type[i];
       plotter(variable[i],name);
     } 
   return 0;

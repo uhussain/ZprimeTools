@@ -64,8 +64,7 @@ std::string SampleName(const char * variable)
 void hs_save(const char * variable, std::vector<TH1F*> hs_list)
 {
   const char* hs_root = "../../Plots/Histogram.root";
-  const char* region = "ControlRegion";
-  const char* type = "ControlRegion/SingleMu";
+  const char* region = "SingleMuCR";
   std::ifstream file(hs_root);
   if (file){file.close();}
   else
@@ -79,11 +78,6 @@ void hs_save(const char * variable, std::vector<TH1F*> hs_list)
       hs_file->mkdir(region);
     }
   hs_file->cd(region);
-  if (!(hs_file->GetDirectory(type)))
-    {
-      hs_file->mkdir(type);
-    }
-  hs_file->cd(type);
   for (int i = 0; i < hs_list.size(); i++)
     {
       hs_list[i]->Write();
@@ -94,7 +88,7 @@ void hs_save(const char * variable, std::vector<TH1F*> hs_list)
 std::vector<int> hs_sort(std::vector<TH1F*> hs_list)
 {
   std::vector<int> hs_index;
-  std::vector<float> hs_order;
+  std::vector<Double_t> hs_order;
   for (int i = 0; i < hs_list.size(); i++)
     {
       hs_order.push_back(hs_list[i]->Integral());
@@ -823,8 +817,8 @@ void plotter(const char * variable,std::string name)
   yaxis_right->Draw("SAME");  
  
 */
-  c->SaveAs((std::string("../../Plots/SinEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".pdf")).c_str());
-  c->SaveAs((std::string("../../Plots/SinEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".png")).c_str());
+  c->SaveAs((std::string("../../Plots/SinMuCRPlots_EWK/datamc_")+std::string(variable)+std::string(".pdf")).c_str());
+  c->SaveAs((std::string("../../Plots/SinMuCRPlots_EWK/datamc_")+std::string(variable)+std::string(".png")).c_str());
 }
 
 int main(int argc, const char *argv[])

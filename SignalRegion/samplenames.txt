@@ -4,8 +4,6 @@ cutflow
 Cutflow
 recoil
 Recoil (GeV)
-pfMET
-pfMET (GeV)
 dileptonPt
 Z P_{T} (GeV)
 nJets
@@ -20,3 +18,7 @@ j1etaWidth
 Leading Jet #eta Width
 LeptonPhi
 Leading Lepton #phi
+j1PF12PtFrac_ID_1
+P^{12}_{T} Fraction
+j1PFPtFrac_ID_2
+P^{123}_{T} Fraction
