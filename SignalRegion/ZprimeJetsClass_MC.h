@@ -53,11 +53,8 @@ public :
 
    //Declaring these jet Vectors and jet substructure vectors
    std::vector<int> jetCand;
-<<<<<<< HEAD
    std::vector<int> jetCandUp;
    std::vector<int> jetCandDown;
-=======
->>>>>>> 0e0ec63be75ea1cdb06cfeea8422edebda9dcb63
    std::vector<double>j1PFConsPt;
    std::vector<double>j1PFConsEta;
    std::vector<double>j1PFConsPhi;
@@ -78,19 +75,11 @@ public :
    //JetEnergyScale
    Float_t MET_to_use, METPhi_to_use;
    
-<<<<<<< HEAD
    TH1F *h_nVtx[75],*h_metcut, *h_dphimin,*h_metFilters[75],*h_pfMETall[75],*h_pfMET200[75],*h_nJets[75],*h_pfMET[75],*h_pfMETPhi[75],*h_j1nCategory1[75],*h_j1nCategory2[75],*h_j1dRPF12_ID_1[75],*h_j1dRPF12_ID_2[75];
    TH1F *h_j1Pt[75], *h_j1Eta[75], *h_j1Phi[75], *h_j1etaWidth[75], *h_j1phiWidth[75],*h_j1nCons[75], *h_j1PF12PtFrac_ID_1[75], *h_j1PF12PtFrac_ID_2[75],*h_j1PFPtFrac_ID_2[75],*h_PF123PtFraction[75];  
    TH1F *h_j1TotPFCands[75], *h_j1ChPFCands[75], *h_j1NeutPFCands[75], *h_j1GammaPFCands[75], *h_j1CHF[75], *h_j1NHF[75], *h_j1ChMultiplicity[75], *h_j1NeutMultiplicity[75],*h_j1Mt[75];  
    //Category3 Histos
    TH1F *h_ChPionPt[75],*h_PhotonPt[75],*h_dRPionPhoton[75];
-=======
-   TH1F *h_nVtx[20],*h_metcut, *h_dphimin,*h_metFilters[20],*h_pfMETall[20],*h_pfMET200[20],*h_nJets[20],*h_pfMET[20],*h_pfMETPhi[20],*h_j1nCategory1[20],*h_j1nCategory2[20],*h_j1dRPF12_ID_1[20],*h_j1dRPF12_ID_2[20];
-   TH1F *h_j1Pt[20], *h_j1Eta[20], *h_j1Phi[20], *h_j1etaWidth[20], *h_j1phiWidth[20],*h_j1nCons[20], *h_j1PF12PtFrac_ID_1[20], *h_j1PF12PtFrac_ID_2[20],*h_j1PFPtFrac_ID_2[20],*h_PF123PtFraction[20];  
-   TH1F *h_j1TotPFCands[20], *h_j1ChPFCands[20], *h_j1NeutPFCands[20], *h_j1GammaPFCands[20], *h_j1CHF[20], *h_j1NHF[20], *h_j1ChMultiplicity[20], *h_j1NeutMultiplicity[20],*h_j1Mt[20];  
-   //Category3 Histos
-   TH1F *h_ChPionPt[20],*h_PhotonPt[20],*h_dRPionPhoton[20];
->>>>>>> 0e0ec63be75ea1cdb06cfeea8422edebda9dcb63
    TH1D *h_cutflow;
    // Fixed size dimensions of array or collections stored in the TTree if any.
 
