@@ -56,6 +56,10 @@ public :
    double j1PFPosConsPt, j1PFPosConsEta,j1PFPosConsPhi, j1PFNegConsPt,j1PFNegConsEta,j1PFNegConsPhi,j1PFPhoConsPt,j1PFPhoConsEta,j1PFPhoConsPhi;
    int TwoChPFCons,TwoChPFConsPlusPho;
    double PF12PtFrac_ID_1,PF12PtFrac_ID_2,dR_PF12_ID_1,dR_PF12_ID_2,PF123PtFrac_ID_2;
+
+   double Pt123,Pt123Fraction;
+    //Category 3 variables
+   double dR_PionPhoton_3,Cat3_ChPionPt,Cat3_PhotonPt,Cat3_ChPionEta,Cat3_PhotonEta,Cat3_ChPionPhi,Cat3_PhotonPhi;
    //CR variables
    int lepindex;
    double lepton_pt,Recoil;
@@ -738,6 +742,7 @@ public :
    virtual vector<int> muon_veto_tightID(int jet_index, float muPtCut);
    virtual vector<int> muon_veto_looseID(int jet_index, int ele_index, float muPtCut);
    virtual vector<int> getPFCandidates();
+   virtual void AllPFCand(std::vector<int> jetCand, std::vector<int> PFCandidates);
 };
 
 #endif
