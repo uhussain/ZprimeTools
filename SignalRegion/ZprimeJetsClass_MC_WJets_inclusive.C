@@ -320,7 +320,7 @@ void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery)
 	    if (jetCandDown.size()>0)
 	      {
 		fillHistos(32,event_weight);
-		jetveto = JetVetoDecision(1);
+		jetveto = JetVetoDecision(-1);
 		
 		if (pfMET_T1JESDo >250)
 		  {
