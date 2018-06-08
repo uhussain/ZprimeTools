@@ -75,11 +75,11 @@ public :
    //JetEnergyScale
    Float_t MET_to_use, METPhi_to_use;
    
-   TH1F *h_nVtx[75],*h_metcut, *h_dphimin,*h_metFilters[75],*h_pfMETall[75],*h_pfMET200[75],*h_nJets[75],*h_pfMET[75],*h_pfMETPhi[75],*h_j1nCategory1[75],*h_j1nCategory2[75],*h_j1dRPF12_ID_1[75],*h_j1dRPF12_ID_2[75];
-   TH1F *h_j1Pt[75], *h_j1Eta[75], *h_j1Phi[75], *h_j1etaWidth[75], *h_j1phiWidth[75],*h_j1nCons[75], *h_j1PF12PtFrac_ID_1[75], *h_j1PF12PtFrac_ID_2[75],*h_j1PFPtFrac_ID_2[75],*h_PF123PtFraction[75];  
-   TH1F *h_j1TotPFCands[75], *h_j1ChPFCands[75], *h_j1NeutPFCands[75], *h_j1GammaPFCands[75], *h_j1CHF[75], *h_j1NHF[75], *h_j1ChMultiplicity[75], *h_j1NeutMultiplicity[75],*h_j1Mt[75];  
+   TH1F *h_nVtx[45],*h_metcut, *h_dphimin,*h_metFilters[45],*h_pfMETall[45],*h_pfMET200[45],*h_nJets[45],*h_pfMET[45],*h_pfMETPhi[45],*h_j1nCategory1[45],*h_j1nCategory2[45],*h_j1dRPF12_ID_1[45],*h_j1dRPF12_ID_2[45];
+   TH1F *h_j1Pt[45], *h_j1Eta[45], *h_j1Phi[45], *h_j1etaWidth[45], *h_j1phiWidth[45],*h_j1nCons[45], *h_j1PF12PtFrac_ID_1[45], *h_j1PF12PtFrac_ID_2[45],*h_j1PFPtFrac_ID_2[45],*h_PF123PtFraction[45];  
+   TH1F *h_j1TotPFCands[45], *h_j1ChPFCands[45], *h_j1NeutPFCands[45], *h_j1GammaPFCands[45], *h_j1CHF[45], *h_j1NHF[45], *h_j1ChMultiplicity[45], *h_j1NeutMultiplicity[45],*h_j1Mt[45];  
    //Category3 Histos
-   TH1F *h_ChPionPt[75],*h_PhotonPt[75],*h_dRPionPhoton[75];
+   TH1F *h_ChPionPt[45],*h_PhotonPt[45],*h_dRPionPhoton[45];
    TH1D *h_cutflow;
    // Fixed size dimensions of array or collections stored in the TTree if any.
 
@@ -739,7 +739,7 @@ public :
    virtual void fillHistos(int histoNumber,double event_weight);
    virtual float DeltaPhi(float phi1, float phi2);
    virtual vector<int> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut,int UncType);
-   virtual vector<int> JetVetoDecision();
+   virtual vector<int> JetVetoDecision(int UncType);
    virtual bool btagVeto();
    virtual bool dPhiJetMETcut(std::vector<int> jets);
    virtual float dPhiJetMETmin(std::vector<int> jets);

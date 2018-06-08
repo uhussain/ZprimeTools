@@ -133,7 +133,7 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
 	      {
 		nJetSelection+=event_weight;
 		fillHistos(3,event_weight);
-		jetveto = JetVetoDecision();
+		jetveto = JetVetoDecision(0);
 		if (pfMET>250)
 		  {
 		    nMET200+=event_weight;
@@ -167,20 +167,6 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
 				  {
 				    nDphiJetMET+=event_weight;
 				    fillHistos(8,event_weight);
-				    /*std::cout<<run<<":"<<lumis<<":"<<event<<std::endl;
-				    std::cout<<"Pt123: "<<Pt123<<std::endl;
-				    std::cout<<"j1Pt: "<<jetPt->at(jetCand[0])<<std::endl;
-				    std::cout<<"j1Eta: "<<jetEta->at(jetCand[0])<<std::endl;
-				    if(j1PFConsPt.size()>0){
-				      std::cout<<"PFCons1Pt: "<<j1PFConsPt.at(0)<<std::endl; 
-				      std::cout<<"PFCons1PID: "<<j1PFConsPID.at(0)<<std::endl;}
-				    if(j1PFConsPt.size()>1){
-				      std::cout<<"PFCons2Pt: "<<j1PFConsPt.at(1)<<std::endl; 
-				      std::cout<<"PFCons2PID: "<<j1PFConsPID.at(1)<<std::endl;}
-				    if(j1PFConsPt.size()>2){
-				      std::cout<<"PFCons3Pt: "<<j1PFConsPt.at(2)<<std::endl;
-				      std::cout<<"PFCons3PID: "<<j1PFConsPID.at(2)<<std::endl;}
-				    */
 				    //Category 1: Exactly Two Charged Hadrons
 				    if(TwoChPFCons==1)
 				      {
@@ -230,339 +216,150 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
 			  }	
 		      } 
 		  }
-
-		if (pfMET_T1JESUp>250)
+		jetCandUp = getJetCand(200,2.4,0.8,0.1,1);
+		AllPFCand(jetCandUp,PFCandidates);
+		if (jetCandUp.size()>0)
 		  {
-		    MET_to_use = pfMET_T1JESUp;
-		    METPhi_to_use = pfMETPhi_T1JESUp;
 		    fillHistos(19,event_weight);
-		    if(metcut<0.5)
+		    jetveto = JetVetoDecision(1);
+
+		    if (pfMET_T1JESUp>250)
 		      {
+			MET_to_use = pfMET_T1JESUp;
+			METPhi_to_use = pfMETPhi_T1JESUp;
 			fillHistos(20,event_weight);
-			if(electron_veto_looseID(jetCand[0],10) &&  muon_veto_looseID(jetCand[0],10))
+			if(metcut<0.5)
 			  {
 			    fillHistos(21,event_weight);
-			    if(btagVeto())
+			    if(electron_veto_looseID(jetCandUp[0],10) &&  muon_veto_looseID(jetCandUp[0],10))
 			      {
 				fillHistos(22,event_weight);
-				double minDPhiJetMET = TMath::Pi();
-				double minDPhiJetMET_first4 = TMath::Pi();
-				for(int j = 0; j < jetveto.size(); j++)
-				  {
-				    if(DeltaPhi(jetPhi->at(jetveto[j]),METPhi_to_use) < minDPhiJetMET)
-				      {
-					minDPhiJetMET = DeltaPhi(jetPhi->at(jetveto[j]),METPhi_to_use);
-					if(j < 4){
-					  minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),METPhi_to_use);}
-				      } 
-				  }	
-				if(dPhiJetMETcut(jetveto))
+				if(btagVeto())
 				  {
 				    fillHistos(23,event_weight);
-				    //Category 1: Exactly Two Charged Hadrons
-				    if(TwoChPFCons==1)
+				    double minDPhiJetMET = TMath::Pi();
+				    double minDPhiJetMET_first4 = TMath::Pi();
+				    for(int j = 0; j < jetveto.size(); j++)
+				      {
+					if(DeltaPhi(jetPhi->at(jetveto[j]),METPhi_to_use) < minDPhiJetMET)
+					  {
+					    minDPhiJetMET = DeltaPhi(jetPhi->at(jetveto[j]),METPhi_to_use);
+					    if(j < 4){
+					      minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),METPhi_to_use);}
+					  } 
+				      }	
+				    if(dPhiJetMETcut(jetveto))
 				      {
 					fillHistos(24,event_weight);
-					//Effectiveness of this cut in Category 1 Events
-					if(PF12PtFrac_ID_1>0.7)
+					//Category 1: Exactly Two Charged Hadrons
+					if(TwoChPFCons==1)
 					  {
-					    fillHistos(25,event_weight);}
-				      } 
-				    //Category 2: Two charged Hadrons + Photon
-				    if(TwoChPFConsPlusPho==1)
-				      {
-					fillHistos(26,event_weight);
-					//Effectiveness of this cut in Category 2 Events
-					if(PF123PtFrac_ID_2>0.7)
+					    fillHistos(25,event_weight);
+					    //Effectiveness of this cut in Category 1 Events
+					    if(PF12PtFrac_ID_1>0.7)
+					      {
+						fillHistos(26,event_weight);}
+					  } 
+					//Category 2: Two charged Hadrons + Photon
+					if(TwoChPFConsPlusPho==1)
 					  {
-					    fillHistos(27,event_weight);}
-				      }
-				    //Category of events with < 2 charged Hadrons
-				    if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
-				      {
-					fillHistos(28,event_weight);
-					//Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
-					if(jetetaWidth->at(jetCand[0])<0.04)
+					    fillHistos(27,event_weight);
+					    //Effectiveness of this cut in Category 2 Events
+					    if(PF123PtFrac_ID_2>0.7)
+					      {
+						fillHistos(28,event_weight);}
+					  }
+					//Category of events with < 2 charged Hadrons
+					if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
 					  {
 					    fillHistos(29,event_weight);
-					  }}
-				    //This is for comparison with previous results (for all events)
-				    if (jetetaWidth->at(jetCand[0])<0.04)
-				      {
-					fillHistos(30,event_weight);
+					    //Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
+					    if(jetetaWidth->at(jetCandUp[0])<0.04)
+					      {
+						fillHistos(30,event_weight);
+					      }}
+					//This is for comparison with previous results (for all events)
+					if (jetetaWidth->at(jetCandUp[0])<0.04)
+					  {
+					    fillHistos(31,event_weight);
+					  }
 				      }
-				  }
-			      }   
-			  }	
-		      }
-		  }
-		
-		if (pfMET_T1JESDo>250)
-		  {
-		    MET_to_use = pfMET_T1JESDo;
-		    METPhi_to_use = pfMETPhi_T1JESDo;
-		    fillHistos(31,event_weight);
-		    if(metcut<0.5)
-		      {
-			fillHistos(32,event_weight);
-			if(electron_veto_looseID(jetCand[0],10) &&  muon_veto_looseID(jetCand[0],10))
-			  {
-			    fillHistos(33,event_weight);
-			    if(btagVeto())
-			      {
-				fillHistos(34,event_weight);
-				double minDPhiJetMET = TMath::Pi();
-				double minDPhiJetMET_first4 = TMath::Pi();
-				for(int j = 0; j < jetveto.size(); j++)
-				  {
-				    if(DeltaPhi(jetPhi->at(jetveto[j]),METPhi_to_use) < minDPhiJetMET)
-				      {
-					minDPhiJetMET = DeltaPhi(jetPhi->at(jetveto[j]),METPhi_to_use);
-					if(j < 4){
-					  minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),METPhi_to_use);}
-				      } 
-				  }	
-				if(dPhiJetMETcut(jetveto))
-				  {
-				    fillHistos(35,event_weight);
-				    //Category 1: Exactly Two Charged Hadrons
-				    if(TwoChPFCons==1)
-				      {
-					fillHistos(36,event_weight);
-					//Effectiveness of this cut in Category 1 Events
-					if(PF12PtFrac_ID_1>0.7)
-					  {
-					    fillHistos(37,event_weight);}
-				      } 
-				    //Category 2: Two charged Hadrons + Photon
-				    if(TwoChPFConsPlusPho==1)
-				      {
-					fillHistos(38,event_weight);
-					//Effectiveness of this cut in Category 2 Events
-					if(PF123PtFrac_ID_2>0.7)
-					  {
-					    fillHistos(39,event_weight);}
-				      }
-				    //Category of events with < 2 charged Hadrons
-				    if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
-				      {
-					fillHistos(40,event_weight);
-					//Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
-					if(jetetaWidth->at(jetCand[0])<0.04)
-					  {
-					    fillHistos(41,event_weight);
-					  }}
-				    //This is for comparison with previous results (for all events)
-				    if (jetetaWidth->at(jetCand[0])<0.04)
-				      {
-					fillHistos(42,event_weight);
-				      }
-				  }
-			      }   
-			  }	
-		      }
-		  }
-	      }
-	  }
-      }
-    jetCandUp = getJetCand(200,2.4,0.8,0.1,1);
-    AllPFCand(jetCandUp,PFCandidates);
-    //closing the pfMET>300 and goodJets condition
-    fillHistos(43,event_weight);
-    metcut= 0.0;
-    metcut = (fabs(pfMET-caloMET))/pfMET;
-    MET_to_use = pfMET;
-    METPhi_to_use = pfMETPhi;
-    //std::cout<<"|caloMET-pfMET|/pfMET: "<<metcut<<std::endl;
-    if (metFilters==0)
-      { 
-	fillHistos(44,event_weight); 
-	if (true) 
-      	  {
-	    fillHistos(45,event_weight);
-	    if (jetCandUp.size()>0)
-	      {
-		fillHistos(46,event_weight);
-		jetveto = JetVetoDecision();
-		if (pfMET>250)
-		  {
-		    fillHistos(47,event_weight);
-		    h_metcut->Fill(metcut,event_weight);
-		    if(metcut<0.5)
-		      {
-			fillHistos(48,event_weight);
-			if(electron_veto_looseID(jetCandUp[0],10) &&  muon_veto_looseID(jetCandUp[0],10))
-			  {
-			    fillHistos(49,event_weight);
-			    if(btagVeto())
-			      {
-				fillHistos(50,event_weight);
-				double minDPhiJetMET = TMath::Pi();
-				double minDPhiJetMET_first4 = TMath::Pi();
-				for(int j = 0; j < jetveto.size(); j++)
-				  {
-				    if(DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi) < minDPhiJetMET)
-				      {
-					minDPhiJetMET = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);
-					if(j < 4){
-					  minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);}
-				      } 
-				  }
-				h_dphimin->Fill(minDPhiJetMET_first4,event_weight);	
-				if(dPhiJetMETcut(jetveto))
-				  {
-				    fillHistos(51,event_weight);
-				    /*std::cout<<run<<":"<<lumis<<":"<<event<<std::endl;
-				    std::cout<<"Pt123: "<<Pt123<<std::endl;
-				    std::cout<<"j1Pt: "<<jetPt->at(jetCandUp[0])<<std::endl;
-				    std::cout<<"j1Eta: "<<jetEta->at(jetCandUp[0])<<std::endl;
-				    if(j1PFConsPt.size()>0){
-				      std::cout<<"PFCons1Pt: "<<j1PFConsPt.at(0)<<std::endl; 
-				      std::cout<<"PFCons1PID: "<<j1PFConsPID.at(0)<<std::endl;}
-				    if(j1PFConsPt.size()>1){
-				      std::cout<<"PFCons2Pt: "<<j1PFConsPt.at(1)<<std::endl; 
-				      std::cout<<"PFCons2PID: "<<j1PFConsPID.at(1)<<std::endl;}
-				    if(j1PFConsPt.size()>2){
-				      std::cout<<"PFCons3Pt: "<<j1PFConsPt.at(2)<<std::endl;
-				      std::cout<<"PFCons3PID: "<<j1PFConsPID.at(2)<<std::endl;}
-				    */
-				      //Category 1: Exactly Two Charged Hadrons
-				    if(TwoChPFCons==1)
-				      {
-					fillHistos(52,event_weight);
-					//Effectiveness of this cut in Category 1 Events
-					if(PF12PtFrac_ID_1>0.7)
-					  {
-					    fillHistos(53,event_weight);}
-				      } 
-				    //Category 2: Two charged Hadrons + Photon
-				    if(TwoChPFConsPlusPho==1)
-				      {
-					fillHistos(54,event_weight);
-					//Effectiveness of this cut in Category 2 Events
-					if(PF123PtFrac_ID_2>0.7)
-					  {
-					    fillHistos(55,event_weight);}
-				      }
-				    //Category of events with < 2 charged Hadrons
-				    if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
-				      {
-					fillHistos(56,event_weight);
-					//Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
-					if(jetetaWidth->at(jetCandUp[0])<0.04)
-					  {
-					    fillHistos(57,event_weight);
-					  }}
-				    //This is for comparison with previous results (for all events)
-				    if (jetetaWidth->at(jetCandUp[0])<0.04)
-				      {
-					fillHistos(58,event_weight);
-				      }
-				  }
-			      }
+				  }   
+			      }	
 			  }
 		      }
 		  }
-	      }
-	  }
-      }
-    jetCandDown = getJetCand(200,2.4,0.8,0.1,-1);
-    AllPFCand(jetCandDown,PFCandidates);
-    //closing the pfMET>300 and goodJets condition
-    fillHistos(59,event_weight);
-    metcut= 0.0;
-    metcut = (fabs(pfMET-caloMET))/pfMET;
-    MET_to_use = pfMET;
-    METPhi_to_use = pfMETPhi;
-    //std::cout<<"|caloMET-pfMET|/pfMET: "<<metcut<<std::endl;
-    if (metFilters==0)
-      { 
-	fillHistos(60,event_weight); 
-	if (true) 
-      	  {
-	    fillHistos(61,event_weight);
-	    if (jetCandDown.size()>0)
-	      {
-		fillHistos(62,event_weight);
-		jetveto = JetVetoDecision();
-		if (pfMET>250)
+		jetCandDown = getJetCand(200,2.4,0.8,0.1,-1);
+		AllPFCand(jetCandDown,PFCandidates);
+		if (jetCandDown.size()>0)
 		  {
-		    fillHistos(63,event_weight);
-		    h_metcut->Fill(metcut,event_weight);
+		    fillHistos(32,event_weight);
+		    jetveto = JetVetoDecision(-1);
+
+		
+		    if (pfMET_T1JESDo>250)
+		      {
+		    MET_to_use = pfMET_T1JESDo;
+		    METPhi_to_use = pfMETPhi_T1JESDo;
+		    fillHistos(33,event_weight);
 		    if(metcut<0.5)
 		      {
-			fillHistos(64,event_weight);
+			fillHistos(34,event_weight);
 			if(electron_veto_looseID(jetCandDown[0],10) &&  muon_veto_looseID(jetCandDown[0],10))
 			  {
-			    fillHistos(65,event_weight);
+			    fillHistos(35,event_weight);
 			    if(btagVeto())
 			      {
-				fillHistos(66,event_weight);
+				fillHistos(36,event_weight);
 				double minDPhiJetMET = TMath::Pi();
 				double minDPhiJetMET_first4 = TMath::Pi();
 				for(int j = 0; j < jetveto.size(); j++)
 				  {
-				    if(DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi) < minDPhiJetMET)
+				    if(DeltaPhi(jetPhi->at(jetveto[j]),METPhi_to_use) < minDPhiJetMET)
 				      {
-					minDPhiJetMET = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);
+					minDPhiJetMET = DeltaPhi(jetPhi->at(jetveto[j]),METPhi_to_use);
 					if(j < 4){
-					  minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);}
+					  minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),METPhi_to_use);}
 				      } 
-				  }
-				h_dphimin->Fill(minDPhiJetMET_first4,event_weight);	
+				  }	
 				if(dPhiJetMETcut(jetveto))
 				  {
-				    fillHistos(67,event_weight);
-				    /*
-				    std::cout<<run<<":"<<lumis<<":"<<event<<std::endl;
-				    std::cout<<"Pt123: "<<Pt123<<std::endl;
-				    std::cout<<"j1Pt: "<<jetPt->at(jetCandDown[0])<<std::endl;
-				    std::cout<<"j1Eta: "<<jetEta->at(jetCandDown[0])<<std::endl;
-				    if(j1PFConsPt.size()>0){
-				      std::cout<<"PFCons1Pt: "<<j1PFConsPt.at(0)<<std::endl; 
-				      std::cout<<"PFCons1PID: "<<j1PFConsPID.at(0)<<std::endl;}
-				    if(j1PFConsPt.size()>1){
-				      std::cout<<"PFCons2Pt: "<<j1PFConsPt.at(1)<<std::endl; 
-				      std::cout<<"PFCons2PID: "<<j1PFConsPID.at(1)<<std::endl;}
-				    if(j1PFConsPt.size()>2){
-				      std::cout<<"PFCons3Pt: "<<j1PFConsPt.at(2)<<std::endl;
-				      std::cout<<"PFCons3PID: "<<j1PFConsPID.at(2)<<std::endl;}
-				    */
+				    fillHistos(37,event_weight);
 				    //Category 1: Exactly Two Charged Hadrons
 				    if(TwoChPFCons==1)
 				      {
-					fillHistos(68,event_weight);
+					fillHistos(38,event_weight);
 					//Effectiveness of this cut in Category 1 Events
 					if(PF12PtFrac_ID_1>0.7)
 					  {
-					    fillHistos(69,event_weight);}
+					    fillHistos(39,event_weight);}
 				      } 
 				    //Category 2: Two charged Hadrons + Photon
 				    if(TwoChPFConsPlusPho==1)
 				      {
-					fillHistos(70,event_weight);
+					fillHistos(40,event_weight);
 					//Effectiveness of this cut in Category 2 Events
 					if(PF123PtFrac_ID_2>0.7)
 					  {
-					    fillHistos(71,event_weight);}
+					    fillHistos(41,event_weight);}
 				      }
 				    //Category of events with < 2 charged Hadrons
 				    if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
 				      {
-					fillHistos(72,event_weight);
+					fillHistos(42,event_weight);
 					//Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
 					if(jetetaWidth->at(jetCandDown[0])<0.04)
 					  {
-					    fillHistos(73,event_weight);
+					    fillHistos(43,event_weight);
 					  }}
 				    //This is for comparison with previous results (for all events)
 				    if (jetetaWidth->at(jetCandDown[0])<0.04)
 				      {
-					fillHistos(74,event_weight);
+					fillHistos(44,event_weight);
 				      }
 				  }
-			      }
-			  }
+			      }   
+			  }	
 		      }
 		  }
 	      }
@@ -620,7 +417,7 @@ void ZprimeJetsClass_MC::BookHistos(const char* file2)
 
   h_dphimin = new TH1F("h_dphimin","h_dphimin; Minimum dPhiJetMET",50,0,3.2);h_dphimin->Sumw2();
   h_metcut  = new TH1F("h_metcut","h_metcut; |pfMET-caloMET|/pfMET", 50,0,1.2);h_metcut->Sumw2();
-  for(int i=0; i<75; i++){
+  for(int i=0; i<45; i++){
 
      char ptbins[100];
      sprintf(ptbins, "_%d", i);
@@ -931,14 +728,19 @@ std::vector<int> ZprimeJetsClass_MC::getJetCand(double jetPtCut, double jetEtaCu
 
 }
 
-std::vector<int> ZprimeJetsClass_MC::JetVetoDecision() {
+std::vector<int> ZprimeJetsClass_MC::JetVetoDecision(int UncType) {
 
   bool jetVeto=true;
   std::vector<int> jetindex;
 
   for(int i = 0; i < nJet; i++)
     {
-      if(jetPt->at(i) >30.0 && jetPFLooseId->at(i)==1)
+      Float_t jetPt_to_use;
+      if (UncType == 0){jetPt_to_use = (*jetPt)[i];}
+      else if (UncType == 1){jetPt_to_use = (*jetPt)[i]*(1+(*jetJECUnc)[i]);}
+      else if (UncType == -1){jetPt_to_use =(*jetPt)[i]*(1-(*jetJECUnc)[i]);}
+
+      if(jetPt_to_use >30.0 && jetPFLooseId->at(i)==1)
         {
           jetindex.push_back(i);
         }
