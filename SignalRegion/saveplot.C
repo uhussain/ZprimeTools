@@ -41,49 +41,93 @@ std::vector<float> GetTotal(std::vector<TFile*> Files)
 
 std::string SampleName(const char * variable)
 {
-  std::string line;
-  std::vector<std::string> lines;
-  std::string name;
-  std::ifstream file ("samplenames.txt");
-  if (file.is_open())
-    {
-      while (getline(file,line)){lines.push_back(line);}
+std::string line;
+std::vector<std::string> lines;
+std::string name;
+std::ifstream file ("samplenames.txt");
+if (file.is_open())
+  {
+    while (getline(file,line)){lines.push_back(line);}
 
-      for (int i = 0; i < lines.size(); i++)
-	{
-	  if (strstr(variable,lines[i].c_str()) != NULL)
-	    {
-	      name=lines[i+1];
-	      break;
-	    }
-	}
-    }
-  else {std::cout << "samplenames.txt could not be found" << std::endl;}
-  return name;
+    for (int i = 0; i < lines.size(); i++)
+      {
+	if (strstr(variable,lines[i].c_str()) != NULL)
+	  {
+	    name=lines[i+1];
+	    break;
+	  }
+      }
+  }
+ else {std::cout << "samplenames.txt could not be found" << std::endl;}
+return name;
 }
 
-void hs_save(const char * variable, TH1F* histo)
+std::string GetCategory(int hs_num)
 {
-  const char* hs_root = "../../Plots/Histogram.root";
-  const char* region = "SignalRegion";
+  std::string cat;
+  if (hs_num == 15) cat = "";
+  else if (hs_num == 10) cat = "_1st";
+  else if (hs_num == 12) cat = "_2nd";
+  else if (hs_num == 14) cat = "_3rd";
+
+  return cat;
+}
+
+std::vector<std::string> GetName(const char * variable)
+{
+  std::string name = std::string(variable);
+  name.erase(name.begin(),name.begin()+6);
+  int n = stoi(name);
+  std::string cat;
+  if (8<=n && n<=15)
+    {
+      cat = GetCategory(n);
+      name="";
+    }
+  else if (20<=n && n<=27)
+    {
+      cat = GetCategory(n-12);
+      name="_jesUp";
+    }
+  else if (32<=n && n<=39)
+    {
+      cat = GetCategory(n-24);
+      name="_jesDown";
+    }
+  std::vector<std::string> label = {name,cat};
+  return label;
+}
+
+void hs_save(std::string cat, const char * variable, std::vector<TH1F*> histo)
+{
+  std::cout<<"Category"<<cat<<std::endl;
+  const char* hs_root = ("../../Systematics.root");
+  std::cout<<"Saving to "<<hs_root<<std::endl;
   std::ifstream file(hs_root);
   if (file){file.close();}
   else
     {
-      TFile* hs_file = TFile::Open(hs_root,"RECREATE");
-      hs_file->Close();
+      TFile* hs_file1 = TFile::Open(hs_root,"RECREATE");
+      hs_file1->Close();
     }
   TFile* hs_file = TFile::Open(hs_root,"UPDATE");
-  if (!(hs_file->GetDirectory(region)))
+  /*if (!(hs_file->GetDirectory(region)))
     {
       hs_file->mkdir(region);
     }
-  hs_file->cd(region);
-  if (gDirectory->GetListOfKeys()->Contains(histo->GetName()))
+    hs_file->cd(region);*/
+  for (int i = 0; i < histo.size(); i++)
     {
-      gDirectory->Delete((std::string(histo->GetName())+";1").c_str());
+      if (gDirectory->GetListOfKeys()->Contains(histo[i]->GetName()))
+	{
+	  gDirectory->Delete((std::string(histo[i]->GetName())+";1").c_str());
+	}
+      histo[i]->GetXaxis()->SetTitle("E_{T}^{miss} (GeV)");
+      histo[i]->GetYaxis()->SetTitle("Events");
+      histo[i]->SetTitle("");
+      histo[i]->Write();
     }
-  histo->Write();
+  std::cout<<"Saving to "<<hs_file->GetName()<<std::endl;
   hs_file->Close();
 }
   
@@ -111,12 +155,14 @@ std::vector<int> hs_sort(std::vector<TH1F*> hs_list)
   return hs_index;
 }
 
-void plotter(const char * variable,std::string name)
+void plotter(const char * variable,std::string name,std::string varname,std::string cat)
 {
   double lumi_1 = 3723.664;
   double lumi_2 = 35900.;
 
-  std::cout << name << std::endl;
+  std::vector<TH1F*> hs_histo = {};
+
+  std::cout << variable <<std::endl;
   std::ifstream file("postMETdata_final.root");
   if (file)
     {
@@ -146,14 +192,17 @@ void plotter(const char * variable,std::string name)
   TH1F *histo_j1EtaWidth_data_0 = (TH1F*)f_datafile_0->Get(variable);
   //TH1F *histo_j1EtaWidth_data_1 = (TH1F*)f_datafile_1->Get(variable);
   //histo_j1EtaWidth_data_0->Add(histo_j1EtaWidth_data_1);
-  histo_j1EtaWidth_data_0->SetName(((std::string(variable))+(std::string("_data"))).c_str());
+  histo_j1EtaWidth_data_0->SetName(((std::string("data_obs")+varname)).c_str());
 
   double integraldata = histo_j1EtaWidth_data_0->Integral();
   std::cout<<"integral of Data here:"<<integraldata<<std::endl;
+  
+  if (varname.find("jes") == std::string::npos)
+    {
+      hs_histo.push_back(histo_j1EtaWidth_data_0);
+    }
 
-  hs_save(variable,histo_j1EtaWidth_data_0);
-
-  histo_j1EtaWidth_data_0->SetStats(0);
+  /*histo_j1EtaWidth_data_0->SetStats(0);
   histo_j1EtaWidth_data_0->SetLineWidth(2);
   histo_j1EtaWidth_data_0->SetLineColor(kWhite);
   histo_j1EtaWidth_data_0->SetTitle("");
@@ -163,8 +212,8 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_data_0->GetYaxis()->SetTitle("");
   histo_j1EtaWidth_data_0->GetYaxis()->SetTickLength(0);
   histo_j1EtaWidth_data_0->GetYaxis()->SetLabelOffset(999);
-  //histo_j1EtaWidth_data_0->Draw("");
-
+  histo_j1EtaWidth_data_0->Draw("");
+  */
   //opening background WJets Sample file
   std::vector<const char *> WJets_FileNames = {"postWJets_MLM_0.root","postW100to200_0.root","postW200to400_0.root","postW400to600_0.root","postW600to800_0.root","postW800to1200_0.root","postW1200to2500_0.root","postW2500toInf_0.root"};
   std::vector<TFile*> WJets_Files;
@@ -207,9 +256,9 @@ void plotter(const char * variable,std::string name)
   double integralWJets = histo_j1EtaWidth_WJets_0->Integral();
   std::cout<<"integral of WJets bkg here:"<<integralWJets<<std::endl;
 
-  histo_j1EtaWidth_WJets_0->SetName(((std::string(variable))+(std::string("_WJets"))).c_str());
-  hs_save(variable,histo_j1EtaWidth_WJets_0);
-  histo_j1EtaWidth_WJets_0->SetTitle("");
+  histo_j1EtaWidth_WJets_0->SetName(((std::string("WJets")+varname)).c_str());
+  hs_histo.push_back(histo_j1EtaWidth_WJets_0);
+  /*histo_j1EtaWidth_WJets_0->SetTitle("");
   histo_j1EtaWidth_WJets_0->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_WJets_0->GetXaxis()->SetTickLength(0);
   histo_j1EtaWidth_WJets_0->GetXaxis()->SetLabelOffset(999);
@@ -217,7 +266,7 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_WJets_0->GetYaxis()->SetTickLength(0);
   histo_j1EtaWidth_WJets_0->GetYaxis()->SetLabelOffset(999);
   histo_j1EtaWidth_WJets_0->SetFillColor(kRed-10);
-
+  */
   std::vector<const char *> Zvv_FileNames = {"postZ100to200_0.root","postZ200to400_0.root","postZ400to600_0.root","postZ600to800_0.root","postZ800to1200_0.root","postZ1200to2500_0.root","postZ2500toInf_0.root"};
   std::vector<TFile *> Zvv_Files;
   for (int i = 0; i < Zvv_FileNames.size(); i++) {Zvv_Files.push_back(new TFile(Zvv_FileNames[i]));}
@@ -253,9 +302,9 @@ void plotter(const char * variable,std::string name)
 
   gPad->Update();
 
-  histo_j1EtaWidth_100to200->SetName(((std::string(variable))+(std::string("_Zvv"))).c_str());
-  hs_save(variable,histo_j1EtaWidth_100to200);
-  histo_j1EtaWidth_100to200->SetTitle("");
+  histo_j1EtaWidth_100to200->SetName(((std::string("ZJets")+varname)).c_str());
+  hs_histo.push_back(histo_j1EtaWidth_100to200);
+  /*histo_j1EtaWidth_100to200->SetTitle("");
   histo_j1EtaWidth_100to200->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_100to200->GetXaxis()->SetTickLength(0);
   histo_j1EtaWidth_100to200->GetXaxis()->SetLabelOffset(999);
@@ -263,7 +312,7 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_100to200->GetYaxis()->SetTickLength(0);
   histo_j1EtaWidth_100to200->GetYaxis()->SetLabelOffset(999);  
   histo_j1EtaWidth_100to200->SetFillColor(kAzure+10);
-
+  */
 
   double integralZvvJets = histo_j1EtaWidth_100to200->Integral();
   std::cout<<"integral of ZvvJets bkg here:"<<integralZvvJets<<std::endl;
@@ -296,9 +345,9 @@ void plotter(const char * variable,std::string name)
 
   gPad->Update();
 
-  histo_j1EtaWidth_G1Jets->SetName(((std::string(variable))+(std::string("_GJets"))).c_str());
-  hs_save(variable,histo_j1EtaWidth_G1Jets);
-  histo_j1EtaWidth_G1Jets->SetTitle("");
+  histo_j1EtaWidth_G1Jets->SetName(((std::string("GJets")+varname)).c_str());
+  hs_histo.push_back(histo_j1EtaWidth_G1Jets);
+  /*histo_j1EtaWidth_G1Jets->SetTitle("");
   histo_j1EtaWidth_G1Jets->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_G1Jets->GetXaxis()->SetTickLength(0);
   histo_j1EtaWidth_G1Jets->GetXaxis()->SetLabelOffset(999);
@@ -306,7 +355,7 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_G1Jets->GetYaxis()->SetTickLength(0);
   histo_j1EtaWidth_G1Jets->GetYaxis()->SetLabelOffset(999);
   histo_j1EtaWidth_G1Jets->SetFillColor(kTeal-9);
-
+  */
   double integralGJets = histo_j1EtaWidth_G1Jets->Integral();
   std::cout<<"integral of GJets bkg here:"<<integralGJets<<std::endl;
 
@@ -348,9 +397,9 @@ void plotter(const char * variable,std::string name)
 
   gPad->Update();
   
-  histo_j1EtaWidth_DY1Jets->SetName(((std::string(variable))+(std::string("_DYJets"))).c_str());
-  hs_save(variable,histo_j1EtaWidth_DY1Jets);
-  histo_j1EtaWidth_DY1Jets->SetTitle("");
+  histo_j1EtaWidth_DY1Jets->SetName(((std::string("DYJets")+varname)).c_str());
+  hs_histo.push_back(histo_j1EtaWidth_DY1Jets);
+  /*histo_j1EtaWidth_DY1Jets->SetTitle("");
   histo_j1EtaWidth_DY1Jets->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_DY1Jets->GetXaxis()->SetTickLength(0);
   histo_j1EtaWidth_DY1Jets->GetXaxis()->SetLabelOffset(999);
@@ -358,7 +407,7 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_DY1Jets->GetYaxis()->SetTickLength(0);
   histo_j1EtaWidth_DY1Jets->GetYaxis()->SetLabelOffset(999);
   histo_j1EtaWidth_DY1Jets->SetFillColor(kGray+2);
-
+  */
   double integralDY = histo_j1EtaWidth_DY1Jets->Integral();
   std::cout<<"integral of DYJets bkg here:"<<integralDY<<std::endl;
 
@@ -375,9 +424,9 @@ void plotter(const char * variable,std::string name)
 
   histo_j1EtaWidth_TTJets->Scale((1.0/TTJets_Total[0])*35900*502.2);
 
-  histo_j1EtaWidth_TTJets->SetName(((std::string(variable))+(std::string("_TTJets"))).c_str());
-  hs_save(variable,histo_j1EtaWidth_TTJets);
-  histo_j1EtaWidth_TTJets->SetTitle("");
+  histo_j1EtaWidth_TTJets->SetName(((std::string("TTJets") + varname)).c_str());
+  hs_histo.push_back(histo_j1EtaWidth_TTJets);
+  /*histo_j1EtaWidth_TTJets->SetTitle("");
   histo_j1EtaWidth_TTJets->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_TTJets->GetXaxis()->SetTickLength(0);
   histo_j1EtaWidth_TTJets->GetXaxis()->SetLabelOffset(999);
@@ -385,7 +434,7 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_TTJets->GetYaxis()->SetTickLength(0);
   histo_j1EtaWidth_TTJets->GetYaxis()->SetLabelOffset(999);
   histo_j1EtaWidth_TTJets->SetFillColor(kOrange-2);
- 
+  */
   double integralTTJets = histo_j1EtaWidth_TTJets->Integral();
   std::cout<<"integral of integralTTJets bkg here:"<<integralTTJets<<std::endl;
 
@@ -398,7 +447,7 @@ void plotter(const char * variable,std::string name)
 
   TH1F *histo_j1EtaWidth_WW = (TH1F*)WW_Files[0]->Get(variable);
   histo_j1EtaWidth_WW->Scale((1.0/WW_Total[0])*35900*118.7);
-  histo_j1EtaWidth_WW->SetName(((std::string(variable))+(std::string("_WW"))).c_str());
+  histo_j1EtaWidth_WW->SetName(((std::string("WW")+varname)).c_str());
   /*histo_j1EtaWidth_WW->SetTitle("");
   histo_j1EtaWidth_WW->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_WW->GetXaxis()->SetTickLength(0);
@@ -410,8 +459,6 @@ void plotter(const char * variable,std::string name)
 */
   double integralWW = histo_j1EtaWidth_WW->Integral();
   std::cout<<"integral of WW bkg here:"<<integralWW<<std::endl;
-
-  hs_save(variable,histo_j1EtaWidth_WW);
  
   std::vector<const char *> WZ_FileNames = {"postWZ.root"};
   std::vector<TFile *> WZ_Files;
@@ -421,7 +468,7 @@ void plotter(const char * variable,std::string name)
   TH1F *histo_j1EtaWidth_WZ = (TH1F*)WZ_Files[0]->Get(variable);
   histo_j1EtaWidth_WZ->Scale((1.0/WZ_Total[0])*35900*47.2);
 
-  histo_j1EtaWidth_WZ->SetName(((std::string(variable))+(std::string("_WZ"))).c_str());
+  histo_j1EtaWidth_WZ->SetName(((std::string("WZ")+varname)).c_str());
 /*  histo_j1EtaWidth_WZ->SetTitle("");
   histo_j1EtaWidth_WZ->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_WZ->GetXaxis()->SetTickLength(0);
@@ -434,8 +481,6 @@ void plotter(const char * variable,std::string name)
   double integralWZ = histo_j1EtaWidth_WZ->Integral();
   std::cout<<"integral of WZ bkg here:"<<integralWZ<<std::endl;
 
-  hs_save(variable,histo_j1EtaWidth_WZ);
-
   std::vector<const char *> ZZ_FileNames = {"postZZ.root"};
   std::vector<TFile *> ZZ_Files;
   for (int i = 0; i < ZZ_FileNames.size(); i++) {ZZ_Files.push_back(new TFile(ZZ_FileNames[i]));}
@@ -444,7 +489,7 @@ void plotter(const char * variable,std::string name)
   TH1F *histo_j1EtaWidth_ZZ = (TH1F*)ZZ_Files[0]->Get(variable);
   histo_j1EtaWidth_ZZ->Scale((1.0/ZZ_Total[0])*35900*16.6);
 
-  histo_j1EtaWidth_ZZ->SetName(((std::string(variable))+(std::string("_ZZ"))).c_str());
+  histo_j1EtaWidth_ZZ->SetName(((std::string("ZZ")+varname)).c_str());
 /*  histo_j1EtaWidth_ZZ->SetTitle("");
   histo_j1EtaWidth_ZZ->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_ZZ->GetXaxis()->SetTickLength(0);
@@ -456,15 +501,14 @@ void plotter(const char * variable,std::string name)
 */
   double integralZZ = histo_j1EtaWidth_ZZ->Integral();
   std::cout<<"integral of ZZ bkg here:"<<integralZZ<<std::endl;
-
-  hs_save(variable,histo_j1EtaWidth_ZZ);
  
   //Ading WW, WZ, ZZ together
   histo_j1EtaWidth_WW->Add(histo_j1EtaWidth_WZ);
   histo_j1EtaWidth_WW->Add(histo_j1EtaWidth_ZZ);
   
-  histo_j1EtaWidth_WW->SetName(((std::string(variable))+(std::string("_WW_WZ_ZZ"))).c_str());
-  histo_j1EtaWidth_WW->SetTitle("");
+  histo_j1EtaWidth_WW->SetName(((std::string("DiBoson")+varname)).c_str());
+  hs_histo.push_back(histo_j1EtaWidth_WW);
+  /*histo_j1EtaWidth_WW->SetTitle("");
   histo_j1EtaWidth_WW->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_WW->GetXaxis()->SetTickLength(0);
   histo_j1EtaWidth_WW->GetXaxis()->SetLabelOffset(999);
@@ -472,7 +516,7 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_WW->GetYaxis()->SetTickLength(0);
   histo_j1EtaWidth_WW->GetYaxis()->SetLabelOffset(999);
   histo_j1EtaWidth_WW->SetFillColor(kCyan-10);
-
+  */
   double TotintegralDiBoson = histo_j1EtaWidth_WW->Integral();
   std::cout<<"integral of WW/WZ/ZZ bkg here:"<<TotintegralDiBoson<<std::endl;
 
@@ -513,9 +557,9 @@ void plotter(const char * variable,std::string name)
   double integral = histo_j1EtaWidth_Q1Jets->Integral();
   std::cout<<"integral of QCD bkg here:"<<integral<<std::endl;
 
-  histo_j1EtaWidth_Q1Jets->SetName(((std::string(variable))+(std::string("_QJets"))).c_str());
-  hs_save(variable,histo_j1EtaWidth_Q1Jets);
-  histo_j1EtaWidth_Q1Jets->SetTitle("");
+  histo_j1EtaWidth_Q1Jets->SetName(((std::string("QCD")+varname)).c_str());
+  hs_histo.push_back(histo_j1EtaWidth_Q1Jets);
+  /*histo_j1EtaWidth_Q1Jets->SetTitle("");
   histo_j1EtaWidth_Q1Jets->GetXaxis()->SetTitle("");
   histo_j1EtaWidth_Q1Jets->GetXaxis()->SetTickLength(0);
   histo_j1EtaWidth_Q1Jets->GetXaxis()->SetLabelOffset(999);
@@ -523,7 +567,7 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_Q1Jets->GetYaxis()->SetTickLength(0);
   histo_j1EtaWidth_Q1Jets->GetYaxis()->SetLabelOffset(999);
   histo_j1EtaWidth_Q1Jets->SetFillColor(kGray);
-
+  */
   //Stack histograms using THStack
   /*THStack *hs_datamc = new THStack("hs_datamc","Data/MC comparison");
   std::vector<TH1F*> hs_list = {histo_j1EtaWidth_100to200,histo_j1EtaWidth_G1Jets,histo_j1EtaWidth_TTJets,histo_j1EtaWidth_Q1Jets,histo_j1EtaWidth_WW,histo_j1EtaWidth_DY1Jets,histo_j1EtaWidth_WJets_0};
@@ -566,14 +610,19 @@ void plotter(const char * variable,std::string name)
   */
   TFile *f_signal_5GeVfile = new TFile("postSignal.root");
   TH1F *histo_signal_5GeV = (TH1F*)f_signal_5GeVfile ->Get(variable);
-  histo_signal_5GeV->Scale((1.0/2133)*35900*0.047);
+  std::vector<TFile *> SignalFile = {f_signal_5GeVfile};
+  std::vector<float> Signal_Totals = GetTotal(SignalFile);
+  histo_signal_5GeV->Scale((1.0/Signal_Totals[0])*35900*0.047);
   histo_signal_5GeV->SetLineColor(kBlue);
   histo_signal_5GeV->SetLineWidth(2);
   histo_signal_5GeV->Draw("HIST SAME");
 
   double integralsignal_5GeV = histo_signal_5GeV->Integral(); 
   std::cout<<"integral of signal_5GeV here:"<<integralsignal_5GeV<<std::endl;
-  hs_save(variable,histo_signal_5GeV);
+  histo_signal_5GeV->SetName((std::string("DM")+varname).c_str());
+  hs_histo.push_back(histo_signal_5GeV);
+
+  hs_save(cat,variable,hs_histo);
   /*
   //TFile *f_signal_10GeVfile = new TFile("postSignal_mchi10GeV.root");
   //TH1F *histo_signal_10GeV = (TH1F*)f_signal_10GeVfile ->Get(variable);
@@ -800,8 +849,8 @@ void plotter(const char * variable,std::string name)
   yaxis_right->Draw("SAME");  
  
 */
-  //c->SaveAs((std::string("../../Plots/SinEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".pdf")).c_str());
-  //c->SaveAs((std::string("../../Plots/SinEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".png")).c_str());
+  //c->SaveAs((std::string("../../Plots/SinEleCRPlots_EWK/datamc_")+varname+std::string(".pdf")).c_str());
+  //c->SaveAs((std::string("../../Plots/SinEleCRPlots_EWK/datamc_")+varname+std::string(".png")).c_str());
 }
 
 int main(int argc, const char *argv[])
@@ -814,7 +863,10 @@ int main(int argc, const char *argv[])
   for (int i = 0; i < variable.size(); i++)
     {
       std::string name = SampleName(variable[i]);
-      plotter(variable[i],name);
+      std::vector<std::string> label = GetName(variable[i]);
+      std::string varname = label[0];
+      std::string cat = label[1];
+      plotter(variable[i],name,varname,cat);
     } 
   return 0;
 }

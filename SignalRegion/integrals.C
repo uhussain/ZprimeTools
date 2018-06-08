@@ -32,8 +32,9 @@ std::vector<float> GetTotal(std::vector<TFile*> Files)
   std::vector<float> Total = {};
   for (int i = 0; i < Files.size(); i++)
     {
-      TH1D *cutflow = (TH1D*)Files[i]->Get("h_cutflow");
-      Total.push_back(cutflow->GetBinContent(1));
+      TH1F *cutflow = (TH1F*)Files[i]->Get("pfMET_0");
+      Total.push_back(cutflow->Integral());
+      std::cout<<Total[i]<<std::endl;
     }
   return Total;
 }
@@ -524,15 +525,6 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_Q7Jets->Scale((1.0/QJets_Total[6])*35900*121.5);
   histo_j1EtaWidth_Q8Jets->Scale((1.0/QJets_Total[7])*35900*25.42);
 
-  std::cout<<QJets_FileNames[0]<<": "<<histo_j1EtaWidth_Q1Jets->Integral()<<" | "<<QJets_Total[0]<<std::endl;
-  std::cout<<QJets_FileNames[1]<<": "<<histo_j1EtaWidth_Q2Jets->Integral()<<" | "<<QJets_Total[1]<<std::endl;
-  std::cout<<QJets_FileNames[2]<<": "<<histo_j1EtaWidth_Q3Jets->Integral()<<" | "<<QJets_Total[2]<<std::endl;
-  std::cout<<QJets_FileNames[3]<<": "<<histo_j1EtaWidth_Q4Jets->Integral()<<" | "<<QJets_Total[3]<<std::endl;
-  std::cout<<QJets_FileNames[4]<<": "<<histo_j1EtaWidth_Q5Jets->Integral()<<" | "<<QJets_Total[4]<<std::endl;
-  std::cout<<QJets_FileNames[5]<<": "<<histo_j1EtaWidth_Q6Jets->Integral()<<" | "<<QJets_Total[5]<<std::endl;
-  std::cout<<QJets_FileNames[6]<<": "<<histo_j1EtaWidth_Q7Jets->Integral()<<" | "<<QJets_Total[6]<<std::endl;
-  std::cout<<QJets_FileNames[7]<<": "<<histo_j1EtaWidth_Q8Jets->Integral()<<" | "<<QJets_Total[7]<<std::endl;
-
   histo_j1EtaWidth_Q1Jets->Add(histo_j1EtaWidth_Q2Jets);
   histo_j1EtaWidth_Q1Jets->Add(histo_j1EtaWidth_Q3Jets);
   histo_j1EtaWidth_Q1Jets->Add(histo_j1EtaWidth_Q4Jets);
@@ -594,10 +586,12 @@ void plotter(const char * variable,std::string name)
 
   //double integralsignal_1GeV = histo_signal_1GeV->Integral(); 
   //std::cout<<"integral of signal_1GeV here:"<<integralsignal_1GeV<<std::endl;
-
+  */
   TFile *f_signal_5GeVfile = new TFile("postSignal.root");
   TH1F *histo_signal_5GeV = (TH1F*)f_signal_5GeVfile ->Get(variable);
-  histo_signal_5GeV->Scale((1.0/2133)*35900*0.047);
+  std::vector<TFile*> Signal_Files = {new TFile("postSignal.root")};
+  std::vector<float> SignalTotal = GetTotal(Signal_Files);
+  histo_signal_5GeV->Scale((1.0/SignalTotal[0])*35900*0.047);
   histo_signal_5GeV->SetLineColor(kBlue);
   histo_signal_5GeV->SetLineWidth(2);
   histo_signal_5GeV->Draw("HIST SAME");
@@ -605,7 +599,7 @@ void plotter(const char * variable,std::string name)
   double integralsignal_5GeV = histo_signal_5GeV->Integral(); 
   std::cout<<"integral of signal_5GeV here:"<<integralsignal_5GeV<<std::endl;
 
-
+  /*
   //TFile *f_signal_10GeVfile = new TFile("postSignal_mchi10GeV.root");
   //TH1F *histo_signal_10GeV = (TH1F*)f_signal_10GeVfile ->Get(variable);
   //histo_signal_10GeV->Scale((1.0/4052)*35900*0.04);
@@ -837,8 +831,8 @@ void plotter(const char * variable,std::string name)
 
 int main(int argc, const char *argv[])
 {
-  std::vector<const char*> variable = {"pfMET_8","pfMET_20","pfMET_32"};
-  std::vector<std::string> type = {"Base","Up","Down"};
+  std::vector<const char*> variable = {"pfMET_15","pfMET_27","pfMET_39"};
+  std::vector<std::string> type = {"Base","JesUp","JesDown"};
   for (int i = 0; i < variable.size(); i++)
     {
       std::string name = type[i];

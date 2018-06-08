@@ -51,23 +51,36 @@ public :
    TFile *fileName;
    TTree *tree;
 
+   //Declaring these jet Vectors and jet substructure vectors
+   std::vector<int> jetCand;
+   std::vector<int> jetCandUp;
+   std::vector<int> jetCandDown;
+   std::vector<double>j1PFConsPt;
+   std::vector<double>j1PFConsEta;
+   std::vector<double>j1PFConsPhi;
+   std::vector<int>j1PFConsPID;
+
    //Categorizing events based on no.of charged Hadrons in PencilJet
    int NoPosPFCons,NoNegPFCons,NoPhoPFCons;
    double j1PFPosConsPt, j1PFPosConsEta,j1PFPosConsPhi, j1PFNegConsPt,j1PFNegConsEta,j1PFNegConsPhi,j1PFPhoConsPt,j1PFPhoConsEta,j1PFPhoConsPhi;
    int TwoChPFCons,TwoChPFConsPlusPho;
    double PF12PtFrac_ID_1,PF12PtFrac_ID_2,dR_PF12_ID_1,dR_PF12_ID_2,PF123PtFrac_ID_2;
 
+   double Pt123,Pt123Fraction;
+   //Category 3 variables
+   double dR_PionPhoton_3,Cat3_ChPionPt,Cat3_PhotonPt,Cat3_ChPionEta,Cat3_PhotonEta,Cat3_ChPionPhi,Cat3_PhotonPhi;
    //getPFCandidates
    int TotalPFCandidates, ChargedPFCandidates,NeutralPFCandidates,GammaPFCandidates;
 
    //JetEnergyScale
    Float_t MET_to_use, METPhi_to_use;
    
-   TH1F *h_nVtx[39], *h_metcut, *h_dphimin,*h_metFilters[39],*h_pfMETall[39],*h_pfMET200[39],*h_nJets[39],*h_pfMET[39],*h_pfMETPhi[39],*h_j1nCategory1[39],*h_j1nCategory2[39],*h_j1dRPF12_ID_1[39],*h_j1dRPF12_ID_2[39];
-   TH1F *h_j1Pt[39], *h_j1Eta[39], *h_j1Phi[39], *h_j1etaWidth[39], *h_j1phiWidth[39],*h_j1nCons[39], *h_j1PF12PtFrac_ID_1[39], *h_j1PF12PtFrac_ID_2[39],*h_j1PFPtFrac_ID_2[39];  
-   TH1F *h_j1TotPFCands[39], *h_j1ChPFCands[39], *h_j1NeutPFCands[39], *h_j1GammaPFCands[39], *h_j1CHF[39], *h_j1NHF[39], *h_j1ChMultiplicity[39], *h_j1NeutMultiplicity[39],*h_j1Mt[39]; 
+   TH1F *h_nVtx[75], *h_metcut, *h_dphimin,*h_metFilters[75],*h_pfMETall[75],*h_pfMET200[75],*h_nJets[75],*h_pfMET[75],*h_pfMETPhi[75],*h_j1nCategory1[75],*h_j1nCategory2[75],*h_j1dRPF12_ID_1[75],*h_j1dRPF12_ID_2[75];
+   TH1F *h_j1Pt[75], *h_j1Eta[75], *h_j1Phi[75], *h_j1etaWidth[75], *h_j1phiWidth[75],*h_j1nCons[75], *h_j1PF12PtFrac_ID_1[75], *h_j1PF12PtFrac_ID_2[75],*h_j1PFPtFrac_ID_2[75],*h_PF123PtFraction[75];  
+   TH1F *h_j1TotPFCands[75], *h_j1ChPFCands[75], *h_j1NeutPFCands[75], *h_j1GammaPFCands[75], *h_j1CHF[75], *h_j1NHF[75], *h_j1ChMultiplicity[75], *h_j1NeutMultiplicity[75],*h_j1Mt[75]; 
    // Fixed size dimensions of array or collections stored in the TTree if any.
-
+   //Category3 Histos
+   TH1F *h_ChPionPt[75],*h_PhotonPt[75],*h_dRPionPhoton[75];
    TH1D *h_cutflow;
    // Declaration of leaf types
    Int_t           run;
@@ -330,17 +343,17 @@ public :
    vector<float>   *muBestTrkPtError;
    vector<float>   *muBestTrkPt;
    Int_t           nJet;
-   Double_t        j1etaWidth;
-   Double_t        j1phiWidth;
-   Double_t        j1nPhotons;
-   Double_t        j1nCHPions;
-   Double_t        j1nMisc;
-   vector<int>     *j1MiscPID;
-   vector<double>  *j1PFConsPt;
-   vector<double>  *j1PFConsEta;
-   vector<double>  *j1PFConsPhi;
-   vector<double>  *j1PFConsEt;
-   vector<int>     *j1PFConsPID;
+   vector<double>  *jetetaWidth;
+   vector<double>  *jetphiWidth;
+   vector<double>  *jetnPhotons;
+   vector<double>  *jetnCHPions;
+   vector<double>  *jetnMisc;
+   vector<vector<int> > *jetMiscPID;
+   vector<vector<double> > *JetsPFConsPt;
+   vector<vector<double> > *JetsPFConsEta;
+   vector<vector<double> > *JetsPFConsPhi;
+   vector<vector<double> > *JetsPFConsEt;
+   vector<vector<int> > *JetsPFConsPID;
    vector<float>   *jetPt;
    vector<float>   *jetEn;
    vector<float>   *jetEta;
@@ -653,17 +666,17 @@ public :
    TBranch        *b_muBestTrkPtError;   //!
    TBranch        *b_muBestTrkPt;   //!
    TBranch        *b_nJet;   //!
-   TBranch        *b_j1etaWidth;   //!
-   TBranch        *b_j1phiWidth;   //!
-   TBranch        *b_j1nPhotons;   //!
-   TBranch        *b_j1nCHPions;   //!
-   TBranch        *b_j1nMisc;   //!
-   TBranch        *b_j1MiscPID;   //!
-   TBranch        *b_j1PFConsPt;   //!
-   TBranch        *b_j1PFConsEta;   //!
-   TBranch        *b_j1PFConsPhi;   //!
-   TBranch        *b_j1PFConsEt;   //!
-   TBranch        *b_j1PFConsPID;   //!
+   TBranch        *b_jetetaWidth;   //!
+   TBranch        *b_jetphiWidth;   //!
+   TBranch        *b_jetnPhotons;   //!
+   TBranch        *b_jetnCHPions;   //!
+   TBranch        *b_jetnMisc;   //!
+   TBranch        *b_jetMiscPID;   //!
+   TBranch        *b_JetsPFConsPt;   //!
+   TBranch        *b_JetsPFConsEta;   //!
+   TBranch        *b_JetsPFConsPhi;   //!
+   TBranch        *b_JetsPFConsEt;   //!
+   TBranch        *b_JetsPFConsPID;   //!
    TBranch        *b_jetPt;   //!
    TBranch        *b_jetEn;   //!
    TBranch        *b_jetEta;   //!
@@ -730,7 +743,7 @@ public :
    virtual double deltaR(double eta1, double phi1, double eta2, double phi2);
    virtual void fillHistos(int histoNumber,double event_weight);
    virtual float DeltaPhi(float phi1, float phi2);
-   virtual vector<int> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut);
+   virtual vector<int> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut,int UncType);
    virtual vector<int> JetVetoDecision();
    virtual bool btagVeto();
    virtual bool dPhiJetMETcut(std::vector<int> jets);
@@ -738,6 +751,7 @@ public :
    virtual bool electron_veto_looseID(int jet_index, float elePtCut);
    virtual bool muon_veto_looseID(int jet_index, float muPtCut);
    virtual vector<int>getPFCandidates();
+   virtual void AllPFCand(std::vector<int> jetCand,std::vector<int> PFCandidates);
 };
 
 #endif
@@ -1025,12 +1039,17 @@ void ZprimeJetsClass_MC_ZJets::Init(TTree *tree)
    mutrkKink = 0;
    muBestTrkPtError = 0;
    muBestTrkPt = 0;
-   j1MiscPID = 0;
-   j1PFConsPt = 0;
-   j1PFConsEta = 0;
-   j1PFConsPhi = 0;
-   j1PFConsEt = 0;
-   j1PFConsPID = 0;
+   jetetaWidth = 0;
+   jetphiWidth = 0;
+   jetnPhotons = 0;
+   jetnCHPions = 0;
+   jetnMisc = 0;
+   jetMiscPID = 0;
+   JetsPFConsPt = 0;
+   JetsPFConsEta = 0;
+   JetsPFConsPhi = 0;
+   JetsPFConsEt = 0;
+   JetsPFConsPID = 0;
    jetPt = 0;
    jetEn = 0;
    jetEta = 0;
@@ -1347,17 +1366,17 @@ void ZprimeJetsClass_MC_ZJets::Init(TTree *tree)
    fChain->SetBranchAddress("muBestTrkPtError", &muBestTrkPtError, &b_muBestTrkPtError);
    fChain->SetBranchAddress("muBestTrkPt", &muBestTrkPt, &b_muBestTrkPt);
    fChain->SetBranchAddress("nJet", &nJet, &b_nJet);
-   fChain->SetBranchAddress("j1etaWidth", &j1etaWidth, &b_j1etaWidth);
-   fChain->SetBranchAddress("j1phiWidth", &j1phiWidth, &b_j1phiWidth);
-   fChain->SetBranchAddress("j1nPhotons", &j1nPhotons, &b_j1nPhotons);
-   fChain->SetBranchAddress("j1nCHPions", &j1nCHPions, &b_j1nCHPions);
-   fChain->SetBranchAddress("j1nMisc", &j1nMisc, &b_j1nMisc);
-   fChain->SetBranchAddress("j1MiscPID", &j1MiscPID, &b_j1MiscPID);
-   fChain->SetBranchAddress("j1PFConsPt", &j1PFConsPt, &b_j1PFConsPt);
-   fChain->SetBranchAddress("j1PFConsEta", &j1PFConsEta, &b_j1PFConsEta);
-   fChain->SetBranchAddress("j1PFConsPhi", &j1PFConsPhi, &b_j1PFConsPhi);
-   fChain->SetBranchAddress("j1PFConsEt", &j1PFConsEt, &b_j1PFConsEt);
-   fChain->SetBranchAddress("j1PFConsPID", &j1PFConsPID, &b_j1PFConsPID);
+   fChain->SetBranchAddress("jetetaWidth", &jetetaWidth, &b_jetetaWidth);
+   fChain->SetBranchAddress("jetphiWidth", &jetphiWidth, &b_jetphiWidth);
+   fChain->SetBranchAddress("jetnPhotons", &jetnPhotons, &b_jetnPhotons);
+   fChain->SetBranchAddress("jetnCHPions", &jetnCHPions, &b_jetnCHPions);
+   fChain->SetBranchAddress("jetnMisc", &jetnMisc, &b_jetnMisc);
+   fChain->SetBranchAddress("jetMiscPID", &jetMiscPID, &b_jetMiscPID);
+   fChain->SetBranchAddress("JetsPFConsPt", &JetsPFConsPt, &b_JetsPFConsPt);
+   fChain->SetBranchAddress("JetsPFConsEta", &JetsPFConsEta, &b_JetsPFConsEta);
+   fChain->SetBranchAddress("JetsPFConsPhi", &JetsPFConsPhi, &b_JetsPFConsPhi);
+   fChain->SetBranchAddress("JetsPFConsEt", &JetsPFConsEt, &b_JetsPFConsEt);
+   fChain->SetBranchAddress("JetsPFConsPID", &JetsPFConsPID, &b_JetsPFConsPID);
    fChain->SetBranchAddress("jetPt", &jetPt, &b_jetPt);
    fChain->SetBranchAddress("jetEn", &jetEn, &b_jetEn);
    fChain->SetBranchAddress("jetEta", &jetEta, &b_jetEta);

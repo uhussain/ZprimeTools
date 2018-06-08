@@ -583,7 +583,9 @@ void plotter(const char * variable,std::string name)
 
   TFile *f_signal_5GeVfile = new TFile("postSignal.root");
   TH1F *histo_signal_5GeV = (TH1F*)f_signal_5GeVfile ->Get(variable);
-  histo_signal_5GeV->Scale((1.0/2133)*35900*0.047);
+  std::vector<TFile *> SignalFile = {f_signal_5GeVfile};
+  std::vector<float> Signal_Totals = GetTotal(SignalFile);
+  histo_signal_5GeV->Scale((1.0/Signal_Totals[0])*35900*0.047);
   histo_signal_5GeV->SetLineColor(kBlue);
   histo_signal_5GeV->SetLineWidth(2);
   histo_signal_5GeV->Draw("HIST SAME");
