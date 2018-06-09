@@ -418,7 +418,7 @@ void ZprimeJetsClass_MC::BookHistos(const char* file2)
 
   h_dphimin = new TH1F("h_dphimin","h_dphimin; Minimum dPhiJetMET",50,0,3.2);h_dphimin->Sumw2();
   h_metcut  = new TH1F("h_metcut","h_metcut; |pfMET-caloMET|/pfMET", 50,0,1.2);h_metcut->Sumw2();
-  for(int i=0; i<45; i++){
+  for(int i=0; i<46; i++){
 
     char ptbins[100];
     sprintf(ptbins, "_%d", i);
@@ -474,7 +474,7 @@ void ZprimeJetsClass_MC::fillHistos(int histoNumber,double event_weight)
   h_pfMET200[histoNumber]->Fill(pfMET,event_weight);
   h_pfMET[histoNumber]->Fill(pfMET,event_weight);
   h_pfMETPhi[histoNumber]->Fill(pfMETPhi,event_weight);
-  if(jetCand.size()>0){
+  if(jetCand.size()>0 || jetCandUp.size()>0 || jetCandDown.size()>0){
     h_j1Pt[histoNumber]->Fill(jetPt->at(jetCand[0]),event_weight);
     h_j1Eta[histoNumber]->Fill(jetEta->at(jetCand[0]),event_weight);
     h_j1Phi[histoNumber]->Fill(jetPhi->at(jetCand[0]),event_weight); 
