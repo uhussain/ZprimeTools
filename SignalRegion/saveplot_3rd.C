@@ -1,4 +1,4 @@
-//Create: ./rootcom plotter plotter
+B//Create: ./rootcom plotter plotter
 //Usage: ./plotter variable
 //Example: ./plotter h_dileptonM_8
 //X axis label is contained in samplename.txt
@@ -84,14 +84,14 @@ std::vector<std::string> GetName(const char * variable)
       cat = GetCategory(n);
       name="";
     }
-  else if (20<=n && n<=27)
+  else if (24<=n && n<=31)
     {
-      cat = GetCategory(n-12);
+      cat = GetCategory(n-16);
       name="_jesUp";
     }
-  else if (32<=n && n<=39)
+  else if (37<=n && n<=44)
     {
-      cat = GetCategory(n-24);
+      cat = GetCategory(n-29);
       name="_jesDown";
     }
   std::vector<std::string> label = {name,cat};
@@ -107,8 +107,8 @@ void hs_save(std::string cat, const char * variable, std::vector<TH1F*> histo)
   if (file){file.close();}
   else
     {
-      TFile* hs_file = TFile::Open(hs_root,"RECREATE");
-      hs_file->Close();
+      TFile* hs_file1 = TFile::Open(hs_root,"RECREATE");
+      hs_file1->Close();
     }
   TFile* hs_file = TFile::Open(hs_root,"UPDATE");
   /*if (!(hs_file->GetDirectory(region)))
@@ -127,6 +127,7 @@ void hs_save(std::string cat, const char * variable, std::vector<TH1F*> histo)
       histo[i]->SetTitle("");
       histo[i]->Write();
     }
+  std::cout<<"Saving to "<<hs_file->GetName()<<std::endl;
   hs_file->Close();
 }
   

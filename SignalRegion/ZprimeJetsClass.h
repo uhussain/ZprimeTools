@@ -755,7 +755,7 @@ public :
    virtual void BookHistos(const char* file2);
    //virtual double dR(double jetetaWidth, double jetphiWidth);
    virtual double deltaR(double eta1, double phi1, double eta2, double phi2);
-   virtual void fillHistos(int histoNumber);
+   virtual void fillHistos(std::vector<int> jetCand_to_use,int histoNumber);
    virtual float DeltaPhi(float phi1, float phi2);
    virtual vector<int> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut,int UncType);
    virtual vector<int> JetVetoDecision(int UncType);

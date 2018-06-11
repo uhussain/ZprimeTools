@@ -99,7 +99,7 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
     
     jetCand   = getJetCand(200,2.4,0.8,0.1,0);
 
-    fillHistos(0);
+    fillHistos(jetCand,0);
     float metcut= 0.0;
     metcut = (fabs(pfMET-caloMET))/pfMET;
     AllPFCand(jetCand,PFCandidates);
@@ -107,33 +107,33 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
     if (metFilters==1536)
       {    
         nFilters++;
-        fillHistos(1);
+        fillHistos(jetCand,1);
         if ((HLTJet>>4&1 == 1) || (HLTJet>>5&1 == 1) || (HLTJet>>6&1 == 1) || (HLTJet>>8&1 == 1) )//Mono-jet triggers
 	  {
 	    nHLT++;
-	    fillHistos(2);
+	    fillHistos(jetCand,2);
 	    if(jetCand.size()>0)
 	      {
 		nJetSelection++;
-		fillHistos(3);
+		fillHistos(jetCand,3);
 		jetveto = JetVetoDecision(0);
 		if (pfMET>250)
 		  {
 		    nMET200++;
-		    fillHistos(4);
+		    fillHistos(jetCand,4);
 		    h_metcut->Fill(metcut);
 		    if(metcut<0.5)
 		      {
 			nMETcut++;
-			fillHistos(5);
+			fillHistos(jetCand,5);
 			if(electron_veto_looseID(jetCand[0],10) &&  muon_veto_looseID(jetCand[0],10))
 			  {
 			    nLeptonIDs++;
-			    fillHistos(6);
+			    fillHistos(jetCand,6);
 			    if(btagVeto())
 			      {
 				nbtagVeto++;
-				fillHistos(7);
+				fillHistos(jetCand,7);
 				double minDPhiJetMET = TMath::Pi();
 				double minDPhiJetMET_first4 = TMath::Pi();
 				for(int j = 0; j < jetveto.size(); j++)
@@ -149,50 +149,50 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 				if(dPhiJetMETcut(jetveto))
 				  {
 				    nDphiJetMET++;
-				    fillHistos(8);
+				    fillHistos(jetCand,8);
 				    //Category 1: Exactly Two Charged Hadrons
 				    if(TwoChPFCons==1)
 				      {
-					fillHistos(9);
+					fillHistos(jetCand,9);
 					//Effectiveness of this cut in Category 1 Events
 					if(PF12PtFrac_ID_1>0.7)
 					  {
-					    fillHistos(10);}
+					    fillHistos(jetCand,10);}
 				      } 
 				    //Category 2: Two charged Hadrons + Photon
 				    if(TwoChPFConsPlusPho==1)
 				      {
-					fillHistos(11);
+					fillHistos(jetCand,11);
 					//Effectiveness of this cut in Category 2 Events
 					if(PF123PtFrac_ID_2>0.7)
 					  {
-					    fillHistos(12);}
+					    fillHistos(jetCand,12);}
 				      }
 				    //Category of events with < 2 charged Hadrons
 				    if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
 				      {
-					fillHistos(13);
+					fillHistos(jetCand,13);
 					//Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
 					if(jetetaWidth->at(jetCand[0])<0.04)
 					  {
-					    fillHistos(14);
+					    fillHistos(jetCand,14);
 					  }}
 				    //This is for comparison with previous results (for all events)
 				    if (jetetaWidth->at(jetCand[0])<0.04)
 				      {
-					fillHistos(15);
+					fillHistos(jetCand,15);
 				      }
 				    if (Pt123Fraction>0.5)
 				      {
-					fillHistos(16);
+					fillHistos(jetCand,16);
 				      }
 				    if (Pt123Fraction>0.6)
 				      {
-					fillHistos(17);
+					fillHistos(jetCand,17);
 				      }
 				    if (Pt123Fraction>0.7)
 				      {
-					fillHistos(18);
+					fillHistos(jetCand,18);
 				      }
 				  }
 			      }   
@@ -204,22 +204,22 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 	    AllPFCand(jetCandUp,PFCandidates);
 	    if (jetCandUp.size() > 0)
 	      {
-		fillHistos(19);
+		fillHistos(jetCandUp,19);
 		jetveto = JetVetoDecision(1);
 		if (pfMET_T1JESUp>250)
 		  {
 		    MET_to_use = pfMET_T1JESUp;
 		    METPhi_to_use = pfMETPhi_T1JESUp;
-		    fillHistos(20);
+		    fillHistos(jetCandUp,20);
 		    if(metcut<0.5)
 		      {
-			fillHistos(21);
+			fillHistos(jetCandUp,21);
 			if(electron_veto_looseID(jetCandUp[0],10) &&  muon_veto_looseID(jetCandUp[0],10))
 			  {
-			    fillHistos(22);
+			    fillHistos(jetCandUp,22);
 			    if(btagVeto())
 			      {
-				fillHistos(23);
+				fillHistos(jetCandUp,23);
 				double minDPhiJetMET = TMath::Pi();
 				double minDPhiJetMET_first4 = TMath::Pi();
 				for(int j = 0; j < jetveto.size(); j++)
@@ -234,38 +234,38 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 				h_dphimin->Fill(minDPhiJetMET_first4);
 				if(dPhiJetMETcut(jetveto))
 				  {
-				    fillHistos(24);
+				    fillHistos(jetCandUp,24);
 				    //Category 1: Exactly Two Charged Hadrons
 				    if(TwoChPFCons==1)
 				      {
-					fillHistos(25);
+					fillHistos(jetCandUp,25);
 					//Effectiveness of this cut in Category 1 Events
 					if(PF12PtFrac_ID_1>0.7)
 					  {
-					    fillHistos(26);}
+					    fillHistos(jetCandUp,26);}
 				      } 
 				    //Category 2: Two charged Hadrons + Photon
 				    if(TwoChPFConsPlusPho==1)
 				      {
-					fillHistos(27);
+					fillHistos(jetCandUp,27);
 					//Effectiveness of this cut in Category 2 Events
 					if(PF123PtFrac_ID_2>0.7)
 					  {
-					    fillHistos(28);}
+					    fillHistos(jetCandUp,28);}
 				      }
 				    //Category of events with < 2 charged Hadrons
 				    if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
 				      {
-					fillHistos(29);
+					fillHistos(jetCandUp,29);
 					//Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
 					if(jetetaWidth->at(jetCandUp[0])<0.04)
 					  {
-					    fillHistos(30);
+					    fillHistos(jetCandUp,30);
 					  }}
 				    //This is for comparison with previous results (for all events)
 				    if (jetetaWidth->at(jetCandUp[0])<0.04)
 				      {
-					fillHistos(31);
+					fillHistos(jetCandUp,31);
 				      }
 				  }
 			      }   
@@ -278,22 +278,22 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 	    AllPFCand(jetCandDown,PFCandidates);
 	    if (jetCandDown.size() > 0)
 	      {
-		fillHistos(32);
+		fillHistos(jetCandDown,32);
 		jetveto = JetVetoDecision(-1);
 		if (pfMET_T1JESDo>250)
 		  {
 		    MET_to_use = pfMET_T1JESDo;
 		    METPhi_to_use = pfMETPhi_T1JESDo;
-		    fillHistos(33);
+		    fillHistos(jetCandDown,33);
 		    if(metcut<0.5)
 		      {
-			fillHistos(34);
+			fillHistos(jetCandDown,34);
 			if(electron_veto_looseID(jetCandDown[0],10) &&  muon_veto_looseID(jetCandDown[0],10))
 			  {
-			    fillHistos(35);
+			    fillHistos(jetCandDown,35);
 			    if(btagVeto())
 			      {
-				fillHistos(36);
+				fillHistos(jetCandDown,36);
 				double minDPhiJetMET = TMath::Pi();
 				double minDPhiJetMET_first4 = TMath::Pi();
 				for(int j = 0; j < jetveto.size(); j++)
@@ -308,38 +308,38 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 				h_dphimin->Fill(minDPhiJetMET_first4);
 				if(dPhiJetMETcut(jetveto))
 				  {
-				    fillHistos(37);
+				    fillHistos(jetCandDown,37);
 				    //Category 1: Exactly Two Charged Hadrons
 				    if(TwoChPFCons==1)
 				      {
-					fillHistos(38);
+					fillHistos(jetCandDown,38);
 					//Effectiveness of this cut in Category 1 Events
 					if(PF12PtFrac_ID_1>0.7)
 					  {
-					    fillHistos(39);}
+					    fillHistos(jetCandDown,39);}
 				      } 
 				    //Category 2: Two charged Hadrons + Photon
 				    if(TwoChPFConsPlusPho==1)
 				      {
-					fillHistos(40);
+					fillHistos(jetCandDown,40);
 					//Effectiveness of this cut in Category 2 Events
 					if(PF123PtFrac_ID_2>0.7)
 					  {
-					    fillHistos(41);}
+					    fillHistos(jetCandDown,41);}
 				      }
 				    //Category of events with < 2 charged Hadrons
 				    if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
 				      {
-					fillHistos(42);
+					fillHistos(jetCandDown,42);
 					//Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
 					if(jetetaWidth->at(jetCandDown[0])<0.04)
 					  {
-					    fillHistos(43);
+					    fillHistos(jetCandDown,43);
 					  }}
 				    //This is for comparison with previous results (for all events)
 				    if (jetetaWidth->at(jetCandDown[0])<0.04)
 				      {
-					fillHistos(44);
+					fillHistos(jetCandDown,44);
 				      }
 				  }
 			      }   
@@ -453,7 +453,7 @@ void ZprimeJetsClass::BookHistos(const char* file2)
 //}
 
 
-void ZprimeJetsClass::fillHistos(int histoNumber)
+void ZprimeJetsClass::fillHistos(std::vector<int> jetCand_to_use, int histoNumber)
 {
   h_nVtx[histoNumber]->Fill(nVtx);
   h_metFilters[histoNumber]->Fill(metFilters);
@@ -462,10 +462,10 @@ void ZprimeJetsClass::fillHistos(int histoNumber)
   h_pfMET200[histoNumber]->Fill(pfMET);
   h_pfMET[histoNumber]->Fill(pfMET);
   h_pfMETPhi[histoNumber]->Fill(pfMETPhi);
-  if(jetCand.size()>0 || jetCandUp.size()>0 || jetCandDown.size()>0){
-    h_j1Pt[histoNumber]->Fill(jetPt->at(jetCand[0]));
-    h_j1Eta[histoNumber]->Fill(jetEta->at(jetCand[0]));
-    h_j1Phi[histoNumber]->Fill(jetPhi->at(jetCand[0]));
+  if(jetCand_to_use.size()>0){
+    h_j1Pt[histoNumber]->Fill(jetPt->at(jetCand_to_use[0]));
+    h_j1Eta[histoNumber]->Fill(jetEta->at(jetCand_to_use[0]));
+    h_j1Phi[histoNumber]->Fill(jetPhi->at(jetCand_to_use[0]));
     h_j1nCategory1[histoNumber]->Fill(TwoChPFCons); 
     h_j1nCategory2[histoNumber]->Fill(TwoChPFConsPlusPho);
     h_PF123PtFraction[histoNumber]->Fill(Pt123Fraction);
@@ -478,19 +478,19 @@ void ZprimeJetsClass::fillHistos(int histoNumber)
     h_j1ChPFCands[histoNumber]->Fill(ChargedPFCandidates);
     h_j1NeutPFCands[histoNumber]->Fill(NeutralPFCandidates);
     h_j1GammaPFCands[histoNumber]->Fill(GammaPFCandidates);
-    h_j1CHF[histoNumber]->Fill(jetCHF->at(jetCand[0]));
-    h_j1NHF[histoNumber]->Fill(jetNHF->at(jetCand[0]));
-    h_j1ChMultiplicity[histoNumber]->Fill(jetNCH->at(jetCand[0]));
-    h_j1NeutMultiplicity[histoNumber]->Fill(jetNNP->at(jetCand[0]));
-    h_j1Mt[histoNumber]->Fill(jetMt->at(jetCand[0]));
+    h_j1CHF[histoNumber]->Fill(jetCHF->at(jetCand_to_use[0]));
+    h_j1NHF[histoNumber]->Fill(jetNHF->at(jetCand_to_use[0]));
+    h_j1ChMultiplicity[histoNumber]->Fill(jetNCH->at(jetCand_to_use[0]));
+    h_j1NeutMultiplicity[histoNumber]->Fill(jetNNP->at(jetCand_to_use[0]));
+    h_j1Mt[histoNumber]->Fill(jetMt->at(jetCand_to_use[0]));
     //Category3
     h_ChPionPt[histoNumber]->Fill(Cat3_ChPionPt);
     h_PhotonPt[histoNumber]->Fill(Cat3_PhotonPt);
     if(Cat3_ChPionPt>0 && Cat3_PhotonPt>0){
       h_dRPionPhoton[histoNumber]->Fill(dR_PionPhoton_3);}
-    h_j1etaWidth[histoNumber]->Fill(jetetaWidth->at(jetCand[0]));
-    h_j1phiWidth[histoNumber]->Fill(jetphiWidth->at(jetCand[0]));
-    h_j1nCons[histoNumber]->Fill(jetnPhotons->at(jetCand[0])+jetnCHPions->at(jetCand[0])+jetnMisc->at(jetCand[0]));
+    h_j1etaWidth[histoNumber]->Fill(jetetaWidth->at(jetCand_to_use[0]));
+    h_j1phiWidth[histoNumber]->Fill(jetphiWidth->at(jetCand_to_use[0]));
+    h_j1nCons[histoNumber]->Fill(jetnPhotons->at(jetCand_to_use[0])+jetnCHPions->at(jetCand_to_use[0])+jetnMisc->at(jetCand_to_use[0]));
   }
 }
 

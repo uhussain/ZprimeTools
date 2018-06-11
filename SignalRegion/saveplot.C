@@ -84,14 +84,14 @@ std::vector<std::string> GetName(const char * variable)
       cat = GetCategory(n);
       name="";
     }
-  else if (20<=n && n<=27)
+  else if (24<=n && n<=31)
     {
-      cat = GetCategory(n-12);
+      cat = GetCategory(n-16);
       name="_jesUp";
     }
-  else if (32<=n && n<=39)
+  else if (37<=n && n<=44)
     {
-      cat = GetCategory(n-24);
+      cat = GetCategory(n-29);
       name="_jesDown";
     }
   std::vector<std::string> label = {name,cat};

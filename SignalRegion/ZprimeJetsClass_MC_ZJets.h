@@ -740,7 +740,7 @@ TH1F *h_nVtx[46], *h_metcut, *h_dphimin,*h_metFilters[46],*h_pfMETall[46],*h_pfM
    virtual void     Show(Long64_t entry = -1);
    virtual void BookHistos(const char* file2);
    virtual double deltaR(double eta1, double phi1, double eta2, double phi2);
-   virtual void fillHistos(int histoNumber,double event_weight);
+   virtual void fillHistos(std::vector<int> jetCand_to_use,int histoNumber,double event_weight);
    virtual float DeltaPhi(float phi1, float phi2);
    virtual vector<int> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut,int UncType);
    virtual vector<int> JetVetoDecision(int UncType);
