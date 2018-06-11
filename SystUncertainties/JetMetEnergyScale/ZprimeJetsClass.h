@@ -50,20 +50,36 @@ public :
 
    TFile *fileName;
    TTree *tree;
-
+   
+   //Declaring these jet Vectors and jet substructure vectors
+   std::vector<int> jetCand;
+   std::vector<int> jetCandUp;
+   std::vector<int> jetCandDown;
+   std::vector<double>j1PFConsPt;
+   std::vector<double>j1PFConsEta;
+   std::vector<double>j1PFConsPhi;
+   std::vector<int>j1PFConsPID;
+   
    //Categorizing events based on no.of charged Hadrons in PencilJet
    int NoPosPFCons,NoNegPFCons,NoPhoPFCons;
    double j1PFPosConsPt, j1PFPosConsEta,j1PFPosConsPhi, j1PFNegConsPt,j1PFNegConsEta,j1PFNegConsPhi,j1PFPhoConsPt,j1PFPhoConsEta,j1PFPhoConsPhi;
    int TwoChPFCons,TwoChPFConsPlusPho;
    double PF12PtFrac_ID_1,PF12PtFrac_ID_2,dR_PF12_ID_1,dR_PF12_ID_2,PF123PtFrac_ID_2;
 
+   double Pt123,Pt123Fraction;
+    //Category 3 variables
+   double dR_PionPhoton_3,Cat3_ChPionPt,Cat3_PhotonPt,Cat3_ChPionEta,Cat3_PhotonEta,Cat3_ChPionPhi,Cat3_PhotonPhi;
    //getPFCandidates
    int TotalPFCandidates, ChargedPFCandidates,NeutralPFCandidates,GammaPFCandidates;
 
-   TH1F *h_nVtx[16],*h_metcut, *h_dphimin,*h_metFilters[16],*h_pfMETall[16],*h_pfMET200[16],*h_nJets[16],*h_pfMET[16],*h_pfMETPhi[16],*h_j1nCategory1[16],*h_j1nCategory2[16],*h_j1dRPF12_ID_1[16],*h_j1dRPF12_ID_2[16];
-   TH1F *h_j1Pt[16], *h_j1Eta[16], *h_j1Phi[16], *h_j1etaWidth[16], *h_j1phiWidth[16],*h_j1nCons[16], *h_j1PF12PtFrac_ID_1[16], *h_j1PF12PtFrac_ID_2[16],*h_j1PFPtFrac_ID_2[16]; 
-   TH1F *h_j1TotPFCands[16], *h_j1ChPFCands[16], *h_j1NeutPFCands[16], *h_j1GammaPFCands[16], *h_j1CHF[16], *h_j1NHF[16], *h_j1ChMultiplicity[16], *h_j1NeutMultiplicity[16],*h_j1Mt[16]; 
-   
+   Float_t MET_to_use, METPhi_to_use;
+
+   TH1F *h_nVtx[46],*h_metcut, *h_dphimin,*h_metFilters[46],*h_pfMETall[46],*h_pfMET200[46],*h_nJets[46],*h_pfMET[46],*h_pfMETPhi[46],*h_j1nCategory1[46],*h_j1nCategory2[46],*h_j1dRPF12_ID_1[46],*h_j1dRPF12_ID_2[46];
+   TH1F *h_j1Pt[46], *h_j1Eta[46], *h_j1Phi[46], *h_j1etaWidth[46], *h_j1phiWidth[46],*h_j1nCons[46], *h_j1PF12PtFrac_ID_1[46], *h_j1PF12PtFrac_ID_2[46],*h_j1PFPtFrac_ID_2[46],*h_PF123PtFraction[46];  
+   TH1F *h_j1TotPFCands[46], *h_j1ChPFCands[46], *h_j1NeutPFCands[46], *h_j1GammaPFCands[46], *h_j1CHF[46], *h_j1NHF[46], *h_j1ChMultiplicity[46], *h_j1NeutMultiplicity[46],*h_j1Mt[46]; 
+   //Category3 Histos
+   TH1F *h_ChPionPt[46],*h_PhotonPt[46],*h_dRPionPhoton[46];
+
    TH1D *h_cutflow;
    // Fixed size dimensions of array or collections stored in the TTree if any.                   
    // Declaration of leaf types
@@ -291,17 +307,17 @@ public :
    vector<float>   *muBestTrkPtError;
    vector<float>   *muBestTrkPt;
    Int_t           nJet;
-   Double_t        j1etaWidth;
-   Double_t        j1phiWidth;
-   Double_t        j1nPhotons;
-   Double_t        j1nCHPions;
-   Double_t        j1nMisc;
-   vector<int>     *j1MiscPID;
-   vector<double>  *j1PFConsPt;
-   vector<double>  *j1PFConsEta;
-   vector<double>  *j1PFConsPhi;
-   vector<double>  *j1PFConsEt;
-   vector<int>     *j1PFConsPID;
+   vector<double>  *jetetaWidth;
+   vector<double>  *jetphiWidth;
+   vector<double>  *jetnPhotons;
+   vector<double>  *jetnCHPions;
+   vector<double>  *jetnMisc;
+   vector<vector<int> > *jetMiscPID;
+   vector<vector<double> > *JetsPFConsPt;
+   vector<vector<double> > *JetsPFConsEta;
+   vector<vector<double> > *JetsPFConsPhi;
+   vector<vector<double> > *JetsPFConsEt;
+   vector<vector<int> > *JetsPFConsPID;
    vector<float>   *jetPt;
    vector<float>   *jetEn;
    vector<float>   *jetEta;
@@ -621,17 +637,17 @@ public :
    TBranch        *b_muBestTrkPtError;   //!
    TBranch        *b_muBestTrkPt;   //!
    TBranch        *b_nJet;   //!
-   TBranch        *b_j1etaWidth;   //!
-   TBranch        *b_j1phiWidth;   //!
-   TBranch        *b_j1nPhotons;   //!
-   TBranch        *b_j1nCHPions;   //!
-   TBranch        *b_j1nMisc;   //!
-   TBranch        *b_j1MiscPID;   //!
-   TBranch        *b_j1PFConsPt;   //!
-   TBranch        *b_j1PFConsEta;   //!
-   TBranch        *b_j1PFConsPhi;   //!
-   TBranch        *b_j1PFConsEt;   //!
-   TBranch        *b_j1PFConsPID;   //!
+   TBranch        *b_jetetaWidth;   //!
+   TBranch        *b_jetphiWidth;   //!
+   TBranch        *b_jetnPhotons;   //!
+   TBranch        *b_jetnCHPions;   //!
+   TBranch        *b_jetnMisc;   //!
+   TBranch        *b_jetMiscPID;   //!
+   TBranch        *b_JetsPFConsPt;   //!
+   TBranch        *b_JetsPFConsEta;   //!
+   TBranch        *b_JetsPFConsPhi;   //!
+   TBranch        *b_JetsPFConsEt;   //!
+   TBranch        *b_JetsPFConsPID;   //!
    TBranch        *b_jetPt;   //!
    TBranch        *b_jetEn;   //!
    TBranch        *b_jetEta;   //!
@@ -739,16 +755,17 @@ public :
    virtual void BookHistos(const char* file2);
    //virtual double dR(double jetetaWidth, double jetphiWidth);
    virtual double deltaR(double eta1, double phi1, double eta2, double phi2);
-   virtual void fillHistos(int histoNumber);
+   virtual void fillHistos(std::vector<int> jetCand_to_use,int histoNumber);
    virtual float DeltaPhi(float phi1, float phi2);
-   virtual vector<int> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut);
-   virtual vector<int> JetVetoDecision();
+   virtual vector<int> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut,int UncType);
+   virtual vector<int> JetVetoDecision(int UncType);
    virtual bool btagVeto();
    virtual bool dPhiJetMETcut(std::vector<int> jets);
    virtual float dPhiJetMETmin(std::vector<int> jets);
    virtual bool electron_veto_looseID(int jet_index, float elePtCut);
    virtual bool muon_veto_looseID(int jet_index, float muPtCut);
    virtual vector<int>getPFCandidates();
+   virtual void AllPFCand(std::vector<int> jetCand,std::vector<int> PFCandidates);
 };
 
 #endif
@@ -772,7 +789,8 @@ ZprimeJetsClass::ZprimeJetsClass(const char* file1,const char* file2)
     std::cout<<"name: "<<(filename->GetName())<<std::endl;
     std::cout<<"fileNumber: "<<fileNumber<<std::endl;
 
-     TString dataset = "ggtree_data_";
+     TString dataset = "ggtree_data";
+     //TString dataset = "Zprime_";
      TString  FullPathInputFile = (path+filename->GetName());
      TString name = filename->GetName();
      if(name.Contains(dataset))
@@ -1009,12 +1027,17 @@ void ZprimeJetsClass::Init(TTree *tree)
    mutrkKink = 0;
    muBestTrkPtError = 0;
    muBestTrkPt = 0;
-   j1MiscPID = 0;
-   j1PFConsPt = 0;
-   j1PFConsEta = 0;
-   j1PFConsPhi = 0;
-   j1PFConsEt = 0;
-   j1PFConsPID = 0;
+   jetetaWidth = 0;
+   jetphiWidth = 0;
+   jetnPhotons = 0;
+   jetnCHPions = 0;
+   jetnMisc = 0;
+   jetMiscPID = 0;
+   JetsPFConsPt = 0;
+   JetsPFConsEta = 0;
+   JetsPFConsPhi = 0;
+   JetsPFConsEt = 0;
+   JetsPFConsPID = 0;
    jetPt = 0;
    jetEn = 0;
    jetEta = 0;
@@ -1337,17 +1360,17 @@ void ZprimeJetsClass::Init(TTree *tree)
    fChain->SetBranchAddress("muBestTrkPtError", &muBestTrkPtError, &b_muBestTrkPtError);
    fChain->SetBranchAddress("muBestTrkPt", &muBestTrkPt, &b_muBestTrkPt);
    fChain->SetBranchAddress("nJet", &nJet, &b_nJet);
-   fChain->SetBranchAddress("j1etaWidth", &j1etaWidth, &b_j1etaWidth);
-   fChain->SetBranchAddress("j1phiWidth", &j1phiWidth, &b_j1phiWidth);
-   fChain->SetBranchAddress("j1nPhotons", &j1nPhotons, &b_j1nPhotons);
-   fChain->SetBranchAddress("j1nCHPions", &j1nCHPions, &b_j1nCHPions);
-   fChain->SetBranchAddress("j1nMisc", &j1nMisc, &b_j1nMisc);
-   fChain->SetBranchAddress("j1MiscPID", &j1MiscPID, &b_j1MiscPID);
-   fChain->SetBranchAddress("j1PFConsPt", &j1PFConsPt, &b_j1PFConsPt);
-   fChain->SetBranchAddress("j1PFConsEta", &j1PFConsEta, &b_j1PFConsEta);
-   fChain->SetBranchAddress("j1PFConsPhi", &j1PFConsPhi, &b_j1PFConsPhi);
-   fChain->SetBranchAddress("j1PFConsEt", &j1PFConsEt, &b_j1PFConsEt);
-   fChain->SetBranchAddress("j1PFConsPID", &j1PFConsPID, &b_j1PFConsPID);
+   fChain->SetBranchAddress("jetetaWidth", &jetetaWidth, &b_jetetaWidth);
+   fChain->SetBranchAddress("jetphiWidth", &jetphiWidth, &b_jetphiWidth);
+   fChain->SetBranchAddress("jetnPhotons", &jetnPhotons, &b_jetnPhotons);
+   fChain->SetBranchAddress("jetnCHPions", &jetnCHPions, &b_jetnCHPions);
+   fChain->SetBranchAddress("jetnMisc", &jetnMisc, &b_jetnMisc);
+   fChain->SetBranchAddress("jetMiscPID", &jetMiscPID, &b_jetMiscPID);
+   fChain->SetBranchAddress("JetsPFConsPt", &JetsPFConsPt, &b_JetsPFConsPt);
+   fChain->SetBranchAddress("JetsPFConsEta", &JetsPFConsEta, &b_JetsPFConsEta);
+   fChain->SetBranchAddress("JetsPFConsPhi", &JetsPFConsPhi, &b_JetsPFConsPhi);
+   fChain->SetBranchAddress("JetsPFConsEt", &JetsPFConsEt, &b_JetsPFConsEt);
+   fChain->SetBranchAddress("JetsPFConsPID", &JetsPFConsPID, &b_JetsPFConsPID);
    fChain->SetBranchAddress("jetPt", &jetPt, &b_jetPt);
    fChain->SetBranchAddress("jetEn", &jetEn, &b_jetEn);
    fChain->SetBranchAddress("jetEta", &jetEta, &b_jetEta);
