@@ -122,7 +122,7 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
     lepindex_subleading = -1;
     dilepton_pt = dilepton_mass = Recoil=-99;
     nTotalEvents+=event_weight;
-    if (metFilters==0)
+    if (genHT < 100 && metFilters==0)
       {   
         nFilters+=event_weight;
         fillHistos(0,event_weight);

@@ -831,7 +831,7 @@ void plotter(const char * variable,std::string name)
 
 int main(int argc, const char *argv[])
 {
-  std::vector<const char*> variable = {"pfMET_15","pfMET_27","pfMET_39"};
+  std::vector<const char*> variable = {"pfMET_15","pfMET_31","pfMET_44"};
   std::vector<std::string> type = {"Base","JesUp","JesDown"};
   for (int i = 0; i < variable.size(); i++)
     {

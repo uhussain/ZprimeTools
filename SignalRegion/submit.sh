@@ -69,7 +69,7 @@ echo "Do the MC samples"
 ./MakeCondorFiles.csh analyze /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/ZZ_TuneCUETP8M1_13TeV-pythia8/crab_ZZ/180528_*/0000/ postZZ.root -1 10000 ZZ PU_Central.root
 
 
-#WJets
+WJets
 ./rootcom ZprimeJetsClass_MC_WJets_inclusive analyzeWJets1
 
 ./MakeCondorFiles_WZ.csh analyzeWJets1 /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_WJets/180528_*/0000/ postWJets_MLM_0.root -1 10000 W_0 kfactors.root PU_Central.root
@@ -90,7 +90,7 @@ echo "Do the MC samples"
                                                                                                                                                                                                                       
 ./MakeCondorFiles_WZ.csh analyzeWJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_HT-2500ToInf_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_W7Jets/180528_*/0000/ postW2500toInf_0.root -1 10000 W2500_0 kfactors.root PU_Central.root
 
-#ZJets
+ZJets
 
 ./rootcom ZprimeJetsClass_MC_ZJets analyzeZJets
 

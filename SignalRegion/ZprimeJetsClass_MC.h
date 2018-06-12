@@ -770,7 +770,7 @@ ZprimeJetsClass_MC::ZprimeJetsClass_MC(const char* file1,const char* file2)
     std::cout<<"name: "<<(filename->GetName())<<std::endl;
     std::cout<<"fileNumber: "<<fileNumber<<std::endl;
 
-     TString dataset = "ggtree_signal5GeV_May";
+     TString dataset = "ggtree_mc_";
      TString  FullPathInputFile = (path+filename->GetName());
      TString name = filename->GetName();
      if(name.Contains(dataset))

@@ -65,7 +65,7 @@ std::string SampleName(const char * variable)
 void hs_save(const char * variable, std::vector<TH1F*> hs_list)
 {
   const char* hs_root = "../../Plots/Histogram.root";
-  const char* region = "DoubleEleCR";
+  const char* region = "DoubleMuCR";
   std::ifstream file(hs_root);
   if (file){file.close();}
   else
@@ -123,14 +123,14 @@ void plotter(const char * variable,std::string name)
   double lumi_2 = 35900.;
 
   std::cout << name << std::endl;
-  std::ifstream file("postSingleEle_final.root");
+  std::ifstream file("postDoubleMu_final.root");
   if (file)
     {
       file.close();
     }
   else
     {
-      system("hadd -f postSingleEle_final.root postSingleEle_{0..19}.root");
+      system("hadd -f postDoubleMu_final.root postDoubleMu_{0..19}.root");
     }
 
   TCanvas *c = new TCanvas("c", "canvas",800,800);
@@ -147,7 +147,7 @@ void plotter(const char * variable,std::string name)
   pad1->SetBottomMargin(0.);
   
   //opening the data file and adding "h_dileptonM_8" histogram
-  TFile *f_datafile_0 = new TFile("postSingleEle_final.root");
+  TFile *f_datafile_0 = new TFile("postDoubleMu_final.root");
   //TFile *f_datafile_1 = new TFile("postMETdata_1.root");
   TH1F *histo_j1EtaWidth_data_0 = (TH1F*)f_datafile_0->Get(variable);
   //TH1F *histo_j1EtaWidth_data_1 = (TH1F*)f_datafile_1->Get(variable);
@@ -825,8 +825,8 @@ void plotter(const char * variable,std::string name)
   yaxis_right->Draw("SAME");  
  
 */
-  c->SaveAs((std::string("../../Plots/DouEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".pdf")).c_str());
-  c->SaveAs((std::string("../../Plots/DouEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".png")).c_str());
+  c->SaveAs((std::string("../../Plots/DouMuCRPlots_EWK/datamc_")+std::string(variable)+std::string(".pdf")).c_str());
+  c->SaveAs((std::string("../../Plots/DouMuCRPlots_EWK/datamc_")+std::string(variable)+std::string(".png")).c_str());
 }
 
 int main(int argc, const char *argv[])

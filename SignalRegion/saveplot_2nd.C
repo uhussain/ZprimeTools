@@ -1,4 +1,4 @@
-B//Create: ./rootcom plotter plotter
+//Create: ./rootcom plotter plotter
 //Usage: ./plotter variable
 //Example: ./plotter h_dileptonM_8
 //X axis label is contained in samplename.txt
