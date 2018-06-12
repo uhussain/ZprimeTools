@@ -67,7 +67,6 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
   std::cout<<"nentries:"<<nentries<<std::endl;
   Long64_t nentriesToCheck = nentries;   
   //jetCandidate that passes the basic pt,eta, NHF, CHF cuts
-  std::vector<int> jetCand;
   jetCand.clear();
 
   std::vector<int> jetveto;

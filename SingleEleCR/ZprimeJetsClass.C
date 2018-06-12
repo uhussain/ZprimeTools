@@ -66,7 +66,6 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
   std::cout<<"nentries:"<<nentries<<std::endl;
   Long64_t nentriesToCheck = nentries;   
 
-  std::vector<int> jetCand;
   jetCand.clear();
   std::vector<int> jetveto;
   jetveto.clear();
