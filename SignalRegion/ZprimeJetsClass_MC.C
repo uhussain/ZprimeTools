@@ -716,7 +716,7 @@ std::vector<int> ZprimeJetsClass_MC::getJetCand(double jetPtCut, double jetEtaCu
       Float_t jetPt_to_use;
       if (UncType == 0){jetPt_to_use = (*jetPt)[p];}
       else if (UncType == 1){jetPt_to_use = (*jetPt)[p]*(1+(*jetJECUnc)[p]);}
-      else if (UncType == -1){jetPt_to_use = (*jetPt)[p]*(1+(*jetJECUnc)[p]);}
+      else if (UncType == -1){jetPt_to_use = (*jetPt)[p]*(1-(*jetJECUnc)[p]);}
       
       bool kinematic = jetPt_to_use > jetPtCut && (*jetNHF)[p] < jetNHFCut && (*jetCHF)[p] > jetCHFCut && fabs((*jetEta)[p])<jetEtaCut;
 

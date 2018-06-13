@@ -32,9 +32,8 @@ std::vector<float> GetTotal(std::vector<TFile*> Files)
   std::vector<float> Total = {};
   for (int i = 0; i < Files.size(); i++)
     {
-      TH1F *cutflow = (TH1F*)Files[i]->Get("pfMET_0");
-      Total.push_back(cutflow->Integral());
-      std::cout<<Total[i]<<std::endl;
+      TH1D *cutflow = (TH1D*)Files[i]->Get("h_cutflow");
+      Total.push_back(cutflow->GetBinContent(1));
     }
   return Total;
 }
@@ -191,7 +190,7 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_W7Jets->SetStats(0);
 
   double rawWJets = (histo_j1EtaWidth_WJets_0->Integral())+ (histo_j1EtaWidth_W1Jets->Integral())+ (histo_j1EtaWidth_W2Jets->Integral())+ (histo_j1EtaWidth_W3Jets->Integral())+ (histo_j1EtaWidth_W4Jets->Integral())+ (histo_j1EtaWidth_W5Jets->Integral())+ (histo_j1EtaWidth_W6Jets->Integral())+ (histo_j1EtaWidth_W7Jets->Integral());
-  std::cout<<"raw WJets events: "<<rawWJets<<std::endl;
+  //std::cout<<"raw WJets events: "<<rawWJets<<std::endl;
 
    // Scaling = (1/Totalevents)*Luminosity*NNLO-cross-section
   histo_j1EtaWidth_WJets_0->Scale((1.0/WJets_Total[0])*35900*50690);
@@ -245,7 +244,7 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_2500toInf->SetStats(0);
 
   double rawZvvJets = (histo_j1EtaWidth_100to200->Integral())+ (histo_j1EtaWidth_200to400->Integral())+ (histo_j1EtaWidth_400to600->Integral())+ (histo_j1EtaWidth_600to800->Integral())+ (histo_j1EtaWidth_800to1200->Integral())+ (histo_j1EtaWidth_1200to2500->Integral())+ (histo_j1EtaWidth_2500toInf->Integral()); 
-  std::cout<<"raw ZvvJets bkg:"<<rawZvvJets<<std::endl;
+  //std::cout<<"raw ZvvJets bkg:"<<rawZvvJets<<std::endl;
   
   // Scaling = (1/Totalevents)*Luminosity*LO-cross-section
   histo_j1EtaWidth_100to200->Scale((1.0/Zvv_Total[0])*35900*280.35);
@@ -277,7 +276,7 @@ void plotter(const char * variable,std::string name)
 
   double integralZvvJets = histo_j1EtaWidth_100to200->Integral();
   std::cout<<"integral of ZvvJets bkg here:"<<integralZvvJets<<std::endl;
-
+ 
   //opening background samples Gamma+jets
   std::vector<const char *> GJets_FileNames = {"postGJets40to100.root","postGJets100to200.root","postGJets200to400.root","postGJets400to600.root","postGJets600toInf.root"};
   std::vector<TFile *> GJets_Files;
@@ -391,7 +390,7 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_TTJets->SetStats(0);
 
   double rawTTJets = histo_j1EtaWidth_TTJets->Integral();
-  std::cout<<"raw TTJets here:"<<rawTTJets<<std::endl;
+  //std::cout<<"raw TTJets here:"<<rawTTJets<<std::endl;
 
   histo_j1EtaWidth_TTJets->Scale((1.0/TTJets_Total[0])*35900*502.2);
 
@@ -491,7 +490,7 @@ void plotter(const char * variable,std::string name)
 
   double TotintegralDiBoson = histo_j1EtaWidth_WW->Integral();
   std::cout<<"integral of WW/WZ/ZZ bkg here:"<<TotintegralDiBoson<<std::endl;
-
+  
  //opening QCD background files (HT-binned samples)
   std::vector<const char *> QJets_FileNames = {"postQCD100to200_0.root","postQCD200to300_0.root","postQCD300to500_0.root","postQCD500to700_0.root","postQCD700to1000_0.root","postQCD1000to1500_0.root","postQCD1500to2000_0.root","postQCD2000toInf_0.root"};
   std::vector<TFile *> QJets_Files;
@@ -545,7 +544,7 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_Q1Jets->GetYaxis()->SetTickLength(0);
   histo_j1EtaWidth_Q1Jets->GetYaxis()->SetLabelOffset(999);
   histo_j1EtaWidth_Q1Jets->SetFillColor(kGray);
-
+  
   //Stack histograms using THStack
   /*THStack *hs_datamc = new THStack("hs_datamc","Data/MC comparison");
   std::vector<TH1F*> hs_list = {histo_j1EtaWidth_100to200,histo_j1EtaWidth_G1Jets,histo_j1EtaWidth_TTJets,histo_j1EtaWidth_Q1Jets,histo_j1EtaWidth_WW,histo_j1EtaWidth_DY1Jets,histo_j1EtaWidth_WJets_0};
@@ -831,8 +830,8 @@ void plotter(const char * variable,std::string name)
 
 int main(int argc, const char *argv[])
 {
-  std::vector<const char*> variable = {"pfMET_15","pfMET_31","pfMET_44"};
-  std::vector<std::string> type = {"Base","JesUp","JesDown"};
+  std::vector<const char*> variable = {"pfMET_15"};//,"pfMET_31","pfMET_44","pfMET_10","pfMET_26","pfMET_39","pfMET_12","pfMET_28","pfMET_41","pfMET_14","pfMET_30","pfMET_43"};
+  std::vector<std::string> type = {"NoCat","NoCatJesUp","NoCatJesDown","Cat1","Cat1JesUp","Cat1JesDown","Cat2","Cat2JesUp","Cat2JesDown","Cat3Base","Cat3JesUp","Cat3JesDown"};
   for (int i = 0; i < variable.size(); i++)
     {
       std::string name = type[i];
