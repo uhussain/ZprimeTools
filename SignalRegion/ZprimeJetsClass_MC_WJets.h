@@ -52,9 +52,9 @@ public :
    TTree *tree;
 
    //Declaring these jet Vectors and jet substructure vectors
-   std::vector<int> jetCand;
-   std::vector<int> jetCandUp;
-   std::vector<int> jetCandDown;
+   std::vector<std::pair<int,double>> jetCand;
+   std::vector<std::pair<int,double>> jetCandUp;
+   std::vector<std::pair<int,double>> jetCandDown;
    std::vector<double>j1PFConsPt;
    std::vector<double>j1PFConsEta;
    std::vector<double>j1PFConsPhi;
@@ -741,17 +741,17 @@ public :
    virtual void     Show(Long64_t entry = -1);
    virtual void BookHistos(const char* file2);
    virtual double deltaR(double eta1, double phi1, double eta2, double phi2);
-   virtual void fillHistos(std::vector<int> jetCand_to_use,int histoNumber,double event_weight);
+   virtual void fillHistos(std::vector<std::pair<int,double>> jetCand_to_use,int histoNumber,double event_weight);
    virtual float DeltaPhi(float phi1, float phi2);
-   virtual vector<int> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut,int UncType);
+   virtual vector<pair<int,double>> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut,int UncType);
    virtual vector<int> JetVetoDecision(int UncType);
-   virtual bool btagVeto();
-   virtual bool dPhiJetMETcut(std::vector<int> jets);
+   virtual bool btagVeto(int UncType);
+   virtual bool dPhiJetMETcut(std::vector<int> jets,float METPhi);
    virtual float dPhiJetMETmin(std::vector<int> jets);
    virtual bool electron_veto_looseID(int jet_index, float elePtCut);
    virtual bool muon_veto_looseID(int jet_index, float muPtCut);
-   virtual vector<int>getPFCandidates();
-   virtual void AllPFCand(std::vector<int> jetCand,std::vector<int> PFCandidates);
+   virtual vector<int> getPFCandidates();
+   virtual void AllPFCand(std::vector<std::pair<int,double>> jetCand,std::vector<int> PFCandidates);
 };
 
 #endif

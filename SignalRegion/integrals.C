@@ -296,7 +296,7 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_G5Jets->SetStats(0);
 
   double rawGJets = (histo_j1EtaWidth_G1Jets->Integral())+ (histo_j1EtaWidth_G2Jets->Integral())+ (histo_j1EtaWidth_G3Jets->Integral())+ (histo_j1EtaWidth_G4Jets->Integral())+ (histo_j1EtaWidth_G5Jets->Integral()); 
-  std::cout<<"raw GJets bkg:"<<rawGJets<<std::endl;
+  //std::cout<<"raw GJets bkg:"<<rawGJets<<std::endl;
   //Scaling
   histo_j1EtaWidth_G1Jets->Scale((1.0/GJets_Total[0])*35900*17420);
   histo_j1EtaWidth_G2Jets->Scale((1.0/GJets_Total[1])*35900*5391);
@@ -347,7 +347,7 @@ void plotter(const char * variable,std::string name)
   histo_j1EtaWidth_DY8Jets->SetStats(0);
 
   double rawDY = (histo_j1EtaWidth_DY1Jets->Integral()) + (histo_j1EtaWidth_DY2Jets->Integral())+ (histo_j1EtaWidth_DY3Jets->Integral())+ (histo_j1EtaWidth_DY4Jets->Integral())+ (histo_j1EtaWidth_DY5Jets->Integral()) + (histo_j1EtaWidth_DY6Jets->Integral()) + (histo_j1EtaWidth_DY7Jets->Integral()) + (histo_j1EtaWidth_DY8Jets->Integral());  
-  std::cout<<"raw DYJets bkg:"<<rawDY<<std::endl;
+  //std::cout<<"raw DYJets bkg:"<<rawDY<<std::endl;
 
   //histo_j1EtaWidth_DY1Jets->Scale((1.0/96657400)*35900*4895);
   histo_j1EtaWidth_DY1Jets->Scale((1.0/DYJets_Total[0])*35900*4895);
@@ -830,7 +830,7 @@ void plotter(const char * variable,std::string name)
 
 int main(int argc, const char *argv[])
 {
-  std::vector<const char*> variable = {"pfMET_15"};//,"pfMET_31","pfMET_44","pfMET_10","pfMET_26","pfMET_39","pfMET_12","pfMET_28","pfMET_41","pfMET_14","pfMET_30","pfMET_43"};
+  std::vector<const char*> variable = {"pfMET_15","pfMET_31","pfMET_44","pfMET_10","pfMET_26","pfMET_39","pfMET_12","pfMET_28","pfMET_41","pfMET_14","pfMET_30","pfMET_43"};
   std::vector<std::string> type = {"NoCat","NoCatJesUp","NoCatJesDown","Cat1","Cat1JesUp","Cat1JesDown","Cat2","Cat2JesUp","Cat2JesDown","Cat3Base","Cat3JesUp","Cat3JesDown"};
   for (int i = 0; i < variable.size(); i++)
     {
