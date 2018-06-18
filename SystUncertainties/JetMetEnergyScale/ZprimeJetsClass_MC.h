@@ -75,11 +75,11 @@ public :
    //JetEnergyScale
    Float_t MET_to_use, METPhi_to_use;
    
-   TH1F *h_nVtx[46],*h_metcut, *h_dphimin,*h_metFilters[46],*h_pfMETall[46],*h_pfMET200[46],*h_nJets[46],*h_pfMET[46],*h_pfMETPhi[46],*h_j1nCategory1[46],*h_j1nCategory2[46],*h_j1dRPF12_ID_1[46],*h_j1dRPF12_ID_2[46];
-   TH1F *h_j1Pt[46], *h_j1Eta[46], *h_j1Phi[46], *h_j1etaWidth[46], *h_j1phiWidth[46],*h_j1nCons[46], *h_j1PF12PtFrac_ID_1[46], *h_j1PF12PtFrac_ID_2[46],*h_j1PFPtFrac_ID_2[46],*h_PF123PtFraction[46];  
-   TH1F *h_j1TotPFCands[46], *h_j1ChPFCands[46], *h_j1NeutPFCands[46], *h_j1GammaPFCands[46], *h_j1CHF[46], *h_j1NHF[46], *h_j1ChMultiplicity[46], *h_j1NeutMultiplicity[46],*h_j1Mt[46];  
+   TH1F *h_nVtx[52],*h_metcut, *h_dphimin,*h_metFilters[52],*h_pfMETall[52],*h_pfMET200[52],*h_nJets[52],*h_pfMET[52],*h_pfMETPhi[52],*h_j1nCategory1[52],*h_j1nCategory2[52],*h_j1dRPF12_ID_1[52],*h_j1dRPF12_ID_2[52];
+   TH1F *h_j1Pt[52], *h_j1Eta[52], *h_j1Phi[52], *h_j1etaWidth[52], *h_j1phiWidth[52],*h_j1nCons[52], *h_j1PF12PtFrac_ID_1[52], *h_j1PF12PtFrac_ID_2[52],*h_j1PFPtFrac_ID_2[52],*h_PF123PtFraction[52];  
+   TH1F *h_j1TotPFCands[52], *h_j1ChPFCands[52], *h_j1NeutPFCands[52], *h_j1GammaPFCands[52], *h_j1CHF[52], *h_j1NHF[52], *h_j1ChMultiplicity[52], *h_j1NeutMultiplicity[52],*h_j1Mt[52];  
    //Category3 Histos
-   TH1F *h_ChPionPt[46],*h_PhotonPt[46],*h_dRPionPhoton[46];
+   TH1F *h_ChPionPt[52],*h_PhotonPt[52],*h_dRPionPhoton[52];
    TH1D *h_cutflow;
    // Fixed size dimensions of array or collections stored in the TTree if any.
 
@@ -738,10 +738,10 @@ public :
    virtual double deltaR(double eta1, double phi1, double eta2, double phi2);
    virtual void fillHistos(std::vector<std::pair<int,double>> jetCand_to_use,int histoNumber,double event_weight);
    virtual float DeltaPhi(float phi1, float phi2);
-   virtual vector<pair<int,double>> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut,int UncType);
+   virtual vector<pair<int,double>> getJetCand(std::vector<int> jets,double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut,int UncType);
    virtual vector<int> JetVetoDecision(int UncType);
    virtual bool btagVeto(int UncType);
-   virtual bool dPhiJetMETcut(std::vector<int> jets);
+   virtual bool dPhiJetMETcut(std::vector<int> jets,float METPhi);
    virtual float dPhiJetMETmin(std::vector<int> jets);
    virtual bool electron_veto_looseID(int jet_index, float elePtCut);
    virtual bool muon_veto_looseID(int jet_index, float muPtCut);
@@ -770,7 +770,7 @@ ZprimeJetsClass_MC::ZprimeJetsClass_MC(const char* file1,const char* file2)
     std::cout<<"name: "<<(filename->GetName())<<std::endl;
     std::cout<<"fileNumber: "<<fileNumber<<std::endl;
 
-     TString dataset = "ggtree_signal100GeV_";
+     TString dataset = "ggtree_signal5GeV_";
      TString  FullPathInputFile = (path+filename->GetName());
      TString name = filename->GetName();
      if(name.Contains(dataset))
