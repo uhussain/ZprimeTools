@@ -1,16 +1,16 @@
 DATE=May2018
 DATE_2=29May
 
-#echo "Do the Data samples"
-#
-#./rootcom ZprimeJetsClass analyzedata
-#
-#./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_2}_SR/MET/crab_dataset6/180529_*/0000/ postMETdata_0.root -1 10000 MET_0
-#
-#./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_2}_SR/MET/crab_dataset6/180529_*/0001/ postMETdata_1.root -1 10000 MET_1
-#
-#./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_2}_SR/MET/crab_dataset6/180529_*/0002/ postMETdata_2.root -1 10000 MET_2
+echo "Do the Data samples"
 
+./rootcom ZprimeJetsClass analyzedata
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_2}_SR/MET/crab_dataset6/180529_*/0000/ postMETdata_0.root -1 10000 MET_0
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_2}_SR/MET/crab_dataset6/180529_*/0001/ postMETdata_1.root -1 10000 MET_1
+
+./MakeCondorFiles_data.csh analyzedata /hdfs/store/user/gomber/MonoZprime_Ntuples_${DATE_2}_SR/MET/crab_dataset6/180529_*/0002/ postMETdata_2.root -1 10000 MET_2
+exit
 
 echo "Do the MC samples"
 

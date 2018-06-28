@@ -1,5 +1,7 @@
 dileptonM
-Dilepton Mass (GeV)
+Z Mass (GeV)
+dileptonPt
+Z P_{T} (GeV)
 cutflow
 Cutflow
 recoil

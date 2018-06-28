@@ -766,6 +766,7 @@ ZprimeJetsClass_MC::ZprimeJetsClass_MC(const char* file1,const char* file2)
   TIter nextlist(fileList);
   TSystemFile* filename;
   int fileNumber = 0;
+  int inFiles = 0;
   int maxFiles = -1;
   while ((filename = (TSystemFile*)nextlist()) && fileNumber >  maxFiles)
     {
@@ -782,11 +783,12 @@ ZprimeJetsClass_MC::ZprimeJetsClass_MC(const char* file1,const char* file2)
          std::cout<<"Adding FullPathInputFile to chain:"<<FullPathInputFile<<std::endl;
          std::cout<<std::endl;
          chain->Add(FullPathInputFile);
+	 inFiles++;
        }
 
       fileNumber++;
     }
-  std::cout<<"All files added."<<std::endl;
+  std::cout<<inFiles<<" files added."<<std::endl;
   std::cout<<"Initializing chain."<<std::endl;
   Init(chain);
   BookHistos(file2);

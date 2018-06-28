@@ -71,6 +71,7 @@ public :
    int lepindex_leading, lepindex_subleading;
    double dilepton_mass,dilepton_pt,Recoil;
    float leptoMET_phi_to_use;
+   TLorentzVector m1,m2;
    
    //getPFCandidates
    int TotalPFCandidates, ChargedPFCandidates,NeutralPFCandidates,GammaPFCandidates;

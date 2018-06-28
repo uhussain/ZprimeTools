@@ -825,8 +825,9 @@ void plotter(const char * variable,std::string name)
   yaxis_right->Draw("SAME");  
  
 */
-  c->SaveAs((std::string("../../Plots/DouEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".pdf")).c_str());
-  c->SaveAs((std::string("../../Plots/DouEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".png")).c_str());
+  c->SaveAs((std::string(variable)+std::string(".png")).c_str());
+  //c->SaveAs((std::string("../../Plots/DouEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".pdf")).c_str());
+  //c->SaveAs((std::string("../../Plots/DouEleCRPlots_EWK/datamc_")+std::string(variable)+std::string(".png")).c_str());
 }
 
 int main(int argc, const char *argv[])

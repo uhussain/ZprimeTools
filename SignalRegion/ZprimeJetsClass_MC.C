@@ -168,10 +168,10 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
 				  {
 				    nDphiJetMET+=event_weight;
 				    fillHistos(jetCand,8,event_weight);
-            std::cout<<"JetPt: "<<jetCand[0].second<<std::endl;
-            std::cout<<"pfMET: "<<pfMET<<std::endl;
-            std::cout<<"MET_to_use: "<<MET_to_use<<std::endl;
-            std::cout<<"METPhi_to_use: "<<METPhi_to_use<<std::endl;
+				    //std::cout<<"JetPt: "<<jetCand[0].second<<std::endl;
+				    //std::cout<<"pfMET: "<<pfMET<<std::endl;
+				    //std::cout<<"MET_to_use: "<<MET_to_use<<std::endl;
+				    //std::cout<<"METPhi_to_use: "<<METPhi_to_use<<std::endl;
 				    //Category 1: Exactly Two Charged Hadrons
 				    if(TwoChPFCons==1)
 				      {
@@ -257,10 +257,10 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
 				if(dPhiJetMETcut(jetveto,METPhi_to_use))
 				  {
 				    fillHistos(jetCandUp,24,event_weight);
-            std::cout<<"JetPtUp: "<<jetCandUp[0].second<<std::endl;
-            std::cout<<"pfMET_T1JESUp: "<<pfMET_T1JESUp<<std::endl;
-            std::cout<<"MET_to_use: "<<MET_to_use<<std::endl;
-            std::cout<<"METPhi_to_use: "<<METPhi_to_use<<std::endl;
+				    //std::cout<<"JetPtUp: "<<jetCandUp[0].second<<std::endl;
+				    //std::cout<<"pfMET_T1JESUp: "<<pfMET_T1JESUp<<std::endl;
+				    //std::cout<<"MET_to_use: "<<MET_to_use<<std::endl;
+				    //std::cout<<"METPhi_to_use: "<<METPhi_to_use<<std::endl;
 				    //Category 1: Exactly Two Charged Hadrons
 				    if(TwoChPFCons==1)
 				      {
@@ -335,10 +335,10 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
 				if(dPhiJetMETcut(jetveto,METPhi_to_use))
 				  {
 				    fillHistos(jetCandDown,37,event_weight);
-            std::cout<<"JetPtDown: "<<jetCandDown[0].second<<std::endl;
-            std::cout<<"pfMET_T1JESDo: "<<pfMET_T1JESDo<<std::endl;
-            std::cout<<"MET_to_use: "<<MET_to_use<<std::endl;
-            std::cout<<"METPhi_to_use: "<<METPhi_to_use<<std::endl;
+				    //std::cout<<"JetPtDown: "<<jetCandDown[0].second<<std::endl;
+				    //std::cout<<"pfMET_T1JESDo: "<<pfMET_T1JESDo<<std::endl;
+				    //std::cout<<"MET_to_use: "<<MET_to_use<<std::endl;
+				    //std::cout<<"METPhi_to_use: "<<METPhi_to_use<<std::endl;
 				    //Category 1: Exactly Two Charged Hadrons
 				    if(TwoChPFCons==1)
 				      {
