@@ -48,7 +48,7 @@ int main(int argc, const char* argv[])
     std::cout<<"Please enter a valid value for reportEvery (parameter 4)."<<std::endl;
     return 1;
   }
-  ZprimeJetsClass_MC_ZJets t(argv[1],argv[2]);
+  ZprimeJetsClass_MC_ZJets t(argv[1],argv[2],atoi(argv[6]),atoi(argv[7]));
   
   t.Loop(maxEvents,reportEvery);
   return 0;
@@ -141,7 +141,7 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
     lepindex_subleading = -1;
     dilepton_pt = dilepton_mass = Recoil=-99;
     nTotalEvents+=event_weight;
-    if (genHT < 100 && metFilters==0)
+    if (genHT < 100 &&  metFilters==0)
       {    
         nFilters+=event_weight;
         fillHistos(0,event_weight);

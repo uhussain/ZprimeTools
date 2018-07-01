@@ -48,7 +48,7 @@ int main(int argc, const char* argv[])
     std::cout<<"Please enter a valid value for reportEvery (parameter 4)."<<std::endl;
     return 1;
   }
-  ZprimeJetsClass_MC_ZJets t(argv[1],argv[2]);
+  ZprimeJetsClass_MC_ZJets t(argv[1],argv[2],atoi(argv[6]),atoi(argv[7]));
   
   t.Loop(maxEvents,reportEvery);
   return 0;

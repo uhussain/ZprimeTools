@@ -1,0 +1,122 @@
+#ifndef PlotTool_h
+#define PlotTool_h
+
+#include <fstream>
+#include <vector>
+#include <iomanip>
+#include <algorithm>
+#include "TFile.h"
+#include "TH1.h"
+#include "TH2.h"
+#include "TH1F.h"
+#include "TStyle.h"
+#include "TCanvas.h"
+#include "TMath.h"
+#include "TString.h"
+#include "THStack.h"
+#include "TPaveText.h"
+#include "TLegend.h"
+#include "TLatex.h"
+#include "TGaxis.h"
+#include "TColor.h"
+#include "iostream"
+#include "stdlib.h"
+#include "fstream"
+#include "string"
+
+using namespace std;
+
+class PlotTool{
+ public:
+
+  double lumi;
+  string Region;
+  const char* regionFile;
+
+  //List of Region Data Files
+  vector<const char*> SignalData_FileNames = {"postMETdata_0","postMETdata_1","postMETdata_2"};
+  vector<const char*> SingleEleData_FileNames = {"postSingleEle_0","postSingleEle_1","postSingleEle_2","postSingleEle_3","postSingleEle_4","postSingleEle_5","postSingleEle_6","postSingleEle_7","postSingleEle_8","postSingleEle_9","postSingleEle_10","postSingleEle_11","postSingleEle_12","postSingleEle_13","postSingleEle_14","postSingleEle_15","postSingleEle_16","postSingleEle_17","postSingleEle_18","postSingleEle_19"};
+  vector<const char*> SingleMuData_FileNames = {"postSingleMu_0","postSingleMu_1","postSingleMu_2","postSingleMu_3","postSingleMu_4","postSingleMu_5","postSingleMu_6","postSingleMu_7","postSingleMu_8","postSingleMu_9","postSingleMu_10","postSingleMu_11","postSingleMu_12","postSingleMu_13","postSingleMu_14","postSingleMu_15","postSingleMu_16","postSingleMu_17","postSingleMu_18","postSingleMu_19"};
+  vector<const char*> DoubleEleData_FileNames = {"postDoubleEle_0","postDoubleEle_1","postDoubleEle_2","postDoubleEle_3","postDoubleEle_4","postDoubleEle_5","postDoubleEle_6","postDoubleEle_7","postDoubleEle_8","postDoubleEle_9","postDoubleEle_10","postDoubleEle_11","postDoubleEle_12","postDoubleEle_13","postDoubleEle_14","postDoubleEle_15","postDoubleEle_16","postDoubleEle_17","postDoubleEle_18","postDoubleEle_19"};
+  vector<const char*> DoubleMuData_FileNames = {"postDoubleMu_0","postDoubleMu_1","postDoubleMu_2","postDoubleMu_3","postDoubleMu_4","postDoubleMu_5","postDoubleMu_6","postDoubleMu_7","postDoubleMu_8","postDoubleMu_9","postDoubleMu_10","postDoubleMu_11","postDoubleMu_12","postDoubleMu_13","postDoubleMu_14","postDoubleMu_15","postDoubleMu_16","postDoubleMu_17","postDoubleMu_18","postDoubleMu_19"};
+
+  //List of Sample Files and Xsec
+  vector<const char *> WJets_FileNames = {"postWJets_MLM_0","postW100to200_0","postW200to400_0","postW400to600_0","postW600to800_0","postW800to1200_0","postW1200to2500_0","postW2500toInf_0"};
+  vector<double> WJets_Xsec =            {50690            ,1345             ,359.7            ,48.91            ,12.05            ,5.501             ,1.329              ,0.03216};
+  
+  vector<const char *> ZJets_FileNames = {"postZ100to200_0","postZ200to400_0","postZ400to600_0","postZ600to800_0","postZ800to1200_0","postZ1200to2500_0","postZ2500toInf_0"};
+  vector<double> ZJets_Xsec =            {280.35           ,77.67            ,10.73            ,2.559            ,1.1796            ,0.28833            ,0.006945};
+  
+  vector<const char *> GJets_FileNames = {"postGJets40to100","postGJets100to200","postGJets200to400","postGJets400to600","postGJets600toInf"};
+  vector<double> GJets_Xsec =            {17420             ,5391               ,1168               ,132.5              ,44.05};
+  
+  vector<const char *> DYJets_FileNames = {"postDY_MLM_0","postDY100to200","postDY200to400","postDY400to600","postDY600to800","postDY800to1200","postDY1200to2500","postDY2500toInf"};
+  vector<double> DYJets_Xsec =            {4895          ,148             ,40.94           ,5.497           ,1.354           ,0.6250           ,0.1511            ,0.003647};
+  
+  vector<const char *> TTJets_FileNames = {"postTTJets_MLM"};
+  vector<double> TTJets_Xsec =            {502.2};
+  
+  vector<const char *> DiBoson_FileNames = {"postWW","postWZ","postZZ"};
+  vector<double> DiBoson_Xsec =            {118.7   ,47.2    ,16.6};
+  
+  vector<const char *> QCD_FileNames = {"postQCD100to200_0","postQCD200to300_0","postQCD300to500_0","postQCD500to700_0","postQCD700to1000_0","postQCD1000to1500_0","postQCD1500to2000_0","postQCD2000toInf_0"};
+  vector<double> QCD_Xsec =            {27500000           ,1735000            ,367000             ,29370              ,6524                ,1064                 ,121.5                ,25.42};
+
+  vector<vector<const char*>> MC_FileNames = {WJets_FileNames,ZJets_FileNames,GJets_FileNames,DYJets_FileNames,TTJets_FileNames,DiBoson_FileNames,QCD_FileNames};
+  vector<vector<double>> MC_Xsec =           {WJets_Xsec     ,ZJets_Xsec     ,GJets_Xsec     ,DYJets_Xsec     ,TTJets_Xsec     ,DiBoson_Xsec     ,QCD_Xsec};
+  vector<Color_t> MC_Color =                 {kRed-10        ,kAzure+10      ,kTeal-9        ,kGray+2         ,kOrange-2       ,kCyan-10         ,kGray};
+  vector<string> MC_Label =                  {"WJets"        ,"ZJets"        ,"GJets"        ,"DYJets"        ,"TTJets"        ,"DiBoson"        ,"QCD"};
+  
+  PlotTool(int argc,const char* argv[]);
+  virtual void Options(int argc,const char* argv[]);
+  virtual void haddAll(std::vector<const char*> Data_FileNames);
+  virtual const char* haddRegion();
+  virtual vector<float> GetTotal(std::vector<TFile*> Files);
+  virtual string SampleName(const char * variable);
+  virtual string GetCategory(int hs_num);
+  virtual vector<std::string> GetName(const char * variable);
+  virtual int hs_save(std::string mchi,std::string cat, const char * variable, std::vector<TH1F*> histo);
+  virtual vector<int> hs_sort(std::vector<TH1F*> hs_list);
+  virtual TH1F* GetHistogram(std::vector<const char*> Sample_FileNames,std::vector<double> Sample_Xsec,const char* variable,std::string SampleName);
+  virtual THStack* StackHistogram(std::vector<TH1F*> hs_list,std::string name);
+  virtual vector<TH1F*> GetSignal(std::string mchi,const char* variable);
+  virtual void DrawRatio(TH1F* histo_Data, THStack* hs_datamc,TCanvas* c);
+  virtual void DrawAxis(TH1F* histo_Data,THStack* hs_datamc, TCanvas* c,std::string name);
+  virtual vector<TH1F*> GetPDF(std::vector<std::string> filenames);
+  virtual void pdf_save(std::vector< std::vector<TH1F*> > hs_list);
+  virtual void savepdf();
+  virtual void saveplot(const char* variable,std::string name,std::string varname,std::string cat,std::string mchi);
+  virtual void integral(const char* variable,std::string name,std::string mchi,int print);
+  virtual void plotter(const char * variable,std::string name,std::string mchi);
+  virtual void saveplotOption(int argc,std::vector<const char*> argv);
+  virtual void integralOption(int print);
+  virtual void plotterOption(int argc, std::vector<const char*> argv);
+  
+};
+
+#endif
+
+#ifdef PlotTool_cxx
+
+PlotTool::PlotTool(int argc,const char* argv[])
+{
+  std::vector<const char*> preRegionData = {".output/postMETdata_0_1.root",".output/postSingleEle_0_1.root",".output/postSingleMu_0_1.root",".output/postDoubleEle_0_1.root",".output/postDoubleMu_0_1.root"};
+  std::vector<const char*> postRegionData ={"postMETdata_0.root","postSingleEle_0.root","postSingleMu_0.root","postDoubleEle_0.root","postDoubleMu_0.root"}; 
+  std::vector<std::string> RegionName = {"SignalRegion","SingleEleCR","SingleMuCR","DoubleEleCR","DoubleMuCR"};
+  for (int i = 0; i < preRegionData.size(); i++)
+    {
+      std::ifstream prefile(preRegionData[i]);
+      std::ifstream postfile(postRegionData[i]);
+      if (prefile || postfile)
+	{
+	  Region=RegionName[i];
+	  break;
+	}
+    }
+  if (Region.size() == 0)
+    {
+      std::cout<<"Error: No Region Files Detected"<<std::endl;
+    }
+}
+
+#endif

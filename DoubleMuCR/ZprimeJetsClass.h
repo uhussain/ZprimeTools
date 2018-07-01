@@ -36,7 +36,7 @@
 #include <TDCacheFile.h>
 #include <TLorentzVector.h>
 #include "TIterator.h"
-
+#include "string"
 // Header file for the classes stored in the TTree if any.
 #include "vector"
 #include "vector"
@@ -743,7 +743,7 @@ public :
    TBranch        *b_AK8puppiSDSJFlavour;   //!
    TBranch        *b_AK8puppiSDSJCSV;   //!
 
-   ZprimeJetsClass(const char* file1,const char* file2);
+  ZprimeJetsClass(const char* file1,const char* file2,int min,int max);
    virtual ~ZprimeJetsClass();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
@@ -773,7 +773,16 @@ public :
 
 #ifdef ZprimeJetsClass_cxx
 
-ZprimeJetsClass::ZprimeJetsClass(const char* file1,const char* file2) 
+bool fileSelection(std::string filename, std::string dataset,int min, int max)
+{
+  filename.erase(filename.begin(),filename.begin()+dataset.size());
+  //std::cout<<"\n\n\n\n\n"<<filename<<std::endl;
+  int fileNum = stoi(filename);
+  if (min < fileNum && fileNum <= max) return true;
+  else return false;
+}
+
+ZprimeJetsClass::ZprimeJetsClass(const char* file1,const char* file2,int min,int max) 
 {
   TChain *chain = new TChain("ggNtuplizer/EventTree");
   TString path = file1;
@@ -783,26 +792,34 @@ ZprimeJetsClass::ZprimeJetsClass(const char* file1,const char* file2)
   TSystemFile* filename;
   int fileNumber = 0;
   int maxFiles = -1;
+  int inFile=0;
   while ((filename = (TSystemFile*)nextlist()) && fileNumber >  maxFiles)
     {
       //Debug
-    std::cout<<"file path found: "<<(path+filename->GetName())<<std::endl;
-    std::cout<<"name: "<<(filename->GetName())<<std::endl;
-    std::cout<<"fileNumber: "<<fileNumber<<std::endl;
+      std::cout<<"file path found: "<<(path+filename->GetName())<<std::endl;
+      std::cout<<"name: "<<(filename->GetName())<<std::endl;
+      std::cout<<"fileNumber: "<<fileNumber<<std::endl;
 
-     TString dataset = "ggtree_data_";
-     TString  FullPathInputFile = (path+filename->GetName());
-     TString name = filename->GetName();
-     if(name.Contains(dataset))
-       {
-         std::cout<<"Adding FullPathInputFile to chain:"<<FullPathInputFile<<std::endl;
-         std::cout<<std::endl;
-         chain->Add(FullPathInputFile);
-       }
-
+      TString dataset = "ggtree_data_";
+      //TString dataset = "Zprime_";
+      TString  FullPathInputFile = (path+filename->GetName());
+      TString name = filename->GetName();
+      if (name.Contains(dataset))
+	{
+	  std::string fname = std::string(name);
+	  fname.erase(fname.end()-5,fname.end());
+	  bool isin = fileSelection(fname,std::string(dataset),min,max);
+	  if(isin)
+	    {
+	      std::cout<<"Adding FullPathInputFile to chain:"<<FullPathInputFile<<std::endl;
+	      std::cout<<std::endl;
+	      chain->Add(FullPathInputFile);
+	      inFile++;
+	    }
+	}
       fileNumber++;
     }
-  std::cout<<"All files added."<<std::endl;
+  std::cout<<inFile<<" files added."<<std::endl;
   std::cout<<"Initializing chain."<<std::endl;
   Init(chain);
   BookHistos(file2);
