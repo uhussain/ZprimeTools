@@ -36,7 +36,7 @@
 #include <TDCacheFile.h>
 #include <TLorentzVector.h>
 #include "TIterator.h"
-
+#include "string"
 // Header file for the classes stored in the TTree if any.
 #include "vector"
 #include "vector"
@@ -74,12 +74,12 @@ public :
 
    //JetEnergyScale
    Float_t MET_to_use, METPhi_to_use;
-TH1F *h_nVtx[46], *h_metcut, *h_dphimin,*h_metFilters[46],*h_pfMETall[46],*h_pfMET200[46],*h_nJets[46],*h_pfMET[46],*h_pfMETPhi[46],*h_j1nCategory1[46],*h_j1nCategory2[46],*h_j1dRPF12_ID_1[46],*h_j1dRPF12_ID_2[46];
-   TH1F *h_j1Pt[46], *h_j1Eta[46], *h_j1Phi[46], *h_j1etaWidth[46], *h_j1phiWidth[46],*h_j1nCons[46], *h_j1PF12PtFrac_ID_1[46], *h_j1PF12PtFrac_ID_2[46],*h_j1PFPtFrac_ID_2[46],*h_PF123PtFraction[46];  
-   TH1F *h_j1TotPFCands[46], *h_j1ChPFCands[46], *h_j1NeutPFCands[46], *h_j1GammaPFCands[46], *h_j1CHF[46], *h_j1NHF[46], *h_j1ChMultiplicity[46], *h_j1NeutMultiplicity[46],*h_j1Mt[46]; 
+TH1F *h_nVtx[16], *h_metcut, *h_dphimin,*h_metFilters[16],*h_pfMETall[16],*h_pfMET200[16],*h_nJets[16],*h_pfMET[16],*h_pfMETPhi[16],*h_j1nCategory1[16],*h_j1nCategory2[16],*h_j1dRPF12_ID_1[16],*h_j1dRPF12_ID_2[16];
+   TH1F *h_j1Pt[16], *h_j1Eta[16], *h_j1Phi[16], *h_j1etaWidth[16], *h_j1phiWidth[16],*h_j1nCons[16], *h_j1PF12PtFrac_ID_1[16], *h_j1PF12PtFrac_ID_2[16],*h_j1PFPtFrac_ID_2[16],*h_PF123PtFraction[16];  
+   TH1F *h_j1TotPFCands[16], *h_j1ChPFCands[16], *h_j1NeutPFCands[16], *h_j1GammaPFCands[16], *h_j1CHF[16], *h_j1NHF[16], *h_j1ChMultiplicity[16], *h_j1NeutMultiplicity[16],*h_j1Mt[16]; 
    // Fixed size dimensions of array or collections stored in the TTree if any.
    //Category3 Histos
-   TH1F *h_ChPionPt[46],*h_PhotonPt[46],*h_dRPionPhoton[46];
+   TH1F *h_ChPionPt[16],*h_PhotonPt[16],*h_dRPionPhoton[16];
    TH1D *h_cutflow;
    // Declaration of leaf types
    Int_t           run;
@@ -729,7 +729,7 @@ TH1F *h_nVtx[46], *h_metcut, *h_dphimin,*h_metFilters[46],*h_pfMETall[46],*h_pfM
    TBranch        *b_jetVtx3DSig;   //!
 
   
-   ZprimeJetsClass_MC_ZJets(const char* file1,const char* file2);
+  ZprimeJetsClass_MC_ZJets(const char* file1,const char* file2,int min,int max);
    virtual ~ZprimeJetsClass_MC_ZJets();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
@@ -757,7 +757,16 @@ TH1F *h_nVtx[46], *h_metcut, *h_dphimin,*h_metFilters[46],*h_pfMETall[46],*h_pfM
 
 #ifdef ZprimeJetsClass_MC_ZJets_cxx
 
-ZprimeJetsClass_MC_ZJets::ZprimeJetsClass_MC_ZJets(const char* file1,const char* file2) 
+bool fileSelection(std::string filename, std::string dataset,int min, int max)
+{
+  filename.erase(filename.begin(),filename.begin()+dataset.size());
+  //std::cout<<"\n\n\n\n\n"<<filename<<std::endl;
+  int fileNum = stoi(filename);
+  if (min < fileNum && fileNum <= max) return true;
+  else return false;
+}
+
+ZprimeJetsClass_MC_ZJets::ZprimeJetsClass_MC_ZJets(const char* file1,const char* file2,int min,int max) 
 {
   TChain *chain = new TChain("ggNtuplizer/EventTree");
   TString path = file1;
@@ -767,26 +776,34 @@ ZprimeJetsClass_MC_ZJets::ZprimeJetsClass_MC_ZJets(const char* file1,const char*
   TSystemFile* filename;
   int fileNumber = 0;
   int maxFiles = -1;
+  int inFile=0;
   while ((filename = (TSystemFile*)nextlist()) && fileNumber >  maxFiles)
     {
       //Debug
-    std::cout<<"file path found: "<<(path+filename->GetName())<<std::endl;
-    std::cout<<"name: "<<(filename->GetName())<<std::endl;
-    std::cout<<"fileNumber: "<<fileNumber<<std::endl;
+      std::cout<<"file path found: "<<(path+filename->GetName())<<std::endl;
+      std::cout<<"name: "<<(filename->GetName())<<std::endl;
+      std::cout<<"fileNumber: "<<fileNumber<<std::endl;
 
-     TString dataset = "ggtree_mc_";
-     TString  FullPathInputFile = (path+filename->GetName());
-     TString name = filename->GetName();
-     if(name.Contains(dataset))
-       {
-         std::cout<<"Adding FullPathInputFile to chain:"<<FullPathInputFile<<std::endl;
-         std::cout<<std::endl;
-         chain->Add(FullPathInputFile);
-       }
-
+      TString dataset = "ggtree_mc_";
+      //TString dataset = "Zprime_";
+      TString  FullPathInputFile = (path+filename->GetName());
+      TString name = filename->GetName();
+      if (name.Contains(dataset))
+	{
+	  std::string fname = std::string(name);
+	  fname.erase(fname.end()-5,fname.end());
+	  bool isin = fileSelection(fname,std::string(dataset),min,max);
+	  if(isin)
+	    {
+	      std::cout<<"Adding FullPathInputFile to chain:"<<FullPathInputFile<<std::endl;
+	      std::cout<<std::endl;
+	      chain->Add(FullPathInputFile);
+	      inFile++;
+	    }
+	}
       fileNumber++;
     }
-  std::cout<<"All files added."<<std::endl;
+  std::cout<<inFile<<" files added."<<std::endl;
   std::cout<<"Initializing chain."<<std::endl;
   Init(chain);
   BookHistos(file2);

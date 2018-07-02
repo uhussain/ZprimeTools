@@ -33,8 +33,20 @@ using namespace std;
 
 int main(int argc, const char* argv[])
 {
-  PlotTool t(argc,argv);
-  t.Options(argc,argv);
+  if (string(argv[1]).compare("-h") == 0)
+    {
+      cout<<"usage: ./PlotTool option variable\n";
+      cout<<"|Options|\n";
+      cout<<"\tnone : Plots variables specified in command line argument (i.e. ./PlotTool h_dileptonM_8 h_cutflow)\n\t\tWhen plotting in Signal Region specify the mass of the Z' sample you would like to use as the first command line argument\n\t\t(i.e. ./PlotTool 5GeV h_cutflow pfMET_8)\n";
+      cout<<"\n\t-i : Prints the events in all the categories (NoCat, Cat1, Cat2, and Cat3)\n\t\tUse secondary option 0 to print only Data and Monte Carlo events\n\t\tUse secondary option 1 to print all Z' mass events\n\t\tUse secondary option -1 to print all Data, Monte Carlo, and all Z' mass events\n\t\tUsage: ./PlotTool -i 1\n";
+      cout<<"\n\t-s : Saves plots specified in command line argument to a root file for use in shape analysis\n\t\tSpecify the Z' mass and the plots to save to root file (i.e. ./PlotTool 1GeV pfMET_15 pfMET_31 pfMET_44) example given for NoCat\n\t\tUse the secondary option pdf to save the PDF uncertainty plots to all the created root files from the previous option (i.e. ./PlotTool -s pdf)\n"; 
+    }
+  else
+    {
+      PlotTool t(argc,argv);
+      t.Options(argc,argv);
+    }
+  return 0;
 }
 
 void PlotTool::Options(int argc,const char* argv[])
@@ -67,9 +79,6 @@ void PlotTool::Options(int argc,const char* argv[])
 	  saveplotOption(realargv.size(),realargv);
 	}
     }
-  else if (string(argv[i]).compare("-h") == 0)
-    {
-      
   else
     {
       cout<<"Plotting at "<<lumi<<" pb^{-1}"<<endl;
@@ -350,8 +359,8 @@ vector<int> PlotTool::hs_sort(vector<TH1F*> hs_list)
     {
       for (int j = 0; j < hs_list.size(); j++)
         {
-          float max = max(hs_order[i],hs_list[j]->Integral());
-          if (fabs(hs_order[i] - hs_list[j]->Integral()) <= (FLT_EPSILON*max) && hs_list[j]->Integral() != 0)
+          float maxval = max(hs_order[i],hs_list[j]->Integral());
+          if (fabs(hs_order[i] - hs_list[j]->Integral()) <= (FLT_EPSILON*maxval) && hs_list[j]->Integral() != 0)
             {
               hs_index.push_back(j);
               break;
