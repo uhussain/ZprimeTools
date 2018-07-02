@@ -53,20 +53,22 @@ public :
 
    //Declaring these jet Vectors and jet substructure vectors
    std::vector<std::pair<int,double>> jetCand;
-   std::vector<std::pair<int,double>> jetCandUp;
-   std::vector<std::pair<int,double>> jetCandDown;
    std::vector<double>j1PFConsPt;
    std::vector<double>j1PFConsEta;
    std::vector<double>j1PFConsPhi;
    std::vector<int>j1PFConsPID;
+  std::vector<double>j1PFConsPtUnc;
 
+  std::vector<int> EcalCand;
+  std::vector<int> TrackerCand;
+  std::vector<int> HcalCand;
    //Categorizing events based on no.of charged Hadrons in PencilJet
    int NoPosPFCons,NoNegPFCons,NoPhoPFCons;
    double j1PFPosConsPt, j1PFPosConsEta,j1PFPosConsPhi, j1PFNegConsPt,j1PFNegConsEta,j1PFNegConsPhi,j1PFPhoConsPt,j1PFPhoConsEta,j1PFPhoConsPhi;
    int TwoChPFCons,TwoChPFConsPlusPho;
    double PF12PtFrac_ID_1,PF12PtFrac_ID_2,dR_PF12_ID_1,dR_PF12_ID_2,PF123PtFrac_ID_2;
 
-   double Pt123,Pt123Fraction;
+   double Pt123Fraction_to_use;
    //Category 3 variables
    double dR_PionPhoton_3,Cat3_ChPionPt,Cat3_PhotonPt,Cat3_ChPionEta,Cat3_PhotonEta,Cat3_ChPionPhi,Cat3_PhotonPhi;
    //getPFCandidates
@@ -75,12 +77,14 @@ public :
    //JetEnergyScale
    Float_t MET_to_use, METPhi_to_use;
    
-   TH1F *h_nVtx[46],*h_metcut, *h_dphimin,*h_metFilters[46],*h_pfMETall[46],*h_pfMET200[46],*h_nJets[46],*h_pfMET[46],*h_pfMETPhi[46],*h_j1nCategory1[46],*h_j1nCategory2[46],*h_j1dRPF12_ID_1[46],*h_j1dRPF12_ID_2[46];
-   TH1F *h_j1Pt[46], *h_j1Eta[46], *h_j1Phi[46], *h_j1etaWidth[46], *h_j1phiWidth[46],*h_j1nCons[46], *h_j1PF12PtFrac_ID_1[46], *h_j1PF12PtFrac_ID_2[46],*h_j1PFPtFrac_ID_2[46],*h_PF123PtFraction[46];  
-   TH1F *h_j1TotPFCands[46], *h_j1ChPFCands[46], *h_j1NeutPFCands[46], *h_j1GammaPFCands[46], *h_j1CHF[46], *h_j1NHF[46], *h_j1ChMultiplicity[46], *h_j1NeutMultiplicity[46],*h_j1Mt[46];  
+   TH1F *h_nVtx[18],*h_metcut, *h_dphimin,*h_metFilters[18],*h_pfMETall[18],*h_pfMET200[18],*h_nJets[18],*h_pfMET[18],*h_pfMETPhi[18],*h_j1nCategory1[18],*h_j1nCategory2[18],*h_j1dRPF12_ID_1[18],*h_j1dRPF12_ID_2[18];
+   TH1F *h_j1Pt[18], *h_j1Eta[18], *h_j1Phi[18], *h_j1etaWidth[18], *h_j1phiWidth[18],*h_j1nCons[18], *h_j1PF12PtFrac_ID_1[18], *h_j1PF12PtFrac_ID_2[18],*h_j1PFPtFrac_ID_2[18],*h_PF123PtFraction[18];  
+   TH1F *h_j1TotPFCands[18], *h_j1ChPFCands[18], *h_j1NeutPFCands[18], *h_j1GammaPFCands[18], *h_j1CHF[18], *h_j1NHF[18], *h_j1ChMultiplicity[18], *h_j1NeutMultiplicity[18],*h_j1Mt[18];  
    //Category3 Histos
-   TH1F *h_ChPionPt[46],*h_PhotonPt[46],*h_dRPionPhoton[46];
+   TH1F *h_ChPionPt[18],*h_PhotonPt[18],*h_dRPionPhoton[18];
    TH1D *h_cutflow;
+
+  TH2F *h_EcalPtUnc[18],*h_TrackerPtUnc[18],*h_HcalPtUnc[18];
    // Fixed size dimensions of array or collections stored in the TTree if any.
 
    // Declaration of leaf types
@@ -746,6 +750,7 @@ public :
    virtual bool electron_veto_looseID(int jet_index, float elePtCut);
    virtual bool muon_veto_looseID(int jet_index, float muPtCut);
    virtual vector<int> getPFCandidates();
+  virtual void getPt123Frac(int UncType);
    virtual void AllPFCand(std::vector<std::pair<int,double>> jetCand,std::vector<int> PFCandidates);
 };
 
@@ -780,8 +785,8 @@ ZprimeJetsClass_MC::ZprimeJetsClass_MC(const char* file1,const char* file2,int m
       std::cout<<"name: "<<(filename->GetName())<<std::endl;
       std::cout<<"fileNumber: "<<fileNumber<<std::endl;
 
-      TString dataset = "ggtree_mc_";
-      //TString dataset = "Zprime_";
+      //TString dataset = "ggtree_mc_";
+      TString dataset = "ggtree_signal5GeV_May";
       TString  FullPathInputFile = (path+filename->GetName());
       TString name = filename->GetName();
       if (name.Contains(dataset))
