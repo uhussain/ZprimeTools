@@ -137,6 +137,7 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
     //}
     jetCand = getJetCand(200,2.4,0.8,0.1,0);
     AllPFCand(jetCand,PFCandidates);
+    getPt123Frac(0);
     fillHistos(jetCand,0,event_weight);
     float metcut= 0.0;
     metcut = (fabs(pfMET-caloMET))/pfMET;
@@ -198,43 +199,43 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
 				    nDphiJetMET+=event_weight;
 				    fillHistos(jetCand,8,event_weight);
 				    
-				    if (Pt123Fraction_to_use>0.5)
+				    if (Pt123Fraction_to_use>0.8)
 				      {
 					fillHistos(jetCand,9,event_weight);
 				      }
-				    if (Pt123Fraction_to_use>0.6)
+				    if (Pt123Fraction_to_use>0.85)
 				      {
 					fillHistos(jetCand,10,event_weight);
 				      }
-				    if (Pt123Fraction_to_use>0.7)
+				    if (Pt123Fraction_to_use>0.9)
 				      {
 					fillHistos(jetCand,11,event_weight);
 				      }
 
 				    getPt123Frac(1);
-				    if (Pt123Fraction_to_use>0.5)
+				    if (Pt123Fraction_to_use>0.8)
 				      {
 					fillHistos(jetCand,12,event_weight);
 				      }
-				    if (Pt123Fraction_to_use>0.6)
+				    if (Pt123Fraction_to_use>0.85)
 				      {
 					fillHistos(jetCand,13,event_weight);
 				      }
-				    if (Pt123Fraction_to_use>0.7)
+				    if (Pt123Fraction_to_use>0.9)
 				      {
 					fillHistos(jetCand,14,event_weight);
 				      }
 
 				    getPt123Frac(-1);
-				    if (Pt123Fraction_to_use>0.5)
+				    if (Pt123Fraction_to_use>0.8)
 				      {
 					fillHistos(jetCand,15,event_weight);
 				      }
-				    if (Pt123Fraction_to_use>0.6)
+				    if (Pt123Fraction_to_use>0.85)
 				      {
 					fillHistos(jetCand,16,event_weight);
 				      }
-				    if (Pt123Fraction_to_use>0.7)
+				    if (Pt123Fraction_to_use>0.9)
 				      {
 					fillHistos(jetCand,17,event_weight);
 				      }
@@ -392,14 +393,13 @@ void ZprimeJetsClass_MC_ZJets::fillHistos(std::vector<std::pair<int,double>> jet
 void ZprimeJetsClass_MC_ZJets::getPt123Frac(int UncType)
 {
   double Pt123=0.0;
+  double jetPtAll=0.0;
   for (int i = 0; i < j1PFConsPID.size(); i++)
     {
-      if (i < 3)
-	{
-	  Pt123+=j1PFConsPt.at(i)+UncType*j1PFConsPtUnc.at(i);
-	}
+      jetPtAll+=j1PFConsPt.at(i)+UncType*j1PFConsPtUnc.at(i);
+      if (i < 3) Pt123+=j1PFConsPt.at(i)+UncType*j1PFConsPtUnc.at(i);
     }
-  Pt123Fraction_to_use=(Pt123/jetCand[0].second);
+  Pt123Fraction_to_use=(Pt123/jetPtAll);
 }
 
 void ZprimeJetsClass_MC_ZJets::AllPFCand(std::vector<std::pair<int,double>> jetCand,std::vector<int> PFCandidates)
@@ -434,37 +434,32 @@ void ZprimeJetsClass_MC_ZJets::AllPFCand(std::vector<std::pair<int,double>> jetC
       j1PFConsPID=JetsPFConsPID->at(jetCand[0].first);
       for(int i=0;i<j1PFConsPID.size();i++)
 	{
-	  if(i<3)
+	  if (abs(j1PFConsPID.at(i)) == 211 || abs(j1PFConsPID.at(i)) == 11)
 	    {
-	      if (abs(j1PFConsPID.at(i)) == 211 || abs(j1PFConsPID.at(i)) == 11)
-		{
-		  //Tracker Uncertainty
-		  //deltaPt=(1/100)*sqrt((0.015*Pt)^2+(0.5)^2)
-		  j1PFConsPtUnc.push_back((1/100.)*sqrt(pow(0.015*j1PFConsPt.at(i),2)+pow(0.5,2)));
-		  TrackerCand.push_back(i);
-		}
-	      else if (abs(j1PFConsPID.at(i)) == 22 || abs(j1PFConsPID.at(i)) == 13)
-		{
-		  //ECAL Uncertainty
-		  //deltaPt=(1/100)*sqrt((2.8)^2/Pt+(12.8/Pt)^2+(0.3)^2)
-		  j1PFConsPtUnc.push_back((1/100.)*sqrt(pow(2.8,2)/j1PFConsPt.at(i)+pow(12.8,2)+pow(0.3,2)));
-		  EcalCand.push_back(i);
-		}
-	      else if (abs(j1PFConsPID.at(i)) == 130)
-		{
-		  //HCAL Uncertainty
-		  //deltaPt=(1/100)*sqrt((115)^2/Pt+(5.5)^2)
-		  j1PFConsPtUnc.push_back((1/100.)*sqrt(pow(115,2)/j1PFConsPt.at(i)+pow(5.5,2)));
-		  HcalCand.push_back(i);
-		}
-	      else
-		{
-		  j1PFConsPtUnc.push_back(0);
-		}
-	      Pt123+=j1PFConsPt.at(i);
+	      //Tracker Uncertainty
+	      //deltaPt=(1/100)*sqrt((0.015*Pt)^2+(0.5)^2)
+	      j1PFConsPtUnc.push_back((1/100.)*sqrt(pow(0.015*j1PFConsPt.at(i),2)+pow(0.5,2)));
+	      TrackerCand.push_back(i);
+	    }
+	  else if (abs(j1PFConsPID.at(i)) == 22 || abs(j1PFConsPID.at(i)) == 13)
+	    {
+	      //ECAL Uncertainty
+	      //deltaPt=(1/100)*sqrt((2.8)^2/Pt+(12.8/Pt)^2+(0.3)^2)
+	      j1PFConsPtUnc.push_back((1/100.)*sqrt(pow(2.8,2)/j1PFConsPt.at(i)+pow(12.8,2)+pow(0.3,2)));
+	      EcalCand.push_back(i);
+	    }
+	  else if (abs(j1PFConsPID.at(i)) == 130)
+	    {
+	      //HCAL Uncertainty
+	      //deltaPt=(1/100)*sqrt((115)^2/Pt+(5.5)^2)
+	      j1PFConsPtUnc.push_back((1/100.)*sqrt(pow(115,2)/j1PFConsPt.at(i)+pow(5.5,2)));
+	      HcalCand.push_back(i);
+	    }
+	  else
+	    {
+	      j1PFConsPtUnc.push_back(0);
 	    }
 	}
-      Pt123Fraction_to_use=(Pt123/jetCand[0].second);
     }
 }
 
