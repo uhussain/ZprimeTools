@@ -174,31 +174,33 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 				      }
 
 				    getPt123Frac(1);
+				    fillHistos(jetCand,12);
 				    if (Pt123Fraction_to_use>0.8)
-				      {
-					fillHistos(jetCand,12);
-				      }
-				    if (Pt123Fraction_to_use>0.85)
 				      {
 					fillHistos(jetCand,13);
 				      }
-				    if (Pt123Fraction_to_use>0.9)
+				    if (Pt123Fraction_to_use>0.85)
 				      {
 					fillHistos(jetCand,14);
 				      }
-
-				    getPt123Frac(-1);
-				    if (Pt123Fraction_to_use>0.8)
+				    if (Pt123Fraction_to_use>0.9)
 				      {
 					fillHistos(jetCand,15);
 				      }
+
+				    getPt123Frac(-1);
+				    fillHistos(jetCand,16);
+				    if (Pt123Fraction_to_use>0.8)
+				      {
+					fillHistos(jetCand,17);
+				      }
 				    if (Pt123Fraction_to_use>0.85)
 				      {
-					fillHistos(jetCand,16);
+					fillHistos(jetCand,18);
 				      }
 				    if (Pt123Fraction_to_use>0.9)
 				      {
-					fillHistos(jetCand,17);
+					fillHistos(jetCand,19);
 				      }
 				  }
 			      }   
@@ -265,7 +267,7 @@ void ZprimeJetsClass::BookHistos(const char* file2)
   
   h_metcut  = new TH1F("h_metcut","h_metcut; |pfMET-caloMET|/pfMET", 50,0,1.2);h_metcut->Sumw2();
   h_dphimin = new TH1F("h_dphimin","h_dphimin; Minimum dPhiJetMET",50,0,3.2);h_dphimin->Sumw2();
-  for(int i=0; i<18; i++){
+  for(int i=0; i<20; i++){
 
      char ptbins[100];
      sprintf(ptbins, "_%d", i);
@@ -304,9 +306,9 @@ void ZprimeJetsClass::BookHistos(const char* file2)
      h_ChPionPt[i]=new TH1F(("ChPionPt"+histname).c_str(),"ChPionPt;p_{T} of Charged Pion in 3rd Signal Category",50,0,2000);h_ChPionPt[i]->Sumw2();
      h_PhotonPt[i]=new TH1F(("PhotonPt"+histname).c_str(),"PhotonPt;p_{T} of Photon in 3rd Signal Category",50,0,2000);h_PhotonPt[i]->Sumw2();
      h_dRPionPhoton[i]=new TH1F(("dRPionPhoton"+histname).c_str(),"dRPionPhoton;deltaR between ChPion and Photon 3rd Signal Category",50,0,0.5);h_dRPionPhoton[i]->Sumw2();
-     h_EcalPtUnc[i]=new TH2F(("EcalPtUnc"+histname).c_str(),"ECAL P_{T} Uncertainty;Photon P_{T} (GeV);Jet P_{T} (GeV);Uncertainty",48,PtBins,50,0.,1.);h_EcalPtUnc[i]->Sumw2();
-     h_TrackerPtUnc[i]=new TH2F(("TrackerPtUnc"+histname).c_str(),"Tracker P_{T} Uncertainty;Charged Hadrons P_{T} (GeV);Uncertainty",48,PtBins,50,0.,1.);h_EcalPtUnc[i]->Sumw2();
-     h_HcalPtUnc[i]=new TH2F(("HcalPtUnc"+histname).c_str(),"HCAL P_{T} Uncertainty;Neutral Hadron P_{T} (GeV);Uncertainty",48,PtBins,50,0.,1.);h_EcalPtUnc[i]->Sumw2();
+     h_EcalPtUnc[i]=new TH2F(("EcalPtUnc"+histname).c_str(),"ECAL P_{T} Uncertainty;Photon P_{T} (GeV);Uncertainty",50,0.,2500.,50,0.,1.);
+     h_TrackerPtUnc[i]=new TH2F(("TrackerPtUnc"+histname).c_str(),"Tracker P_{T} Uncertainty;Charged Hadrons P_{T} (GeV);Uncertainty",50,0.,2500.,50,0.,1.);
+     h_HcalPtUnc[i]=new TH2F(("HcalPtUnc"+histname).c_str(),"HCAL P_{T} Uncertainty;Neutral Hadron P_{T} (GeV);Uncertainty",50,0.,2500.,50,0.,1.);
   }
 }
 
@@ -355,9 +357,9 @@ void ZprimeJetsClass::fillHistos(std::vector<std::pair<int,double>> jetCand_to_u
     h_j1phiWidth[histoNumber]->Fill(jetphiWidth->at(jetCand_to_use[0].first));
     h_j1nCons[histoNumber]->Fill(jetnPhotons->at(jetCand_to_use[0].first)+jetnCHPions->at(jetCand_to_use[0].first)+jetnMisc->at(jetCand_to_use[0].first));
 
-    for(int i=0;i<TrackerCand.size();i++) h_TrackerPtUnc[histoNumber]->Fill(j1PFConsPt.at(i),j1PFConsPtUnc.at(i));
-    for(int i=0;i<EcalCand.size();i++) h_EcalPtUnc[histoNumber]->Fill(j1PFConsPt.at(i),j1PFConsPtUnc.at(i));
-    for(int i=0;i<HcalCand.size();i++) h_HcalPtUnc[histoNumber]->Fill(j1PFConsPt.at(i),j1PFConsPtUnc.at(i));
+    for(int i=0;i<TrackerCand.size();i++) if (j1PFConsPt.at(TrackerCand[i]) > 1.) h_TrackerPtUnc[histoNumber]->Fill(j1PFConsPt.at(TrackerCand[i]),j1PFConsPtUnc.at(TrackerCand[i]));
+    for(int i=0;i<EcalCand.size();i++) if (j1PFConsPt.at(EcalCand[i]) > 1.) h_EcalPtUnc[histoNumber]->Fill(j1PFConsPt.at(EcalCand[i]),j1PFConsPtUnc.at(EcalCand[i]));
+    for(int i=0;i<HcalCand.size();i++) if (j1PFConsPt.at(HcalCand[i]) > 1.) h_HcalPtUnc[histoNumber]->Fill(j1PFConsPt.at(HcalCand[i]),j1PFConsPtUnc.at(HcalCand[i]));
   }
 }
 
@@ -370,7 +372,7 @@ void ZprimeJetsClass::getPt123Frac(int UncType)
       jetPtAll+=j1PFConsPt.at(i)+UncType*j1PFConsPtUnc.at(i);
       if (i < 3) Pt123+=j1PFConsPt.at(i)+UncType*j1PFConsPtUnc.at(i);
     }
-  Pt123Fraction_to_use=(Pt123/jetCand[0].second);
+  Pt123Fraction_to_use=(Pt123/jetPtAll);
 }
 
 void ZprimeJetsClass::AllPFCand(std::vector<std::pair<int,double>> jetCand, std::vector<int> PFCandidates)
@@ -416,7 +418,7 @@ void ZprimeJetsClass::AllPFCand(std::vector<std::pair<int,double>> jetCand, std:
 	    {
 	      //ECAL Uncertainty
 	      //deltaPt=(1/100)*sqrt((2.8)^2/Pt+(12.8/Pt)^2+(0.3)^2)
-	      j1PFConsPtUnc.push_back((1/100.)*sqrt(pow(2.8,2)/j1PFConsPt.at(i)+pow(12.8,2)+pow(0.3,2)));
+	      j1PFConsPtUnc.push_back((1/100.)*sqrt(pow(2.8,2)/j1PFConsPt.at(i)+pow(12.8/j1PFConsPt.at(i),2)+pow(0.3,2)));
 	      EcalCand.push_back(i);
 	    }
 	  else if (abs(j1PFConsPID.at(i)) == 130)

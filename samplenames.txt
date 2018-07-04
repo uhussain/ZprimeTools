@@ -28,3 +28,9 @@ subleadingLeptonEta
 Trailing Lepton #eta
 nVtx
 Number of Primary Verticies
+EcalPtUnc
+Photon P_{T} (GeV)
+HcalPtUnc
+Neutral Hadron P_{T} (GeV)
+TrackerPtUnc
+Charged Hadron P_{T} (GeV)

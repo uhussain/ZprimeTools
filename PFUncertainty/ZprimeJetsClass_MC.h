@@ -1,3 +1,4 @@
+
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
 // Wed Mar  8 10:15:33 2017 by ROOT version 6.06/01
@@ -77,14 +78,14 @@ public :
    //JetEnergyScale
    Float_t MET_to_use, METPhi_to_use;
    
-   TH1F *h_nVtx[18],*h_metcut, *h_dphimin,*h_metFilters[18],*h_pfMETall[18],*h_pfMET200[18],*h_nJets[18],*h_pfMET[18],*h_pfMETPhi[18],*h_j1nCategory1[18],*h_j1nCategory2[18],*h_j1dRPF12_ID_1[18],*h_j1dRPF12_ID_2[18];
-   TH1F *h_j1Pt[18], *h_j1Eta[18], *h_j1Phi[18], *h_j1etaWidth[18], *h_j1phiWidth[18],*h_j1nCons[18], *h_j1PF12PtFrac_ID_1[18], *h_j1PF12PtFrac_ID_2[18],*h_j1PFPtFrac_ID_2[18],*h_PF123PtFraction[18];  
-   TH1F *h_j1TotPFCands[18], *h_j1ChPFCands[18], *h_j1NeutPFCands[18], *h_j1GammaPFCands[18], *h_j1CHF[18], *h_j1NHF[18], *h_j1ChMultiplicity[18], *h_j1NeutMultiplicity[18],*h_j1Mt[18];  
+   TH1F *h_nVtx[20],*h_metcut, *h_dphimin,*h_metFilters[20],*h_pfMETall[20],*h_pfMET200[20],*h_nJets[20],*h_pfMET[20],*h_pfMETPhi[20],*h_j1nCategory1[20],*h_j1nCategory2[20],*h_j1dRPF12_ID_1[20],*h_j1dRPF12_ID_2[20];
+   TH1F *h_j1Pt[20], *h_j1Eta[20], *h_j1Phi[20], *h_j1etaWidth[20], *h_j1phiWidth[20],*h_j1nCons[20], *h_j1PF12PtFrac_ID_1[20], *h_j1PF12PtFrac_ID_2[20],*h_j1PFPtFrac_ID_2[20],*h_PF123PtFraction[20];  
+   TH1F *h_j1TotPFCands[20], *h_j1ChPFCands[20], *h_j1NeutPFCands[20], *h_j1GammaPFCands[20], *h_j1CHF[20], *h_j1NHF[20], *h_j1ChMultiplicity[20], *h_j1NeutMultiplicity[20],*h_j1Mt[20];  
    //Category3 Histos
-   TH1F *h_ChPionPt[18],*h_PhotonPt[18],*h_dRPionPhoton[18];
+   TH1F *h_ChPionPt[20],*h_PhotonPt[20],*h_dRPionPhoton[20];
    TH1D *h_cutflow;
 
-  TH2F *h_EcalPtUnc[18],*h_TrackerPtUnc[18],*h_HcalPtUnc[18];
+  TH2F *h_EcalPtUnc[20],*h_TrackerPtUnc[20],*h_HcalPtUnc[20];
    // Fixed size dimensions of array or collections stored in the TTree if any.
 
    // Declaration of leaf types
@@ -742,7 +743,7 @@ public :
    virtual double deltaR(double eta1, double phi1, double eta2, double phi2);
    virtual void fillHistos(std::vector<std::pair<int,double>> jetCand_to_use,int histoNumber,double event_weight);
    virtual float DeltaPhi(float phi1, float phi2);
-   virtual vector<pair<int,double>> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut,int UncType);
+  virtual vector<pair<int,double>> getJetCand(std::vector<int> jets,double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut,int UncType);
    virtual vector<int> JetVetoDecision(int UncType);
    virtual bool btagVeto(int UncType);
    virtual bool dPhiJetMETcut(std::vector<int> jets,float METPhi);

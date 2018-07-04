@@ -69,28 +69,31 @@ class PlotTool{
   
   PlotTool(int argc,const char* argv[]);
   virtual void Options(int argc,const char* argv[]);
-  virtual void haddAll(std::vector<const char*> Data_FileNames);
+  virtual void haddAll(vector<const char*> Data_FileNames);
   virtual const char* haddRegion();
-  virtual vector<float> GetTotal(std::vector<TFile*> Files);
+  virtual vector<float> GetTotal(vector<TFile*> Files);
   virtual string SampleName(const char * variable);
   virtual string GetCategory(int hs_num);
-  virtual vector<std::string> GetName(const char * variable);
-  virtual int hs_save(std::string mchi,std::string cat, const char * variable, std::vector<TH1F*> histo);
-  virtual vector<int> hs_sort(std::vector<TH1F*> hs_list);
-  virtual TH1F* GetHistogram(std::vector<const char*> Sample_FileNames,std::vector<double> Sample_Xsec,const char* variable,std::string SampleName);
-  virtual THStack* StackHistogram(std::vector<TH1F*> hs_list,std::string name);
-  virtual vector<TH1F*> GetSignal(std::string mchi,const char* variable);
+  virtual vector<string> GetName(const char * variable);
+  virtual int hs_save(string mchi,string cat, const char * variable, vector<TH1F*> histo);
+  virtual vector<int> hs_sort(vector<TH1F*> hs_list);
+  virtual TH1F* GetHistogram(vector<const char*> Sample_FileNames,vector<double> Sample_Xsec,const char* variable,string SampleName);
+  virtual TH2F* GetTH2F(vector<const char*> Sample_FileNames,vector<double> Sample_Xsec,const char* variable,string SampleName);
+  virtual THStack* StackHistogram(vector<TH1F*> hs_list,string name);
+  virtual vector<TH1F*> GetSignal(string mchi,const char* variable);
   virtual void DrawRatio(TH1F* histo_Data, THStack* hs_datamc,TCanvas* c);
-  virtual void DrawAxis(TH1F* histo_Data,THStack* hs_datamc, TCanvas* c,std::string name);
-  virtual vector<TH1F*> GetPDF(std::vector<std::string> filenames);
-  virtual void pdf_save(std::vector< std::vector<TH1F*> > hs_list);
+  virtual void DrawAxis(TH1F* histo_Data,THStack* hs_datamc, TCanvas* c,string name);
+  virtual vector<TH1F*> GetPDF(vector<string> filenames);
+  virtual void pdf_save(vector< vector<TH1F*> > hs_list);
   virtual void savepdf();
-  virtual void saveplot(const char* variable,std::string name,std::string varname,std::string cat,std::string mchi);
-  virtual void integral(const char* variable,std::string name,std::string mchi,int print);
-  virtual void plotter(const char * variable,std::string name,std::string mchi);
-  virtual void saveplotOption(int argc,std::vector<const char*> argv);
+  virtual void saveplot(const char* variable,string name,string varname,string cat,string mchi);
+  virtual void integral(const char* variable,string name,string mchi,int print);
+  virtual void plotter(const char * variable,string name,string mchi);
+  virtual void plotTH2F(const char * variable,string name,string mchi);
+  virtual void saveplotOption(int argc,vector<const char*> argv);
   virtual void integralOption(int print);
-  virtual void plotterOption(int argc, std::vector<const char*> argv);
+  virtual void plotterOption(int argc, vector<const char*> argv);
+  virtual void plotTH2FOption(int argc,vector<const char*> argv);
   
 };
 
@@ -100,13 +103,13 @@ class PlotTool{
 
 PlotTool::PlotTool(int argc,const char* argv[])
 {
-  std::vector<const char*> preRegionData = {".output/postMETdata_0_1.root",".output/postSingleEle_0_1.root",".output/postSingleMu_0_1.root",".output/postDoubleEle_0_1.root",".output/postDoubleMu_0_1.root"};
-  std::vector<const char*> postRegionData ={"postMETdata_0.root","postSingleEle_0.root","postSingleMu_0.root","postDoubleEle_0.root","postDoubleMu_0.root"}; 
-  std::vector<std::string> RegionName = {"SignalRegion","SingleEleCR","SingleMuCR","DoubleEleCR","DoubleMuCR"};
+  vector<const char*> preRegionData = {".output/postMETdata_0_1.root",".output/postSingleEle_0_1.root",".output/postSingleMu_0_1.root",".output/postDoubleEle_0_1.root",".output/postDoubleMu_0_1.root"};
+  vector<const char*> postRegionData ={"postMETdata_0.root","postSingleEle_0.root","postSingleMu_0.root","postDoubleEle_0.root","postDoubleMu_0.root"}; 
+  vector<string> RegionName = {"SignalRegion","SingleEleCR","SingleMuCR","DoubleEleCR","DoubleMuCR"};
   for (int i = 0; i < preRegionData.size(); i++)
     {
-      std::ifstream prefile(preRegionData[i]);
-      std::ifstream postfile(postRegionData[i]);
+      ifstream prefile(preRegionData[i]);
+      ifstream postfile(postRegionData[i]);
       if (prefile || postfile)
 	{
 	  Region=RegionName[i];
@@ -115,7 +118,7 @@ PlotTool::PlotTool(int argc,const char* argv[])
     }
   if (Region.size() == 0)
     {
-      std::cout<<"Error: No Region Files Detected"<<std::endl;
+      cout<<"Error: No Region Files Detected"<<endl;
     }
 }
 

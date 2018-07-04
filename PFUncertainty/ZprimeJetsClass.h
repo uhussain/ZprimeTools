@@ -1,3 +1,4 @@
+
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
 // Wed Mar  8 10:01:47 2017 by ROOT version 6.06/01
@@ -76,14 +77,14 @@ public :
 
   Float_t MET_to_use, METPhi_to_use;
 
-  TH1F *h_nVtx[18],*h_metcut, *h_dphimin,*h_metFilters[18],*h_pfMETall[18],*h_pfMET200[18],*h_nJets[18],*h_pfMET[18],*h_pfMETPhi[18],*h_j1nCategory1[18],*h_j1nCategory2[18],*h_j1dRPF12_ID_1[18],*h_j1dRPF12_ID_2[18];
-  TH1F *h_j1Pt[18], *h_j1Eta[18], *h_j1Phi[18], *h_j1etaWidth[18], *h_j1phiWidth[18],*h_j1nCons[18], *h_j1PF12PtFrac_ID_1[18], *h_j1PF12PtFrac_ID_2[18],*h_j1PFPtFrac_ID_2[18],*h_PF123PtFraction[18];  
-  TH1F *h_j1TotPFCands[18], *h_j1ChPFCands[18], *h_j1NeutPFCands[18], *h_j1GammaPFCands[18], *h_j1CHF[18], *h_j1NHF[18], *h_j1ChMultiplicity[18], *h_j1NeutMultiplicity[18],*h_j1Mt[18]; 
+  TH1F *h_nVtx[20],*h_metcut, *h_dphimin,*h_metFilters[20],*h_pfMETall[20],*h_pfMET200[20],*h_nJets[20],*h_pfMET[20],*h_pfMETPhi[20],*h_j1nCategory1[20],*h_j1nCategory2[20],*h_j1dRPF12_ID_1[20],*h_j1dRPF12_ID_2[20];
+  TH1F *h_j1Pt[20], *h_j1Eta[20], *h_j1Phi[20], *h_j1etaWidth[20], *h_j1phiWidth[20],*h_j1nCons[20], *h_j1PF12PtFrac_ID_1[20], *h_j1PF12PtFrac_ID_2[20],*h_j1PFPtFrac_ID_2[20],*h_PF123PtFraction[20];  
+  TH1F *h_j1TotPFCands[20], *h_j1ChPFCands[20], *h_j1NeutPFCands[20], *h_j1GammaPFCands[20], *h_j1CHF[20], *h_j1NHF[20], *h_j1ChMultiplicity[20], *h_j1NeutMultiplicity[20],*h_j1Mt[20]; 
   //Category3 Histos
-  TH1F *h_ChPionPt[18],*h_PhotonPt[18],*h_dRPionPhoton[18];
+  TH1F *h_ChPionPt[20],*h_PhotonPt[20],*h_dRPionPhoton[20];
   TH1D *h_cutflow;
 
-  TH2F *h_EcalPtUnc[18],*h_TrackerPtUnc[18],*h_HcalPtUnc[18];
+  TH2F *h_EcalPtUnc[20],*h_TrackerPtUnc[20],*h_HcalPtUnc[20];
   // Fixed size dimensions of array or collections stored in the TTree if any.                   
   // Declaration of leaf types
   Int_t           run;
@@ -105,7 +106,6 @@ public :
   ULong64_t       HLTEleMuXIsPrescaled;
   ULong64_t       HLTPhoIsPrescaled;
   ULong64_t       HLTJetIsPrescaled;
-  vector<int>     *phoPrescale;
   Int_t           metFilters;
   Float_t         pfMET;
   Float_t         caloMET;
@@ -135,7 +135,6 @@ public :
   vector<float>   *phoCalibEt;
   vector<float>   *phoSCE;
   vector<float>   *phoSCRawE;
-  vector<float>   *phoESEn;
   vector<float>   *phoESEnP1;
   vector<float>   *phoESEnP2;
   vector<float>   *phoSCEta;
@@ -186,7 +185,6 @@ public :
   vector<int>     *eleChargeConsistent;
   vector<float>   *eleEn;
   vector<float>   *eleSCEn;
-  vector<float>   *eleESEn;
   vector<float>   *eleESEnP1;
   vector<float>   *eleESEnP2;
   vector<float>   *eleD0;
@@ -436,7 +434,6 @@ public :
   TBranch        *b_HLTEleMuXIsPrescaled;   //!
   TBranch        *b_HLTPhoIsPrescaled;   //!
   TBranch        *b_HLTJetIsPrescaled;   //!
-  TBranch        *b_phoPrescale;   //!
   TBranch        *b_metFilters;   //!
   TBranch        *b_pfMET;   //! 
   TBranch        *b_caloMET;   //!
@@ -465,7 +462,6 @@ public :
   TBranch        *b_phoCalibEt;   //!
   TBranch        *b_phoSCE;   //!
   TBranch        *b_phoSCRawE;   //!
-  TBranch        *b_phoESEn;   //!
   TBranch        *b_phoESEnP1;   //!
   TBranch        *b_phoESEnP2;   //!
   TBranch        *b_phoSCEta;   //!
@@ -516,7 +512,6 @@ public :
   TBranch        *b_eleChargeConsistent;   //!
   TBranch        *b_eleEn;   //!
   TBranch        *b_eleSCEn;   //!
-  TBranch        *b_eleESEn;   //!
   TBranch        *b_eleESEnP1;   //!
   TBranch        *b_eleESEnP2;   //!
   TBranch        *b_eleD0;   //!
@@ -868,7 +863,6 @@ void ZprimeJetsClass::Init(TTree *tree)
   // (once per file to be processed).
 
   // Set object pointer
-  phoPrescale = 0;
   phoE = 0;
   phoEt = 0;
   phoEta = 0;
@@ -877,7 +871,6 @@ void ZprimeJetsClass::Init(TTree *tree)
   phoCalibEt = 0;
   phoSCE = 0;
   phoSCRawE = 0;
-  phoESEn = 0;
   phoESEnP1 = 0;
   phoESEnP2 = 0;
   phoSCEta = 0;
@@ -926,7 +919,6 @@ void ZprimeJetsClass::Init(TTree *tree)
   eleChargeConsistent = 0;
   eleEn = 0;
   eleSCEn = 0;
-  eleESEn = 0;
   eleESEnP1 = 0;
   eleESEnP2 = 0;
   eleD0 = 0;
@@ -1176,7 +1168,6 @@ void ZprimeJetsClass::Init(TTree *tree)
   fChain->SetBranchAddress("HLTEleMuXIsPrescaled", &HLTEleMuXIsPrescaled, &b_HLTEleMuXIsPrescaled);
   fChain->SetBranchAddress("HLTPhoIsPrescaled", &HLTPhoIsPrescaled, &b_HLTPhoIsPrescaled);
   fChain->SetBranchAddress("HLTJetIsPrescaled", &HLTJetIsPrescaled, &b_HLTJetIsPrescaled);
-  fChain->SetBranchAddress("phoPrescale", &phoPrescale, &b_phoPrescale);
   fChain->SetBranchAddress("metFilters", &metFilters, &b_metFilters);
   fChain->SetBranchAddress("pfMET", &pfMET, &b_pfMET);
   fChain->SetBranchAddress("caloMET", &caloMET, &b_caloMET);
@@ -1205,7 +1196,6 @@ void ZprimeJetsClass::Init(TTree *tree)
   fChain->SetBranchAddress("phoCalibEt", &phoCalibEt, &b_phoCalibEt);
   fChain->SetBranchAddress("phoSCE", &phoSCE, &b_phoSCE);
   fChain->SetBranchAddress("phoSCRawE", &phoSCRawE, &b_phoSCRawE);
-  fChain->SetBranchAddress("phoESEn", &phoESEn, &b_phoESEn);
   fChain->SetBranchAddress("phoESEnP1", &phoESEnP1, &b_phoESEnP1);
   fChain->SetBranchAddress("phoESEnP2", &phoESEnP2, &b_phoESEnP2);
   fChain->SetBranchAddress("phoSCEta", &phoSCEta, &b_phoSCEta);
@@ -1256,7 +1246,6 @@ void ZprimeJetsClass::Init(TTree *tree)
   fChain->SetBranchAddress("eleChargeConsistent", &eleChargeConsistent, &b_eleChargeConsistent);
   fChain->SetBranchAddress("eleEn", &eleEn, &b_eleEn);
   fChain->SetBranchAddress("eleSCEn", &eleSCEn, &b_eleSCEn);
-  fChain->SetBranchAddress("eleESEn", &eleESEn, &b_eleESEn);
   fChain->SetBranchAddress("eleESEnP1", &eleESEnP1, &b_eleESEnP1);
   fChain->SetBranchAddress("eleESEnP2", &eleESEnP2, &b_eleESEnP2);
   fChain->SetBranchAddress("eleD0", &eleD0, &b_eleD0);

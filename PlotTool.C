@@ -79,11 +79,33 @@ void PlotTool::Options(int argc,const char* argv[])
 	  saveplotOption(realargv.size(),realargv);
 	}
     }
+  else if (string(argv[1]).compare("-th2f") == 0)
+    {
+      if (Region != "SignalRegion")
+	{
+	  cout<<"Please only run ./PlotTool -th2f in PFUncertainty"<<endl;
+	}
+      cout<<"Making TH2F Uncertianty Plots"<<endl;
+      for (int j = 1; j < argc; j++){ realargv.push_back(argv[j]);}
+      plotTH2FOption(realargv.size(),realargv);
+    }
   else
     {
       cout<<"Plotting at "<<lumi<<" pb^{-1}"<<endl;
       for (int j = 1; j < argc; j++){realargv.push_back(argv[j]);}
       plotterOption(realargv.size(),realargv);
+    }
+}
+  
+void PlotTool::plotTH2FOption(int argc,vector<const char*> argv)
+{
+  string mchi = "-1";
+  vector<const char*> variable;
+  for (int i = 1; i < argc; i++){variable.push_back(argv[i]);}
+  for (int i = 0; i < variable.size(); i++)
+    {
+      string name = SampleName(variable[i]);
+      plotTH2F(variable[i],name,mchi);
     }
 }
 
@@ -380,6 +402,32 @@ TH1F* PlotTool::GetHistogram(vector<const char*> Sample_FileNames,vector<double>
   for(int i = 0; i < Sample_FileNames.size(); i++)
     {
       Sample_Histo.push_back((TH1F*)Sample_Files[i]->Get(variable));
+      Sample_Histo[i]->SetStats(0);
+      rawEvents+=Sample_Histo[i]->Integral();
+      //Scaling = (1/Totalevents)*Luminosity*NNLO-cross-section
+      if (Sample_Xsec[i] > 0)
+	{
+	  double scaleEvents = (Sample_Histo[i]->Integral()/Sample_Total[i])*lumi*Sample_Xsec[i];
+	  //cout<<lumi<<"\t"<<Sample_Files[i]->GetName()<<" scaled events: "<<scaleEvents<<endl;
+	  Sample_Histo[i]->Scale((1.0/Sample_Total[i])*lumi*Sample_Xsec[i]);
+	}
+    }
+  for(int i = 1; i < Sample_FileNames.size(); i++){Sample_Histo[0]->Add(Sample_Histo[i]);}
+  Sample_Histo[0]->SetName(((string(variable)+string("_")+SampleName)).c_str());
+
+  return Sample_Histo[0];
+}
+
+TH2F* PlotTool::GetTH2F(vector<const char*> Sample_FileNames,vector<double> Sample_Xsec,const char* variable,string SampleName)
+{
+  vector<TFile*> Sample_Files;
+  for(int i = 0; i < Sample_FileNames.size(); i++){Sample_Files.push_back(new TFile((string(Sample_FileNames[i])+string(".root")).c_str()));}
+  vector<float> Sample_Total = GetTotal(Sample_Files);
+  vector<TH2F*> Sample_Histo;
+  double rawEvents = 0;
+  for(int i = 0; i < Sample_FileNames.size(); i++)
+    {
+      Sample_Histo.push_back((TH2F*)Sample_Files[i]->Get(variable));
       Sample_Histo[i]->SetStats(0);
       rawEvents+=Sample_Histo[i]->Integral();
       //Scaling = (1/Totalevents)*Luminosity*NNLO-cross-section
@@ -805,7 +853,6 @@ void PlotTool::plotter(const char * variable,string name,string mchi)
     }
 
   //Stack histograms using THStack
-  vector<int> hs_index = hs_sort(hs_list);
   THStack* hs_datamc = StackHistogram(hs_list,name);
   hs_datamc->Draw("HIST");
 
@@ -850,9 +897,78 @@ void PlotTool::plotter(const char * variable,string name,string mchi)
   
   DrawAxis(histo_Data,hs_datamc,c,name);
 
+  system("echo '${PWD##*/}' > .filelist/dir.txt");
+  ifstream dirfile(".filelist/dir.txt");
+  string dir;
+  if (dirfile.is_open())
+    {
+      string line;
+      while(getline(dirfile,line)) dir=line;
+    }
   //c->SaveAs((string(variable)+string(".png")).c_str());
   c->SaveAs((string(variable)+string(".pdf")).c_str());
   c->SaveAs((string(variable)+string(".png")).c_str());
-  system((string("mv ")+string(variable)+string(".pdf ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/Plots/")+Region+string("Plots_EWK/datamc_")+string(variable)+string(".pdf")).c_str());
-  system((string("mv ")+string(variable)+string(".png ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/Plots/")+Region+string("Plots_EWK/datamc_")+string(variable)+string(".png")).c_str());
+  system((string("mv ")+string(variable)+string(".pdf ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string(".pdf")).c_str());
+  system((string("mv ")+string(variable)+string(".png ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string(".png")).c_str());
+}
+
+void PlotTool::plotTH2F(const char * variable,string name,string mchi)
+{
+  cout << name <<endl;
+
+  TCanvas *c = new TCanvas("c", "canvas",800,800);
+  gStyle->SetOptStat(0);
+  gStyle->SetLegendBorderSize(0);
+  //c->SetLeftMargin(0.15);
+  //c->SetLogy();
+  //c->cd();
+  
+  TPad *pad1 = new TPad("pad1","pad1",0.01,0.25,0.99,0.99);
+  pad1->Draw(); pad1->cd();
+  pad1->SetFillColor(0); pad1->SetFrameBorderMode(0); pad1->SetBorderMode(0);
+  pad1->SetBottomMargin(0.);
+  
+  //opening the data file and adding "h_dileptonM_8" histogram
+
+  vector<TH2F*> hs_list;
+
+  TH2F* mainBkg;
+  TH2F* allBkg;
+  for(int i = 0; i < MC_FileNames.size(); i++)
+    {
+      hs_list.push_back(GetTH2F(MC_FileNames[i],MC_Xsec[i],variable,MC_Label[i]));
+      if (i == 0)
+	{
+	  mainBkg=hs_list[0];
+	  allBkg=hs_list[0];
+	}
+      if (i == 1)mainBkg->Add(hs_list[i]);
+      allBkg->Add(hs_list[i]);
+      cout<<"integral of "<<MC_Label[i]<<" here:"<<hs_list[i]->Integral()<<endl;
+    }
+
+  mainBkg->GetYaxis()->SetTitle("Uncertainty");
+  allBkg->GetYaxis()->SetTitle("Uncertainty");
+  
+  system("echo '${PWD##*/}' > .filelist/dir.txt");
+  ifstream dirfile(".filelist/dir.txt");
+  string dir;
+  if (dirfile.is_open())
+    {
+      string line;
+      while(getline(dirfile,line)) dir=line;
+    }
+
+  mainBkg->Draw("COLZ");
+  //c->SaveAs((string(variable)+string(".png")).c_str());
+  c->SaveAs((string(variable)+string("MainBkg.pdf")).c_str());
+  c->SaveAs((string(variable)+string("MainBkg.png")).c_str());
+  system((string("mv ")+string(variable)+string("MainBkg.pdf ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string("MainBkg.pdf")).c_str());
+  system((string("mv ")+string(variable)+string("MainBkg.png ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string("MainBkg.png")).c_str());
+
+  allBkg->Draw("COLZ");
+  c->SaveAs((string(variable)+string("AllBkg.pdf")).c_str());
+  c->SaveAs((string(variable)+string("AllBkg.png")).c_str());
+  system((string("mv ")+string(variable)+string("AllBkg.pdf ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string("AllBkg.pdf")).c_str());
+  system((string("mv ")+string(variable)+string("AllBkg.png ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string("AllBkg.png")).c_str());    
 }
