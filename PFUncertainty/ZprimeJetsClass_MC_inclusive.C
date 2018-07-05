@@ -103,6 +103,8 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
     TrackerCand.clear();
     HcalCand.clear();
 
+    Pt123Fraction_to_use = {-1,-1,-1,-1};
+    
     Long64_t ientry = LoadTree(jentry);
     if (ientry < 0) break;
     nb = fChain->GetEntry(jentry);   nbytes += nb;
@@ -118,7 +120,6 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
     jetCand = getJetCand(jetveto,200,2.4,0.8,0.1,0);
     AllPFCand(jetCand,PFCandidates);
     getPt123Frac(0);
-    //closing the pfMET>300 and goodJets condition
     fillHistos(jetCand,0,event_weight);
     float metcut= 0.0;
     metcut = (fabs(pfMET-caloMET))/pfMET;
@@ -172,45 +173,45 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
 				    nDphiJetMET+=event_weight;
 				    fillHistos(jetCand,8,event_weight);
 				    
-				    if (Pt123Fraction_to_use>0.8)
+				    if (Pt123Fraction_to_use[0]>0.8)
 				      {
 					fillHistos(jetCand,9,event_weight);
 				      }
-				    if (Pt123Fraction_to_use>0.85)
+				    if (Pt123Fraction_to_use[0]>0.85)
 				      {
 					fillHistos(jetCand,10,event_weight);
 				      }
-				    if (Pt123Fraction_to_use>0.9)
+				    if (Pt123Fraction_to_use[0]>0.9)
 				      {
 					fillHistos(jetCand,11,event_weight);
 				      }
 
 				    getPt123Frac(1);
 				    fillHistos(jetCand,12,event_weight);
-				    if (Pt123Fraction_to_use>0.8)
+				    if (Pt123Fraction_to_use[0]>0.8)
 				      {
 					fillHistos(jetCand,13,event_weight);
 				      }
-				    if (Pt123Fraction_to_use>0.85)
+				    if (Pt123Fraction_to_use[0]>0.85)
 				      {
 					fillHistos(jetCand,14,event_weight);
 				      }
-				    if (Pt123Fraction_to_use>0.9)
+				    if (Pt123Fraction_to_use[0]>0.9)
 				      {
 					fillHistos(jetCand,15,event_weight);
 				      }
 
 				    getPt123Frac(-1);
 				    fillHistos(jetCand,16,event_weight);
-				    if (Pt123Fraction_to_use>0.8)
+				    if (Pt123Fraction_to_use[0]>0.8)
 				      {
 					fillHistos(jetCand,17,event_weight);
 				      }
-				    if (Pt123Fraction_to_use>0.85)
+				    if (Pt123Fraction_to_use[0]>0.85)
 				      {
 					fillHistos(jetCand,18,event_weight);
 				      }
-				    if (Pt123Fraction_to_use>0.9)
+				    if (Pt123Fraction_to_use[0]>0.9)
 				      {
 					fillHistos(jetCand,19,event_weight);
 				      }
@@ -315,6 +316,9 @@ void ZprimeJetsClass_MC::BookHistos(const char* file2)
     h_EcalPtUnc[i]=new TH2F(("EcalPtUnc"+histname).c_str(),"ECAL P_{T} Uncertainty;Photon P_{T} (GeV);Uncertainty",50,0.,2500.,50,0.,1.);
     h_TrackerPtUnc[i]=new TH2F(("TrackerPtUnc"+histname).c_str(),"Tracker P_{T} Uncertainty;Charged Hadrons P_{T} (GeV);Uncertainty",50,0.,2500.,50,0.,1.);
     h_HcalPtUnc[i]=new TH2F(("HcalPtUnc"+histname).c_str(),"HCAL P_{T} Uncertainty;Neutral Hadron P_{T} (GeV);Uncertainty",50,0.,2500.,50,0.,1.);
+    h_TrackerPtFrac[i]=new TH1F(("TrackerPtFraction"+histname).c_str(), "TrackerPtFraction;P_{T} fraction carried by Charged Hadrons of the Pencil Jet" ,50,0,1.1);h_TrackerPtFrac[i]->Sumw2();
+     h_EcalPtFrac[i]=new TH1F(("EcalPtFraction"+histname).c_str(), "EcalPtFraction;P_{T} fraction carried by Photons of the Pencil Jet" ,50,0,1.1);h_EcalPtFrac[i]->Sumw2();
+     h_HcalPtFrac[i]=new TH1F(("HcalPtFraction"+histname).c_str(), "HcalPtFraction;P_{T} fraction carried by Neutral Hadrons of the Pencil Jet" ,50,0,1.1);h_HcalPtFrac[i]->Sumw2();
   }
 }
 
@@ -339,7 +343,7 @@ void ZprimeJetsClass_MC::fillHistos(std::vector<std::pair<int,double>> jetCand_t
     h_j1Phi[histoNumber]->Fill(jetPhi->at(jetCand_to_use[0].first),event_weight); 
     h_j1nCategory1[histoNumber]->Fill(TwoChPFCons,event_weight); 
     h_j1nCategory2[histoNumber]->Fill(TwoChPFConsPlusPho,event_weight);
-    h_PF123PtFraction[histoNumber]->Fill(Pt123Fraction_to_use,event_weight);
+    h_PF123PtFraction[histoNumber]->Fill(Pt123Fraction_to_use[0],event_weight);
     h_j1PF12PtFrac_ID_1[histoNumber]->Fill(PF12PtFrac_ID_1,event_weight);
     h_j1dRPF12_ID_1[histoNumber]->Fill(dR_PF12_ID_1,event_weight);
     h_j1PF12PtFrac_ID_2[histoNumber]->Fill(PF12PtFrac_ID_2,event_weight);
@@ -358,22 +362,61 @@ void ZprimeJetsClass_MC::fillHistos(std::vector<std::pair<int,double>> jetCand_t
     h_j1phiWidth[histoNumber]->Fill(jetphiWidth->at(jetCand_to_use[0].first),event_weight);
     h_j1nCons[histoNumber]->Fill((jetnPhotons->at(jetCand_to_use[0].first)+jetnCHPions->at(jetCand_to_use[0].first)+jetnMisc->at(jetCand_to_use[0].first)),event_weight);
 
-    for(int i=0;i<TrackerCand.size();i++) if (j1PFConsPt.at(TrackerCand[i]) > 1.) h_TrackerPtUnc[histoNumber]->Fill(j1PFConsPt.at(TrackerCand[i]),j1PFConsPtUnc.at(TrackerCand[i]),event_weight);
-    for(int i=0;i<EcalCand.size();i++) if (j1PFConsPt.at(EcalCand[i]) > 1.) h_EcalPtUnc[histoNumber]->Fill(j1PFConsPt.at(EcalCand[i]),j1PFConsPtUnc.at(EcalCand[i]),event_weight);
-    for(int i=0;i<HcalCand.size();i++) if (j1PFConsPt.at(HcalCand[i]) > 1.) h_HcalPtUnc[histoNumber]->Fill(j1PFConsPt.at(HcalCand[i]),j1PFConsPtUnc.at(HcalCand[i]),event_weight);
+    for(int i=0;i<TrackerCand.size();i++)
+      {
+	if (j1PFConsPt.at(TrackerCand[i]) > 1. && TrackerCand[i] < 3)
+	  {
+	    h_TrackerPtFrac[histoNumber]->Fill(Pt123Fraction_to_use[1],event_weight);
+	    h_TrackerPtUnc[histoNumber]->Fill(j1PFConsPt.at(TrackerCand[i]),j1PFConsPtUnc.at(TrackerCand[i]),event_weight);
+	  }
+      }
+    for(int i=0;i<EcalCand.size();i++)
+      {
+	if (j1PFConsPt.at(EcalCand[i]) > 1. && EcalCand[i] < 3)
+	  {
+	    h_EcalPtFrac[histoNumber]->Fill(Pt123Fraction_to_use[2],event_weight);
+	    h_EcalPtUnc[histoNumber]->Fill(j1PFConsPt.at(EcalCand[i]),j1PFConsPtUnc.at(EcalCand[i]),event_weight);
+	  }
+      }
+    for(int i=0;i<HcalCand.size();i++)
+      {
+	if (j1PFConsPt.at(HcalCand[i]) > 1. && HcalCand[i] < 3)
+	  {
+	    h_HcalPtFrac[histoNumber]->Fill(Pt123Fraction_to_use[3],event_weight);
+	    h_HcalPtUnc[histoNumber]->Fill(j1PFConsPt.at(HcalCand[i]),j1PFConsPtUnc.at(HcalCand[i]),event_weight);
+	  }
+      }
   }
 }
 
 void ZprimeJetsClass_MC::getPt123Frac(int UncType)
 {
-  double Pt123=0.0;
-  double jetPtAll=0.0;
-  for (int i = 0; i < j1PFConsPID.size(); i++)
+  vector<double> Pt123 = {0.0,0.0,0.0,0.0};
+  vector<double> jetPtAll = {0.0,0.0,0.0,0.0};
+  vector<int> index(j1PFConsPID.size());
+  iota(begin(index),end(index),0);
+  vector<vector<int>> ConsIndex = {index,TrackerCand,EcalCand,HcalCand};
+  vector<string> ConsName = {"All","Tracker","Ecal","Hcal"};
+  for (int i = 0; i < ConsIndex.size(); i++)
     {
-      jetPtAll+=j1PFConsPt.at(i)+UncType*j1PFConsPtUnc.at(i);
-      if (i < 3) Pt123+=j1PFConsPt.at(i)+UncType*j1PFConsPtUnc.at(i);
+      //cout<<"\nRunning on "<<ConsName[i]<<": ";
+      for (int j = 0; j < j1PFConsPID.size(); j++)
+	{
+	  if (find(ConsIndex[i].begin(),ConsIndex[i].end(),j) != ConsIndex[i].end())
+	    {
+	      //cout<<"/"<<j<<" ";
+	      jetPtAll[i]+=j1PFConsPt.at(j)+UncType*j1PFConsPtUnc.at(j);
+	      if (j < 3) Pt123[i]+=j1PFConsPt.at(j)+UncType*j1PFConsPtUnc.at(j);
+	    }
+	  else
+	    {
+	      //cout<<j<<" ";
+	      jetPtAll[i]+=j1PFConsPt.at(j);
+	      if (j < 3) Pt123[i]+=j1PFConsPt.at(j);
+	    }
+	}
+      Pt123Fraction_to_use[i]=(Pt123[i]/jetPtAll[i]);
     }
-  Pt123Fraction_to_use=(Pt123/jetPtAll);
 }
 
 void ZprimeJetsClass_MC::AllPFCand(std::vector<std::pair<int,double>> jetCand, std::vector<int> PFCandidates)
@@ -397,8 +440,6 @@ void ZprimeJetsClass_MC::AllPFCand(std::vector<std::pair<int,double>> jetCand, s
     if(PFCandidates.size()>3){
       NeutralPFCandidates=PFCandidates.at(3);}
     //std::cout<<"TotalNeutralPFCandidates: "<<NeutralPFCandidates<<std::endl;}
-    double Pt123=0.0;
-    Pt123Fraction_to_use=0.0;
     //We are using these conditions so we only calculate the following quantities for the signal we are interested in
     //This will also make it faster to process the events
     if(pfMET>250 && jetCand.size()>0){
@@ -434,6 +475,12 @@ void ZprimeJetsClass_MC::AllPFCand(std::vector<std::pair<int,double>> jetCand, s
 	      j1PFConsPtUnc.push_back(0);
 	    }
 	}
+      //cout<<"\nTracker Index: ";
+      //for (int i = 0; i < TrackerCand.size(); i++) cout <<TrackerCand[i]<<" ";
+      //cout<<"\nEcal Index: ";
+      //for (int i = 0; i < EcalCand.size(); i++) cout <<EcalCand[i]<<" ";
+      //cout<<"\nHcal Index: ";
+      //for (int i = 0; i < HcalCand.size(); i++) cout <<HcalCand[i]<<" ";
     }
 }
 

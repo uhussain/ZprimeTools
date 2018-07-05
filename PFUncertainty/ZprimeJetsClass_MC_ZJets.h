@@ -62,13 +62,14 @@ public :
   std::vector<int> EcalCand;
   std::vector<int> TrackerCand;
   std::vector<int> HcalCand;
+
+  std::vector<double> Pt123Fraction_to_use;
    //Categorizing events based on no.of charged Hadrons in PencilJet
    int NoPosPFCons,NoNegPFCons,NoPhoPFCons;
    double j1PFPosConsPt, j1PFPosConsEta,j1PFPosConsPhi, j1PFNegConsPt,j1PFNegConsEta,j1PFNegConsPhi,j1PFPhoConsPt,j1PFPhoConsEta,j1PFPhoConsPhi;
    int TwoChPFCons,TwoChPFConsPlusPho;
    double PF12PtFrac_ID_1,PF12PtFrac_ID_2,dR_PF12_ID_1,dR_PF12_ID_2,PF123PtFrac_ID_2;
 
-   double Pt123Fraction_to_use;
    //Category 3 variables
    double dR_PionPhoton_3,Cat3_ChPionPt,Cat3_PhotonPt,Cat3_ChPionEta,Cat3_PhotonEta,Cat3_ChPionPhi,Cat3_PhotonPhi;
    //getPFCandidates
@@ -85,6 +86,7 @@ TH1F *h_nVtx[20], *h_metcut, *h_dphimin,*h_metFilters[20],*h_pfMETall[20],*h_pfM
    TH1D *h_cutflow;
 
   TH2F *h_EcalPtUnc[20],*h_TrackerPtUnc[20],*h_HcalPtUnc[20];
+  TH1F *h_TrackerPtFrac[20],*h_EcalPtFrac[20],*h_HcalPtFrac[20];
    // Declaration of leaf types
    Int_t           run;
    Long64_t        event;
