@@ -875,7 +875,7 @@ void PlotTool::plotter(const char * variable,string name,string mchi)
   leg->SetFillStyle(0);
   leg->SetTextSize(0.025);
   leg->Draw();
-  TLatex *texS = new TLatex(0.20,0.837173,"#sqrt{s} = 13 TeV, 35.9 fb^{-1}");
+  TLatex *texS = new TLatex(0.20,0.837173,"#sqrt{s} = 13 TeV, 1.89 fb^{-1}");
   texS->SetNDC();
   texS->SetTextFont(42);
   texS->SetTextSize(0.040);
@@ -959,14 +959,14 @@ void PlotTool::plotTH2F(const char * variable,string name,string mchi)
       while(getline(dirfile,line)) dir=line;
     }
 
-  mainBkg->Draw("COLZ");
+  mainBkg->Draw();
   //c->SaveAs((string(variable)+string(".png")).c_str());
   c->SaveAs((string(variable)+string("MainBkg.pdf")).c_str());
   c->SaveAs((string(variable)+string("MainBkg.png")).c_str());
   system((string("mv ")+string(variable)+string("MainBkg.pdf ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string("MainBkg.pdf")).c_str());
   system((string("mv ")+string(variable)+string("MainBkg.png ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string("MainBkg.png")).c_str());
 
-  allBkg->Draw("COLZ");
+  allBkg->Draw();
   c->SaveAs((string(variable)+string("AllBkg.pdf")).c_str());
   c->SaveAs((string(variable)+string("AllBkg.png")).c_str());
   system((string("mv ")+string(variable)+string("AllBkg.pdf ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string("AllBkg.pdf")).c_str());

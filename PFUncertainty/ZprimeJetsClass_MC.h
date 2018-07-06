@@ -1,4 +1,3 @@
-
 //////////////////////////////////////////////////////////
 // This class has been automatically generated on
 // Wed Mar  8 10:15:33 2017 by ROOT version 6.06/01
@@ -78,15 +77,15 @@ public :
    //JetEnergyScale
    Float_t MET_to_use, METPhi_to_use;
    
-   TH1F *h_nVtx[20],*h_metcut, *h_dphimin,*h_metFilters[20],*h_pfMETall[20],*h_pfMET200[20],*h_nJets[20],*h_pfMET[20],*h_pfMETPhi[20],*h_j1nCategory1[20],*h_j1nCategory2[20],*h_j1dRPF12_ID_1[20],*h_j1dRPF12_ID_2[20];
-   TH1F *h_j1Pt[20], *h_j1Eta[20], *h_j1Phi[20], *h_j1etaWidth[20], *h_j1phiWidth[20],*h_j1nCons[20], *h_j1PF12PtFrac_ID_1[20], *h_j1PF12PtFrac_ID_2[20],*h_j1PFPtFrac_ID_2[20],*h_PF123PtFraction[20];  
-   TH1F *h_j1TotPFCands[20], *h_j1ChPFCands[20], *h_j1NeutPFCands[20], *h_j1GammaPFCands[20], *h_j1CHF[20], *h_j1NHF[20], *h_j1ChMultiplicity[20], *h_j1NeutMultiplicity[20],*h_j1Mt[20];  
+   TH1F *h_nVtx[40],*h_metcut, *h_dphimin,*h_metFilters[40],*h_pfMETall[40],*h_pfMET200[40],*h_nJets[40],*h_pfMET[40],*h_pfMETPhi[40],*h_j1nCategory1[40],*h_j1nCategory2[40],*h_j1dRPF12_ID_1[40],*h_j1dRPF12_ID_2[40];
+   TH1F *h_j1Pt[40], *h_j1Eta[40], *h_j1Phi[40], *h_j1etaWidth[40], *h_j1phiWidth[40],*h_j1nCons[40], *h_j1PF12PtFrac_ID_1[40], *h_j1PF12PtFrac_ID_2[40],*h_j1PFPtFrac_ID_2[40],*h_PF123PtFraction[40];  
+   TH1F *h_j1TotPFCands[40], *h_j1ChPFCands[40], *h_j1NeutPFCands[40], *h_j1GammaPFCands[40], *h_j1CHF[40], *h_j1NHF[40], *h_j1ChMultiplicity[40], *h_j1NeutMultiplicity[40],*h_j1Mt[40];  
    //Category3 Histos
-   TH1F *h_ChPionPt[20],*h_PhotonPt[20],*h_dRPionPhoton[20];
+   TH1F *h_ChPionPt[40],*h_PhotonPt[40],*h_dRPionPhoton[40];
    TH1D *h_cutflow;
 
-  TH2F *h_EcalPtUnc[20],*h_TrackerPtUnc[20],*h_HcalPtUnc[20];
-  TH1F *h_TrackerPtFrac[20],*h_EcalPtFrac[20],*h_HcalPtFrac[20];
+  TH2F *h_EcalPtUnc[40],*h_TrackerPtUnc[40],*h_HcalPtUnc[40];
+  TH1F *h_TrackerPtFrac[40],*h_EcalPtFrac[40],*h_HcalPtFrac[40];
    // Fixed size dimensions of array or collections stored in the TTree if any.
 
    // Declaration of leaf types
@@ -788,7 +787,7 @@ ZprimeJetsClass_MC::ZprimeJetsClass_MC(const char* file1,const char* file2,int m
       std::cout<<"fileNumber: "<<fileNumber<<std::endl;
 
       TString dataset = "ggtree_mc_";
-      //TString dataset = "ggtree_signal5GeV_May";
+      //TString dataset = "ggtree_signal100GeV_May";
       TString  FullPathInputFile = (path+filename->GetName());
       TString name = filename->GetName();
       if (name.Contains(dataset))

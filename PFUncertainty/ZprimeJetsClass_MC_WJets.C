@@ -198,48 +198,144 @@ void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery)
 				  {
 				    nDphiJetMET+=event_weight;
 				    fillHistos(jetCand,8,event_weight);
-				    
-				    if (Pt123Fraction_to_use[0]>0.8)
+				    //Category 1: Exactly Two Charged Hadrons
+				    if(TwoChPFCons==1)
 				      {
 					fillHistos(jetCand,9,event_weight);
-				      }
-				    if (Pt123Fraction_to_use[0]>0.85)
-				      {
-					fillHistos(jetCand,10,event_weight);
-				      }
-				    if (Pt123Fraction_to_use[0]>0.9)
+					//Effectiveness of this cut in Category 1 Events
+					if(PF12PtFrac_ID_1>0.7)
+					  {
+					    fillHistos(jetCand,10,event_weight);}
+				      } 
+				    //Category 2: Two charged Hadrons + Photon
+				    if(TwoChPFConsPlusPho==1)
 				      {
 					fillHistos(jetCand,11,event_weight);
+					//Effectiveness of this cut in Category 2 Events
+					if(PF123PtFrac_ID_2>0.7)
+					  {
+					    fillHistos(jetCand,12,event_weight);}
 				      }
-
-				    getPt123Frac(1);
-				    fillHistos(jetCand,12,event_weight);
-				     if (Pt123Fraction_to_use[0]>0.8)
+				    //Category of events with < 2 charged Hadrons
+				    if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
 				      {
 					fillHistos(jetCand,13,event_weight);
-				      }
-				    if (Pt123Fraction_to_use[0]>0.85)
-				      {
-					fillHistos(jetCand,14,event_weight);
-				      }
-				    if (Pt123Fraction_to_use[0]>0.9)
+					//Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
+					if(jetetaWidth->at(jetCand[0].first)<0.04)
+					  {
+					    fillHistos(jetCand,14,event_weight);
+					  }}
+				    //This is for comparison with previous results (for all events)
+				    if (jetetaWidth->at(jetCand[0].first)<0.04)
 				      {
 					fillHistos(jetCand,15,event_weight);
 				      }
-
-				    getPt123Frac(-1);
-				    fillHistos(jetCand,16,event_weight);
-				     if (Pt123Fraction_to_use[0]>0.8)
+				    if (Pt123Fraction_to_use[0]>0.8)
 				      {
-					fillHistos(jetCand,17,event_weight);
+					fillHistos(jetCand,16,event_weight);
 				      }
 				    if (Pt123Fraction_to_use[0]>0.85)
 				      {
-					fillHistos(jetCand,18,event_weight);
+					fillHistos(jetCand,17,event_weight);
 				      }
 				    if (Pt123Fraction_to_use[0]>0.9)
 				      {
-					fillHistos(jetCand,19,event_weight);
+					fillHistos(jetCand,18,event_weight);
+				      }
+				    
+
+				    getPt123Frac(1);
+				    fillHistos(jetCand,19,event_weight);
+				    //Category 1: Exactly Two Charged Hadrons
+				    if(TwoChPFCons==1)
+				      {
+					fillHistos(jetCand,20,event_weight);
+					//Effectiveness of this cut in Category 1 Events
+					if(PF12PtFrac_ID_1>0.7)
+					  {
+					    fillHistos(jetCand,21,event_weight);}
+				      } 
+				    //Category 2: Two charged Hadrons + Photon
+				    if(TwoChPFConsPlusPho==1)
+				      {
+					fillHistos(jetCand,22,event_weight);
+					//Effectiveness of this cut in Category 2 Events
+					if(PF123PtFrac_ID_2>0.7)
+					  {
+					    fillHistos(jetCand,23,event_weight);}
+				      }
+				    //Category of events with < 2 charged Hadrons
+				    if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
+				      {
+					fillHistos(jetCand,24,event_weight);
+					//Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
+					if(jetetaWidth->at(jetCand[0].first)<0.04)
+					  {
+					    fillHistos(jetCand,25,event_weight);
+					  }}
+				    //This is for comparison with previous results (for all events)
+				    if (jetetaWidth->at(jetCand[0].first)<0.04)
+				      {
+					fillHistos(jetCand,26,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[0]>0.8)
+				      {
+					fillHistos(jetCand,27,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[0]>0.85)
+				      {
+					fillHistos(jetCand,28,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[0]>0.9)
+				      {
+					fillHistos(jetCand,29,event_weight);
+				      }
+
+				    getPt123Frac(-1);
+				    fillHistos(jetCand,30,event_weight);
+				    //Category 1: Exactly Two Charged Hadrons
+				    if(TwoChPFCons==1)
+				      {
+					fillHistos(jetCand,31,event_weight);
+					//Effectiveness of this cut in Category 1 Events
+					if(PF12PtFrac_ID_1>0.7)
+					  {
+					    fillHistos(jetCand,32,event_weight);}
+				      } 
+				    //Category 2: Two charged Hadrons + Photon
+				    if(TwoChPFConsPlusPho==1)
+				      {
+					fillHistos(jetCand,33,event_weight);
+					//Effectiveness of this cut in Category 2 Events
+					if(PF123PtFrac_ID_2>0.7)
+					  {
+					    fillHistos(jetCand,33,event_weight);}
+				      }
+				    //Category of events with < 2 charged Hadrons
+				    if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
+				      {
+					fillHistos(jetCand,34,event_weight);
+					//Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
+					if(jetetaWidth->at(jetCand[0].first)<0.04)
+					  {
+					    fillHistos(jetCand,35,event_weight);
+					  }}
+				    //This is for comparison with previous results (for all events)
+				    if (jetetaWidth->at(jetCand[0].first)<0.04)
+				      {
+					fillHistos(jetCand,36,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[0]>0.8)
+				      {
+					fillHistos(jetCand,37,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[0]>0.85)
+				      {
+					fillHistos(jetCand,38,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[0]>0.9)
+				      {
+					fillHistos(jetCand,39,event_weight);
 				      }
 				  }
 			      }   
@@ -303,7 +399,7 @@ void ZprimeJetsClass_MC_WJets::BookHistos(const char* file2)
 
   h_dphimin = new TH1F("h_dphimin","h_dphimin; Minimum dPhiJetMET",50,0,3.2);h_dphimin->Sumw2();
   h_metcut  = new TH1F("h_metcut","h_metcut; |pfMET-caloMET|/pfMET", 50,0,1.2);h_metcut->Sumw2();
-  for(int i=0; i<20; i++){
+  for(int i=0; i<40; i++){
 
     char ptbins[100];
     sprintf(ptbins, "_%d", i);
@@ -467,6 +563,14 @@ void ZprimeJetsClass_MC_WJets::AllPFCand(std::vector<std::pair<int,double>> jetC
 
     if(PFCandidates.size()>3){
       NeutralPFCandidates=PFCandidates.at(3);}
+
+    TwoChPFCons=TwoChPFConsPlusPho=0; 
+  PF12PtFrac_ID_1=PF12PtFrac_ID_2=dR_PF12_ID_1=dR_PF12_ID_2=PF123PtFrac_ID_2=0.0;
+  NoPosPFCons=NoNegPFCons=NoPhoPFCons=0;
+  j1PFPosConsPt= j1PFPosConsEta=j1PFPosConsPhi=j1PFNegConsPt=j1PFNegConsEta=j1PFNegConsPhi=j1PFPhoConsPt=j1PFPhoConsEta=j1PFPhoConsPhi=0.0;
+  
+  //Category 3 variables
+  dR_PionPhoton_3=Cat3_ChPionPt=Cat3_PhotonPt=Cat3_ChPionEta=Cat3_PhotonEta=Cat3_ChPionPhi=Cat3_PhotonPhi=0.0;
     //std::cout<<"TotalNeutralPFCandidates: "<<NeutralPFCandidates<<std::endl;}
     //We are using these conditions so we only calculate the following quantities for the signal we are interested in
     //This will also make it faster to process the events

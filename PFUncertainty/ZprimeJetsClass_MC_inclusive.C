@@ -1,4 +1,5 @@
 
+
 //For use with Ntuples made from JetAnalyzer
 ////Required arguments: 1 is folder containing input files, 2 is output file path, 3 is maxEvents (-1 to run over all events), 4 is reportEvery
 ////
@@ -172,48 +173,144 @@ void ZprimeJetsClass_MC::Loop(Long64_t maxEvents, int reportEvery)
 				  {
 				    nDphiJetMET+=event_weight;
 				    fillHistos(jetCand,8,event_weight);
-				    
-				    if (Pt123Fraction_to_use[0]>0.8)
+				    //Category 1: Exactly Two Charged Hadrons
+				    if(TwoChPFCons==1)
 				      {
 					fillHistos(jetCand,9,event_weight);
-				      }
-				    if (Pt123Fraction_to_use[0]>0.85)
-				      {
-					fillHistos(jetCand,10,event_weight);
-				      }
-				    if (Pt123Fraction_to_use[0]>0.9)
+					//Effectiveness of this cut in Category 1 Events
+					if(PF12PtFrac_ID_1>0.7)
+					  {
+					    fillHistos(jetCand,10,event_weight);}
+				      } 
+				    //Category 2: Two charged Hadrons + Photon
+				    if(TwoChPFConsPlusPho==1)
 				      {
 					fillHistos(jetCand,11,event_weight);
+					//Effectiveness of this cut in Category 2 Events
+					if(PF123PtFrac_ID_2>0.7)
+					  {
+					    fillHistos(jetCand,12,event_weight);}
 				      }
-
-				    getPt123Frac(1);
-				    fillHistos(jetCand,12,event_weight);
-				    if (Pt123Fraction_to_use[0]>0.8)
+				    //Category of events with < 2 charged Hadrons
+				    if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
 				      {
 					fillHistos(jetCand,13,event_weight);
-				      }
-				    if (Pt123Fraction_to_use[0]>0.85)
-				      {
-					fillHistos(jetCand,14,event_weight);
-				      }
-				    if (Pt123Fraction_to_use[0]>0.9)
+					//Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
+					if(jetetaWidth->at(jetCand[0].first)<0.04)
+					  {
+					    fillHistos(jetCand,14,event_weight);
+					  }}
+				    //This is for comparison with previous results (for all events)
+				    if (jetetaWidth->at(jetCand[0].first)<0.04)
 				      {
 					fillHistos(jetCand,15,event_weight);
 				      }
-
-				    getPt123Frac(-1);
-				    fillHistos(jetCand,16,event_weight);
 				    if (Pt123Fraction_to_use[0]>0.8)
 				      {
-					fillHistos(jetCand,17,event_weight);
+					fillHistos(jetCand,16,event_weight);
 				      }
 				    if (Pt123Fraction_to_use[0]>0.85)
 				      {
-					fillHistos(jetCand,18,event_weight);
+					fillHistos(jetCand,17,event_weight);
 				      }
 				    if (Pt123Fraction_to_use[0]>0.9)
 				      {
-					fillHistos(jetCand,19,event_weight);
+					fillHistos(jetCand,18,event_weight);
+				      }
+				    
+
+				    getPt123Frac(1);
+				    fillHistos(jetCand,19,event_weight);
+				    //Category 1: Exactly Two Charged Hadrons
+				    if(TwoChPFCons==1)
+				      {
+					fillHistos(jetCand,20,event_weight);
+					//Effectiveness of this cut in Category 1 Events
+					if(PF12PtFrac_ID_1>0.7)
+					  {
+					    fillHistos(jetCand,21,event_weight);}
+				      } 
+				    //Category 2: Two charged Hadrons + Photon
+				    if(TwoChPFConsPlusPho==1)
+				      {
+					fillHistos(jetCand,22,event_weight);
+					//Effectiveness of this cut in Category 2 Events
+					if(PF123PtFrac_ID_2>0.7)
+					  {
+					    fillHistos(jetCand,23,event_weight);}
+				      }
+				    //Category of events with < 2 charged Hadrons
+				    if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
+				      {
+					fillHistos(jetCand,24,event_weight);
+					//Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
+					if(jetetaWidth->at(jetCand[0].first)<0.04)
+					  {
+					    fillHistos(jetCand,25,event_weight);
+					  }}
+				    //This is for comparison with previous results (for all events)
+				    if (jetetaWidth->at(jetCand[0].first)<0.04)
+				      {
+					fillHistos(jetCand,26,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[0]>0.8)
+				      {
+					fillHistos(jetCand,27,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[0]>0.85)
+				      {
+					fillHistos(jetCand,28,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[0]>0.9)
+				      {
+					fillHistos(jetCand,29,event_weight);
+				      }
+
+				    getPt123Frac(-1);
+				    fillHistos(jetCand,30,event_weight);
+				    //Category 1: Exactly Two Charged Hadrons
+				    if(TwoChPFCons==1)
+				      {
+					fillHistos(jetCand,31,event_weight);
+					//Effectiveness of this cut in Category 1 Events
+					if(PF12PtFrac_ID_1>0.7)
+					  {
+					    fillHistos(jetCand,32,event_weight);}
+				      } 
+				    //Category 2: Two charged Hadrons + Photon
+				    if(TwoChPFConsPlusPho==1)
+				      {
+					fillHistos(jetCand,33,event_weight);
+					//Effectiveness of this cut in Category 2 Events
+					if(PF123PtFrac_ID_2>0.7)
+					  {
+					    fillHistos(jetCand,33,event_weight);}
+				      }
+				    //Category of events with < 2 charged Hadrons
+				    if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
+				      {
+					fillHistos(jetCand,34,event_weight);
+					//Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
+					if(jetetaWidth->at(jetCand[0].first)<0.04)
+					  {
+					    fillHistos(jetCand,35,event_weight);
+					  }}
+				    //This is for comparison with previous results (for all events)
+				    if (jetetaWidth->at(jetCand[0].first)<0.04)
+				      {
+					fillHistos(jetCand,36,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[0]>0.8)
+				      {
+					fillHistos(jetCand,37,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[0]>0.85)
+				      {
+					fillHistos(jetCand,38,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[0]>0.9)
+				      {
+					fillHistos(jetCand,39,event_weight);
 				      }
 				  }
 			      }   
@@ -275,7 +372,7 @@ void ZprimeJetsClass_MC::BookHistos(const char* file2)
 
   h_dphimin = new TH1F("h_dphimin","h_dphimin; Minimum dPhiJetMET",50,0,3.2);h_dphimin->Sumw2();
   h_metcut  = new TH1F("h_metcut","h_metcut; |pfMET-caloMET|/pfMET", 50,0,1.2);h_metcut->Sumw2();
-  for(int i=0; i<20; i++){
+  for(int i=0; i<40; i++){
 
     char ptbins[100];
     sprintf(ptbins, "_%d", i);
@@ -361,12 +458,13 @@ void ZprimeJetsClass_MC::fillHistos(std::vector<std::pair<int,double>> jetCand_t
     h_j1etaWidth[histoNumber]->Fill(jetetaWidth->at(jetCand_to_use[0].first),event_weight);
     h_j1phiWidth[histoNumber]->Fill(jetphiWidth->at(jetCand_to_use[0].first),event_weight);
     h_j1nCons[histoNumber]->Fill((jetnPhotons->at(jetCand_to_use[0].first)+jetnCHPions->at(jetCand_to_use[0].first)+jetnMisc->at(jetCand_to_use[0].first)),event_weight);
-
+    h_TrackerPtFrac[histoNumber]->Fill(Pt123Fraction_to_use[1],event_weight);
+    h_EcalPtFrac[histoNumber]->Fill(Pt123Fraction_to_use[2],event_weight);
+    h_HcalPtFrac[histoNumber]->Fill(Pt123Fraction_to_use[3],event_weight);
     for(int i=0;i<TrackerCand.size();i++)
       {
 	if (j1PFConsPt.at(TrackerCand[i]) > 1. && TrackerCand[i] < 3)
 	  {
-	    h_TrackerPtFrac[histoNumber]->Fill(Pt123Fraction_to_use[1],event_weight);
 	    h_TrackerPtUnc[histoNumber]->Fill(j1PFConsPt.at(TrackerCand[i]),j1PFConsPtUnc.at(TrackerCand[i]),event_weight);
 	  }
       }
@@ -374,7 +472,6 @@ void ZprimeJetsClass_MC::fillHistos(std::vector<std::pair<int,double>> jetCand_t
       {
 	if (j1PFConsPt.at(EcalCand[i]) > 1. && EcalCand[i] < 3)
 	  {
-	    h_EcalPtFrac[histoNumber]->Fill(Pt123Fraction_to_use[2],event_weight);
 	    h_EcalPtUnc[histoNumber]->Fill(j1PFConsPt.at(EcalCand[i]),j1PFConsPtUnc.at(EcalCand[i]),event_weight);
 	  }
       }
@@ -382,7 +479,6 @@ void ZprimeJetsClass_MC::fillHistos(std::vector<std::pair<int,double>> jetCand_t
       {
 	if (j1PFConsPt.at(HcalCand[i]) > 1. && HcalCand[i] < 3)
 	  {
-	    h_HcalPtFrac[histoNumber]->Fill(Pt123Fraction_to_use[3],event_weight);
 	    h_HcalPtUnc[histoNumber]->Fill(j1PFConsPt.at(HcalCand[i]),j1PFConsPtUnc.at(HcalCand[i]),event_weight);
 	  }
       }
@@ -439,6 +535,13 @@ void ZprimeJetsClass_MC::AllPFCand(std::vector<std::pair<int,double>> jetCand, s
 
     if(PFCandidates.size()>3){
       NeutralPFCandidates=PFCandidates.at(3);}
+    
+    TwoChPFCons=TwoChPFConsPlusPho=0; 
+    PF12PtFrac_ID_1=PF12PtFrac_ID_2=dR_PF12_ID_1=dR_PF12_ID_2=PF123PtFrac_ID_2=0.0;
+    NoPosPFCons=NoNegPFCons=NoPhoPFCons=0;
+    j1PFPosConsPt= j1PFPosConsEta=j1PFPosConsPhi=j1PFNegConsPt=j1PFNegConsEta=j1PFNegConsPhi=j1PFPhoConsPt=j1PFPhoConsEta=j1PFPhoConsPhi=0.0;
+    //Category 3 variables
+    dR_PionPhoton_3=Cat3_ChPionPt=Cat3_PhotonPt=Cat3_ChPionEta=Cat3_PhotonEta=Cat3_ChPionPhi=Cat3_PhotonPhi=0.0;
     //std::cout<<"TotalNeutralPFCandidates: "<<NeutralPFCandidates<<std::endl;}
     //We are using these conditions so we only calculate the following quantities for the signal we are interested in
     //This will also make it faster to process the events
@@ -475,12 +578,124 @@ void ZprimeJetsClass_MC::AllPFCand(std::vector<std::pair<int,double>> jetCand, s
 	      j1PFConsPtUnc.push_back(0);
 	    }
 	}
-      //cout<<"\nTracker Index: ";
-      //for (int i = 0; i < TrackerCand.size(); i++) cout <<TrackerCand[i]<<" ";
-      //cout<<"\nEcal Index: ";
-      //for (int i = 0; i < EcalCand.size(); i++) cout <<EcalCand[i]<<" ";
-      //cout<<"\nHcal Index: ";
-      //for (int i = 0; i < HcalCand.size(); i++) cout <<HcalCand[i]<<" ";
+      //Positively charged hadron Cons of the Pencil Jet
+      if(j1PFConsPID.size()>0 && j1PFConsPID.at(0)==+211)
+	{
+	  j1PFPosConsPt = j1PFConsPt.at(0);
+	  j1PFPosConsEta = j1PFConsEta.at(0);
+	  j1PFPosConsPhi = j1PFConsPhi.at(0);    
+	}
+      else if(j1PFConsPID.size()>1 && j1PFConsPID.at(1)==+211)
+	{
+	  j1PFPosConsPt = j1PFConsPt.at(1);
+	  j1PFPosConsEta = j1PFConsEta.at(1);
+	  j1PFPosConsPhi = j1PFConsPhi.at(1);    
+	}
+      else if(j1PFConsPID.size()>2 && j1PFConsPID.at(2)==+211)
+	{
+	  j1PFPosConsPt = j1PFConsPt.at(2);
+	  j1PFPosConsEta = j1PFConsEta.at(2);
+	  j1PFPosConsPhi = j1PFConsPhi.at(2);    
+	}
+      else{NoPosPFCons=1;}
+      //Negatively charged hadron Cons of the Pencil Jet
+      if(j1PFConsPID.size()>0 && j1PFConsPID.at(0)==-211)
+	{
+	  j1PFNegConsPt = j1PFConsPt.at(0);
+	  j1PFNegConsEta = j1PFConsEta.at(0);
+	  j1PFNegConsPhi = j1PFConsPhi.at(0);    
+	}
+      else if(j1PFConsPID.size()>1 && j1PFConsPID.at(1)==-211)
+	{
+	  j1PFNegConsPt = j1PFConsPt.at(1);
+	  j1PFNegConsEta = j1PFConsEta.at(1);
+	  j1PFNegConsPhi = j1PFConsPhi.at(1);    
+	}
+      else if(j1PFConsPID.size()>2 && j1PFConsPID.at(2)==-211)
+	{
+	  j1PFNegConsPt = j1PFConsPt.at(2);
+	  j1PFNegConsEta = j1PFConsEta.at(2);
+	  j1PFNegConsPhi = j1PFConsPhi.at(2);    
+	}
+      else{
+	//std::cout<<"Where is the error:"<<std::endl;
+	NoNegPFCons=1;}
+      //Photon PFCons of the Pencil Jet
+      if(j1PFConsPID.size()>0 && j1PFConsPID.at(0)==22)
+	{
+	  j1PFPhoConsPt = j1PFConsPt.at(0);
+	  j1PFPhoConsEta = j1PFConsEta.at(0);
+	  j1PFPhoConsPhi = j1PFConsPhi.at(0);    
+	}
+      else if(j1PFConsPID.size()>1 && j1PFConsPID.at(1)==22)
+	{
+	  j1PFPhoConsPt = j1PFConsPt.at(1);
+	  j1PFPhoConsEta = j1PFConsEta.at(1);
+	  j1PFPhoConsPhi = j1PFConsPhi.at(1);    
+	}
+      else if(j1PFConsPID.size()>2 && j1PFConsPID.at(2)==22)
+	{
+	  j1PFPhoConsPt = j1PFConsPt.at(2);
+	  j1PFPhoConsEta = j1PFConsEta.at(2);
+	  j1PFPhoConsPhi = j1PFConsPhi.at(2);    
+	}
+      else{NoPhoPFCons=1;}
+      
+      //Category I: Exactly Two Charged Hadrons/Tracks
+      if(NoPosPFCons==0 && NoNegPFCons==0 && NoPhoPFCons==1){
+	TwoChPFCons=1;
+	PF12PtFrac_ID_1 =(j1PFPosConsPt+j1PFNegConsPt)/(jetCand[0].second);
+	dR_PF12_ID_1 = deltaR(j1PFPosConsEta,j1PFPosConsPhi,j1PFNegConsEta,j1PFNegConsPhi);
+      }
+      //Category II: Exactly Two Charged Hadrons/Tracks + One Photon
+      if(NoPosPFCons==0 && NoNegPFCons==0 && NoPhoPFCons==0){
+	TwoChPFConsPlusPho=1;
+	PF12PtFrac_ID_2 =(j1PFPosConsPt+j1PFNegConsPt)/(jetCand[0].second);
+	dR_PF12_ID_2 = deltaR(j1PFPosConsEta,j1PFPosConsPhi,j1PFNegConsEta,j1PFNegConsPhi);
+	PF123PtFrac_ID_2 = (j1PFPosConsPt+j1PFNegConsPt+j1PFPhoConsPt)/(jetCand[0].second);
+      }
+      //Category3
+      if(TwoChPFCons==0 && TwoChPFConsPlusPho==0){
+	if(j1PFConsPID.size()>0){
+	  if(abs(j1PFConsPID.at(0))==211){
+	    Cat3_ChPionPt=j1PFConsPt.at(0); 
+	    Cat3_ChPionEta=j1PFConsEta.at(0);
+	    Cat3_ChPionPhi=j1PFConsPhi.at(0);}
+	  else if(abs(j1PFConsPID.at(0))==22){
+	    Cat3_PhotonPt=j1PFConsPt.at(0); 
+	    Cat3_PhotonEta=j1PFConsEta.at(0);
+	    Cat3_PhotonPhi=j1PFConsPhi.at(0);}
+	}
+	if(j1PFConsPID.size()>1){
+	  if(abs(j1PFConsPID.at(1))==211){
+	    //Confirm that it does not get overwritten with smaller value
+	    if(j1PFConsPt.at(1)>Cat3_ChPionPt){
+	      Cat3_ChPionPt=j1PFConsPt.at(1); 
+	      Cat3_ChPionEta=j1PFConsEta.at(1);
+	      Cat3_ChPionPhi=j1PFConsPhi.at(1);}}
+	  else if(abs(j1PFConsPID.at(1))==22){
+	    if(j1PFConsPt.at(1)>Cat3_PhotonPt){
+	      Cat3_PhotonPt=j1PFConsPt.at(1); 
+	      Cat3_PhotonEta=j1PFConsEta.at(1);
+	      Cat3_PhotonPhi=j1PFConsPhi.at(1);}}
+	}
+	if(j1PFConsPID.size()>2){
+	  if(abs(j1PFConsPID.at(2))==211){
+	    //Confirm that it does not get overwritten with smaller value
+	    if(j1PFConsPt.at(2)>Cat3_ChPionPt){
+	      Cat3_ChPionPt=j1PFConsPt.at(2); 
+	      Cat3_ChPionEta=j1PFConsEta.at(2);
+	      Cat3_ChPionPhi=j1PFConsPhi.at(2);}}
+	  else if(abs(j1PFConsPID.at(2))==22){
+	    if(j1PFConsPt.at(2)>Cat3_PhotonPt){
+	      Cat3_PhotonPt=j1PFConsPt.at(2); 
+	      Cat3_PhotonEta=j1PFConsEta.at(2);
+	      Cat3_PhotonPhi=j1PFConsPhi.at(2);}}
+	}
+	if(Cat3_ChPionPt>0 && Cat3_PhotonPt>0){
+	  dR_PionPhoton_3 = deltaR(Cat3_ChPionEta,Cat3_ChPionPhi,Cat3_PhotonEta,Cat3_PhotonPhi);
+	}
+      }
     }
 }
 
