@@ -78,16 +78,16 @@ public :
    //JetEneregyScale
    Float_t MET_to_use, METPhi_to_use;
    
-   TH1F *h_nVtx[40], *h_metcut, *h_dphimin,*h_metFilters[40],*h_pfMETall[40],*h_pfMET200[40],*h_nJets[40],*h_pfMET[40],*h_pfMETPhi[40],*h_j1nCategory1[40],*h_j1nCategory2[40],*h_j1dRPF12_ID_1[40],*h_j1dRPF12_ID_2[40];
-   TH1F *h_j1Pt[40], *h_j1Eta[40], *h_j1Phi[40], *h_j1etaWidth[40], *h_j1phiWidth[40],*h_j1nCons[40], *h_j1PF12PtFrac_ID_1[40], *h_j1PF12PtFrac_ID_2[40],*h_j1PFPtFrac_ID_2[40],*h_PF123PtFraction[40];  
-   TH1F *h_j1TotPFCands[40], *h_j1ChPFCands[40], *h_j1NeutPFCands[40], *h_j1GammaPFCands[40], *h_j1CHF[40], *h_j1NHF[40], *h_j1ChMultiplicity[40], *h_j1NeutMultiplicity[40],*h_j1Mt[40]; 
+   TH1F *h_nVtx[60], *h_metcut, *h_dphimin,*h_metFilters[60],*h_pfMETall[60],*h_pfMET200[60],*h_nJets[60],*h_pfMET[60],*h_pfMETPhi[60],*h_j1nCategory1[60],*h_j1nCategory2[60],*h_j1dRPF12_ID_1[60],*h_j1dRPF12_ID_2[60];
+   TH1F *h_j1Pt[60], *h_j1Eta[60], *h_j1Phi[60], *h_j1etaWidth[60], *h_j1phiWidth[60],*h_j1nCons[60], *h_j1PF12PtFrac_ID_1[60], *h_j1PF12PtFrac_ID_2[60],*h_j1PFPtFrac_ID_2[60],*h_PF123PtFraction[60];  
+   TH1F *h_j1TotPFCands[60], *h_j1ChPFCands[60], *h_j1NeutPFCands[60], *h_j1GammaPFCands[60], *h_j1CHF[60], *h_j1NHF[60], *h_j1ChMultiplicity[60], *h_j1NeutMultiplicity[60],*h_j1Mt[60]; 
    // Fixed size dimensions of array or collections stored in the TTree if any.
    //Category3 Histos
-   TH1F *h_ChPionPt[40],*h_PhotonPt[40],*h_dRPionPhoton[40];
+   TH1F *h_ChPionPt[60],*h_PhotonPt[60],*h_dRPionPhoton[60];
    TH1D *h_cutflow;
 
-  TH2F *h_EcalPtUnc[40],*h_TrackerPtUnc[40],*h_HcalPtUnc[40];
-  TH1F *h_TrackerPtFrac[40],*h_EcalPtFrac[40],*h_HcalPtFrac[40];
+  TH2F *h_EcalPtUnc[60],*h_TrackerPtUnc[60],*h_HcalPtUnc[60];
+  TH1F *h_TrackerPtFrac[60],*h_EcalPtFrac[60],*h_HcalPtFrac[60];
    // Declaration of leaf types
    Int_t           run;
    Long64_t        event;

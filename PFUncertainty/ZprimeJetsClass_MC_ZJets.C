@@ -279,64 +279,140 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
 				      {
 					fillHistos(jetCand,26,event_weight);
 				      }
-				    if (Pt123Fraction_to_use[0]>0.8)
-				      {
+
+				    if (Pt123Fraction_to_use[0] > 0.8)
+				      {//Correlated Uncertainty
 					fillHistos(jetCand,27,event_weight);
 				      }
-				    if (Pt123Fraction_to_use[0]>0.85)
-				      {
+				    if (Pt123Fraction_to_use[1] > 0.8)
+				      {//Tracker Uncertainty
 					fillHistos(jetCand,28,event_weight);
 				      }
-				    if (Pt123Fraction_to_use[0]>0.9)
-				      {
+				    if (Pt123Fraction_to_use[2] > 0.8)
+				      {//Ecal Uncertainty
 					fillHistos(jetCand,29,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[3] > 0.8)
+				      {//Hcal Uncertainty
+					fillHistos(jetCand,30,event_weight);
+				      }
+
+				    if (Pt123Fraction_to_use[0] > 0.85)
+				      {//Correlated Uncertainty
+					fillHistos(jetCand,31,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[1] > 0.85)
+				      {//Tracker Uncertainty
+					fillHistos(jetCand,32,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[2] > 0.85)
+				      {//Ecal Uncertainty
+					fillHistos(jetCand,33,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[3] > 0.85)
+				      {//Hcal Uncertainty
+					fillHistos(jetCand,34,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[0] > 0.9)
+				      {//Correlated Uncertainty
+					fillHistos(jetCand,35,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[1] > 0.9)
+				      {//Tracker Uncertainty
+					fillHistos(jetCand,36,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[2] > 0.9)
+				      {//Ecal Uncertainty
+					fillHistos(jetCand,37,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[3] > 0.9)
+				      {//Hcal Uncertainty
+					fillHistos(jetCand,38,event_weight);
 				      }
 
 				    getPt123Frac(-1);
-				    fillHistos(jetCand,30,event_weight);
+				    fillHistos(jetCand,39,event_weight);
 				    //Category 1: Exactly Two Charged Hadrons
 				    if(TwoChPFCons==1)
 				      {
-					fillHistos(jetCand,31,event_weight);
+					fillHistos(jetCand,40,event_weight);
 					//Effectiveness of this cut in Category 1 Events
 					if(PF12PtFrac_ID_1>0.7)
 					  {
-					    fillHistos(jetCand,32,event_weight);}
+					    fillHistos(jetCand,41,event_weight);}
 				      } 
 				    //Category 2: Two charged Hadrons + Photon
 				    if(TwoChPFConsPlusPho==1)
 				      {
-					fillHistos(jetCand,33,event_weight);
+					fillHistos(jetCand,42,event_weight);
 					//Effectiveness of this cut in Category 2 Events
 					if(PF123PtFrac_ID_2>0.7)
 					  {
-					    fillHistos(jetCand,33,event_weight);}
+					    fillHistos(jetCand,43,event_weight);}
 				      }
 				    //Category of events with < 2 charged Hadrons
 				    if(TwoChPFCons==0 && TwoChPFConsPlusPho==0)
 				      {
-					fillHistos(jetCand,34,event_weight);
+					fillHistos(jetCand,44,event_weight);
 					//Calculating the effectiveness of this cut in only events with < 2 oppositely charged Hadrons
 					if(jetetaWidth->at(jetCand[0].first)<0.04)
 					  {
-					    fillHistos(jetCand,35,event_weight);
+					    fillHistos(jetCand,46,event_weight);
 					  }}
 				    //This is for comparison with previous results (for all events)
 				    if (jetetaWidth->at(jetCand[0].first)<0.04)
 				      {
-					fillHistos(jetCand,36,event_weight);
+					fillHistos(jetCand,47,event_weight);
 				      }
-				    if (Pt123Fraction_to_use[0]>0.8)
-				      {
-					fillHistos(jetCand,37,event_weight);
+
+				    if (Pt123Fraction_to_use[0] > 0.8)
+				      {//Correlated Uncertainty
+					fillHistos(jetCand,48,event_weight);
 				      }
-				    if (Pt123Fraction_to_use[0]>0.85)
-				      {
-					fillHistos(jetCand,38,event_weight);
+				    if (Pt123Fraction_to_use[1] > 0.8)
+				      {//Tracker Uncertainty
+					fillHistos(jetCand,49,event_weight);
 				      }
-				    if (Pt123Fraction_to_use[0]>0.9)
-				      {
-					fillHistos(jetCand,39,event_weight);
+				    if (Pt123Fraction_to_use[2] > 0.8)
+				      {//Ecal Uncertainty
+					fillHistos(jetCand,50,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[3] > 0.8)
+				      {//Hcal Uncertainty
+					fillHistos(jetCand,51,event_weight);
+				      }
+
+				    if (Pt123Fraction_to_use[0] > 0.85)
+				      {//Correlated Uncertainty
+					fillHistos(jetCand,52,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[1] > 0.85)
+				      {//Tracker Uncertainty
+					fillHistos(jetCand,53,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[2] > 0.85)
+				      {//Ecal Uncertainty
+					fillHistos(jetCand,54,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[3] > 0.85)
+				      {//Hcal Uncertainty
+					fillHistos(jetCand,55,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[0] > 0.9)
+				      {//Correlated Uncertainty
+					fillHistos(jetCand,56,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[1] > 0.9)
+				      {//Tracker Uncertainty
+					fillHistos(jetCand,57,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[2] > 0.9)
+				      {//Ecal Uncertainty
+					fillHistos(jetCand,58,event_weight);
+				      }
+				    if (Pt123Fraction_to_use[3] > 0.9)
+				      {//Hcal Uncertainty
+					fillHistos(jetCand,59,event_weight);
 				      }
 				  }
 			      }   
@@ -399,7 +475,7 @@ void ZprimeJetsClass_MC_ZJets::BookHistos(const char* file2)
 
   h_dphimin = new TH1F("h_dphimin","h_dphimin; Minimum dPhiJetMET",50,0,3.2);h_dphimin->Sumw2();
   h_metcut  = new TH1F("h_metcut","h_metcut; |pfMET-caloMET|/pfMET", 50,0,1.2);h_metcut->Sumw2();
-  for(int i=0; i<40; i++){
+  for(int i=0; i<60; i++){
 
     char ptbins[100];
     sprintf(ptbins, "_%d", i);
