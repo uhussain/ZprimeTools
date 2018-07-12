@@ -730,7 +730,7 @@ public :
    TBranch        *b_jetVtx3DSig;   //!
 
   
-  ZprimeJetsClass_MC(const char* file1,const char* file2,int min,int max);
+  ZprimeJetsClass_MC(const char* file1,const char* file2,int min,int max,const char* set);
    virtual ~ZprimeJetsClass_MC();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
@@ -768,7 +768,7 @@ bool fileSelection(std::string filename, std::string dataset,int min, int max)
   else return false;
 }
 
-ZprimeJetsClass_MC::ZprimeJetsClass_MC(const char* file1,const char* file2,int min,int max) 
+ZprimeJetsClass_MC::ZprimeJetsClass_MC(const char* file1,const char* file2,int min,int max,const char* set) 
 {
   TChain *chain = new TChain("ggNtuplizer/EventTree");
   TString path = file1;
@@ -779,6 +779,16 @@ ZprimeJetsClass_MC::ZprimeJetsClass_MC(const char* file1,const char* file2,int m
   int fileNumber = 0;
   int maxFiles = -1;
   int inFile=0;
+  TString dataset;
+  if (string(set).compare("1GeV") == 0)dataset = "ggtree_signal1GeV_May";
+  else if (string(set).compare("5GeV") == 0)dataset = "ggtree_signal5GeV_May";
+  else if (string(set).compare("10GeV") == 0)dataset = "ggtree_signal10GeV_May";
+  else if (string(set).compare("20GeV") == 0)dataset = "ggtree_signal20GeV_May";
+  else if (string(set).compare("50GeV") == 0)dataset = "ggtree_signal50GeV_May";
+  else if (string(set).compare("100GeV") == 0)dataset = "ggtree_signal100GeV_May";
+  else if (string(set).compare("null") == 0) dataset = "ggtree_mc_";
+  else dataset = set;
+  
   while ((filename = (TSystemFile*)nextlist()) && fileNumber >  maxFiles)
     {
       //Debug
@@ -786,8 +796,7 @@ ZprimeJetsClass_MC::ZprimeJetsClass_MC(const char* file1,const char* file2,int m
       std::cout<<"name: "<<(filename->GetName())<<std::endl;
       std::cout<<"fileNumber: "<<fileNumber<<std::endl;
 
-      //TString dataset = "ggtree_mc_";
-      TString dataset = "ggtree_signal100GeV_May";
+      
       TString  FullPathInputFile = (path+filename->GetName());
       TString name = filename->GetName();
       if (name.Contains(dataset))

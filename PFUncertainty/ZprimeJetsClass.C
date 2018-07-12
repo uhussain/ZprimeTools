@@ -532,12 +532,14 @@ void ZprimeJetsClass::fillHistos(std::vector<std::pair<int,double>> jetCand_to_u
     h_j1etaWidth[histoNumber]->Fill(jetetaWidth->at(jetCand_to_use[0].first));
     h_j1phiWidth[histoNumber]->Fill(jetphiWidth->at(jetCand_to_use[0].first));
     h_j1nCons[histoNumber]->Fill(jetnPhotons->at(jetCand_to_use[0].first)+jetnCHPions->at(jetCand_to_use[0].first)+jetnMisc->at(jetCand_to_use[0].first));
+    h_TrackerPtFrac[histoNumber]->Fill(Pt123Fraction_to_use[1]);
+    h_EcalPtFrac[histoNumber]->Fill(Pt123Fraction_to_use[2]);
+    h_HcalPtFrac[histoNumber]->Fill(Pt123Fraction_to_use[3]);
 
     for(int i=0;i<TrackerCand.size();i++)
       {
 	if (j1PFConsPt.at(TrackerCand[i]) > 1. && TrackerCand[i] < 3)
 	  {
-	    h_TrackerPtFrac[histoNumber]->Fill(Pt123Fraction_to_use[1]);
 	    h_TrackerPtUnc[histoNumber]->Fill(j1PFConsPt.at(TrackerCand[i]),j1PFConsPtUnc.at(TrackerCand[i]));
 	  }
       }
@@ -545,7 +547,6 @@ void ZprimeJetsClass::fillHistos(std::vector<std::pair<int,double>> jetCand_to_u
       {
 	if (j1PFConsPt.at(EcalCand[i]) > 1. && EcalCand[i] < 3)
 	  {
-	    h_EcalPtFrac[histoNumber]->Fill(Pt123Fraction_to_use[2]);
 	    h_EcalPtUnc[histoNumber]->Fill(j1PFConsPt.at(EcalCand[i]),j1PFConsPtUnc.at(EcalCand[i]));
 	  }
       }
@@ -553,7 +554,6 @@ void ZprimeJetsClass::fillHistos(std::vector<std::pair<int,double>> jetCand_to_u
       {
 	if (j1PFConsPt.at(HcalCand[i]) > 1. && HcalCand[i] < 3)
 	  {
-	    h_HcalPtFrac[histoNumber]->Fill(Pt123Fraction_to_use[3]);
 	    h_HcalPtUnc[histoNumber]->Fill(j1PFConsPt.at(HcalCand[i]),j1PFConsPtUnc.at(HcalCand[i]));
 	  }
       }
