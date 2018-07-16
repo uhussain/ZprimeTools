@@ -58,7 +58,7 @@ void PlotTool::Options(int argc,const char* argv[])
   lumi=lumi_2;
   
   cout<<"Running in "<<Region<<endl;
-  if (Region == "SignalRegion"){lumi=lumi_3;}
+  //if (Region == "SignalRegion"){lumi=lumi_3;}
   regionFile = haddRegion();
   vector<const char*> realargv;
   if (string(argv[1]).compare("-i") == 0)
@@ -111,11 +111,11 @@ void PlotTool::plotTH2FOption(int argc,vector<const char*> argv)
 
 void PlotTool::saveplotOption(int argc,vector<const char*> argv)
 {
-  string mchi = string(argv[1]);
+  string mchi = string(argv[0]);
   vector<const char*> variable;
   if (mchi != "pdf")
     {
-      for (int i = 2; i < argc; i++)
+      for (int i = 1; i < argc; i++)
 	{
 	  variable.push_back(argv[i]);
 	}
@@ -124,7 +124,7 @@ void PlotTool::saveplotOption(int argc,vector<const char*> argv)
 	  string name = SampleName(variable[i]);
 	  vector<string> label = GetName(variable[i]);
 	  string varname = label[0];
-	  string cat = label[1];
+	  string cat = "";
 	  saveplot(variable[i],name,varname,cat,mchi);
 	} 
     }
@@ -325,23 +325,44 @@ string PlotTool::GetCategory(int hs_num)
 vector<string> PlotTool::GetName(const char * variable)
 {
   string name = string(variable);
-  name.erase(name.begin(),name.begin()+6);
+  size_t pos = name.find("_");
+  name = name.substr(pos+1);
   int n = stoi(name);
-  string cat;
-  if (8<=n && n<=15)
+  string cat="";
+  if (8<=n && n<=18)
     {
-      cat = GetCategory(n);
+      //cat = GetCategory(n);
       name="";
     }
-  else if (24<=n && n<=31)
+  else if (n == 28 || n == 32 || n == 36)
     {
-      cat = GetCategory(n-16);
-      name="_jesUp";
+      //cat = GetCategory(n-16);
+      name="_trackerUp";
     }
-  else if (37<=n && n<=44)
+  else if (n == 29 || n == 33 || n == 37)
     {
-      cat = GetCategory(n-29);
-      name="_jesDown";
+      //cat = GetCategory(n-16);
+      name="_ecalUp";
+    }
+  else if (n == 30 || n == 34 || n == 38)
+    {
+      //cat = GetCategory(n-16);
+      name="_hcalUp";
+    }
+  else if (n == 49 || n == 53 || n == 57)
+    {
+      //cat = GetCategory(n-16);
+      name="_trackerDown";
+    }
+  else if (n == 50 || n == 54 || n == 58)
+    {
+      //cat = GetCategory(n-16);
+      name="_ecalDown";
+    }
+  else if (n == 51 || n == 55 || n == 59)
+    {
+      //cat = GetCategory(n-16);
+      name="_hcalDown";
     }
   vector<string> label = {name,cat};
   return label;
@@ -349,8 +370,8 @@ vector<string> PlotTool::GetName(const char * variable)
 
 int PlotTool::hs_save(string mchi,string cat, const char * variable, vector<TH1F*> histo)
 {
-  cout<<"Category"<<cat<<endl;
-  const char* hs_root = (string("../../Systematics")+mchi+cat+string(".root")).c_str();
+  cout<<variable<<endl;
+  const char* hs_root = (string("../../Systematics")+string(".root")).c_str();
   cout<<"Saving to "<<hs_root<<endl;
   TFile* hs_file = TFile::Open(hs_root,"UPDATE");
   for (int i = 0; i < histo.size(); i++)
@@ -359,12 +380,11 @@ int PlotTool::hs_save(string mchi,string cat, const char * variable, vector<TH1F
 	{
 	  gDirectory->Delete((string(histo[i]->GetName())+";1").c_str());
 	}
-      histo[i]->GetXaxis()->SetTitle("E_{T}^{miss} (GeV)");
+      histo[i]->GetXaxis()->SetTitle("P_{T}^{123} Fraction");
       histo[i]->GetYaxis()->SetTitle("Events");
       histo[i]->SetTitle("");
       histo[i]->Write();
     }
-  cout<<"Saving to "<<hs_file->GetName()<<endl;
   hs_file->Close();
 }
   
@@ -467,6 +487,95 @@ THStack* PlotTool::StackHistogram(vector<TH1F*> hs_list,string name)
   return hs_datamc;
 }
 
+vector<TH1F*> PlotTool::GetMx_Mv(string mchi,const char* variable)
+{
+  vector<TH1F*> histo_Signal;
+  vector<vector<const char*>> Mx_Mv_FileNames;
+  if (mchi != "-1")
+    {
+      int mx_index;
+      int mv_index;
+      for (int i = 0; i < Mx_Label.size(); i++)
+	{
+	  if (mchi.find("Mx"+Mx_Label[i]+"_") != string::npos)
+	    {
+	      mx_index = i;
+	      for (int j = 0; j < Mv_Label.size(); j++)
+		{
+		  int pos = mchi.find("v") +1;
+		  string mv = mchi.substr(pos,mchi.size());
+		  if (stoi(mv) == stoi(Mv_Label[j]))
+		    {
+		      mv_index = j;
+		      break;
+		    }
+		}
+	      break;
+	    }
+	}
+      for (int j = 0; j< Mx_Mv[mx_index][mv_index].size(); j++)
+	{
+	  ifstream curFile(string(Mx_Mv[mx_index][mv_index][j])+".root");
+	  if (curFile.is_open())
+	    {
+	      curFile.close();
+	    }
+	  else
+	    {
+	      int nfile;
+	      system(("ls -f .output/"+string(Mx_Mv[mx_index][mv_index][j])+"_* | wc -l > .filelist/"+string(Mx_Mv[mx_index][mv_index][j])).c_str());
+	      ifstream mcFile(".filelist/"+string(Mx_Mv[mx_index][mv_index][j]));
+	      if (mcFile.is_open())
+		{
+		  string line;
+		  while(getline(mcFile,line)) nfile = stoi(line);
+		  system(("hadd -f "+string(Mx_Mv[mx_index][mv_index][j])+".root .output/"+string(Mx_Mv[mx_index][mv_index][j])+"_{1.."+to_string(nfile)+"}.root").c_str());
+		}
+	      else cout<<"Unable to find"+string(Mx_Mv[mx_index][mv_index][j])<<endl;
+	    }
+	}
+      histo_Signal.push_back(GetHistogram(Mx_Mv[mx_index][mv_index],Mx_Mv_Xsec[mx_index][mv_index],variable,""));
+      histo_Signal[0]->SetLineWidth(2);
+      histo_Signal[0]->SetLineColor(kBlue);
+      histo_Signal[0]->SetName(("m_{#chi}="+Mx_Label[mx_index]+" GeV,m_{med}="+Mv_Label[mv_index]+" GeV").c_str());
+    }
+
+  else
+    {
+      for (int k =0; k < Mx_Mv.size(); k++)
+	{
+	  for (int i = 0; i< Mx_Mv[k].size(); i++)
+	    {
+	      for (int j = 0; j< Mx_Mv[k][i].size(); j++)
+		{
+		  ifstream curFile(string(Mx_Mv[k][i][j])+".root");
+		  if (curFile.is_open())
+		    {
+		      curFile.close();
+		    }
+		  else
+		    {
+		      int nfile;
+		      system(("ls -f .output/"+string(Mx_Mv[k][i][j])+"_* | wc -l > .filelist/"+string(Mx_Mv[k][i][j])).c_str());
+		      ifstream mcFile(".filelist/"+string(Mx_Mv[k][i][j]));
+		      if (mcFile.is_open())
+			{
+			  string line;
+			  while(getline(mcFile,line)) nfile = stoi(line);
+			  system(("hadd -f "+string(Mx_Mv[k][i][j])+".root .output/"+string(Mx_Mv[k][i][j])+"_{1.."+to_string(nfile)+"}.root").c_str());
+			}
+		      else cout<<"Unable to find"+string(Mx_Mv[k][i][j])<<endl;
+		    }
+		  histo_Signal.push_back(GetHistogram(Mx_Mv[k][i],Mx_Mv_Xsec[k][i],variable,""));
+		  histo_Signal[histo_Signal.size()-1]->SetName(("Mx"+Mx_Label[k]+"_Mv"+Mv_Label[i]).c_str());
+		}
+	    }
+	}
+    }
+
+  return histo_Signal;
+}
+
 vector<TH1F*> PlotTool::GetSignal(string mchi,const char* variable)
 {
   vector<TH1F*> histo_Signal;
@@ -567,12 +676,12 @@ void PlotTool::DrawRatio(TH1F* histo_Data, THStack* hs_datamc,TCanvas* c)
     double dataerror = histo_Data->GetBinError(ibin);
     //cout<<"stackcontent: "<<stackcontent<<" and data content: "<<datacontent<<endl;
     double ratiocontent=0;
-    if(datacontent!=0){
+    if(datacontent!=0 && stackcontent != 0){
       ratiocontent = ( datacontent) / stackcontent ;}
     double num = 1/datacontent;
     double den = 1/stackcontent;
     double error=0;
-    if(datacontent!=0){
+    if(datacontent!=0 && stackcontent != 0){
       error = ratiocontent*sqrt(pow((dataerror/datacontent),2) + pow((stackerror/stackcontent),2));}
     else {error = 2.07;}
     //cout<<"ratio content: "<<ratiocontent<<" and error: "<<error<<endl;
@@ -654,7 +763,9 @@ void PlotTool::DrawAxis(TH1F* histo_Data,THStack* hs_datamc, TCanvas* c,string n
 
 vector<TH1F*> PlotTool::GetPDF(vector<string> filenames)
 {
-  TFile* main = TFile::Open(filenames[0].c_str());
+  
+  string dir = "/nfs_scratch/uhussain/MonoZprimeJet_postanalyzer_jobsubmission/Uncertainties/CMSSW_8_0_26_patch2/src/Pt123Fraction08/";
+  TFile* main = TFile::Open((dir+filenames[0]).c_str());
   string name = string(filenames[0].c_str());
   name.erase(name.begin()+1,name.begin()+10);
   name.erase(name.end()-5,name.end());
@@ -663,7 +774,7 @@ vector<TH1F*> PlotTool::GetPDF(vector<string> filenames)
 
   for (int i = 1; i < filenames.size(); i++)
     {
-      TFile* file = TFile::Open(filenames[i].c_str());
+      TFile* file = TFile::Open((dir+filenames[i]).c_str());
       name = string(filenames[i].c_str());
       name.erase(name.begin()+1,name.begin()+10);
       name.erase(name.end()-5,name.end());
@@ -679,13 +790,13 @@ vector<TH1F*> PlotTool::GetPDF(vector<string> filenames)
 
 void PlotTool::pdf_save(vector< vector<TH1F*> > hs_list)
 {
-  vector<const char*> mchi = {"1GeV","5GeV","10GeV","20GeV","50GeV","100GeV"};
-  vector<const char*> cat = {"_NoCat","_Cat1","_Cat2","_Cat3"};
+  vector<const char*> mchi = {""};//"1GeV","5GeV","10GeV","20GeV","50GeV","100GeV"};
+  vector<const char*> cat = {""};//_NoCat","_Cat1","_Cat2","_Cat3"};
   for (int k = 0; k < mchi.size(); k++)
     {
       for (int j = 0; j < cat.size(); j++)
 	{
-	  const char* hs_root = (string("../../Systematics")+string(mchi[k])+string(cat[j])+".root").c_str();
+	  const char* hs_root = (string("../../Systematics")+".root").c_str();
 	  TFile* hs_file = TFile::Open(hs_root,"UPDATE");
 	  for (int i = 0; i < hs_list.size(); i++)
 	    {
@@ -754,26 +865,38 @@ void PlotTool::saveplot(const char* variable,string name,string varname,string c
 {
   vector<TH1F*> hs_list;
   
-  vector<const char*> Data_FileNames = {"postMETdata_final.root"};
+  vector<const char*> Data_FileNames = {"postMETdata_final"};
   vector<double> Data_Xsec = {-1};
   TH1F* histo_Data = GetHistogram(Data_FileNames,Data_Xsec,variable,"data");
   histo_Data->SetName(((string("data_obs")+varname)).c_str());
   
-  cout<<"integral of Data here:"<<histo_Data->Integral()<<endl;
+  if (varname.find("Up") == string::npos && varname.find("Down") == string::npos) hs_list.push_back(histo_Data);
   
-  if (varname.find("jes") == string::npos){hs_list.push_back(histo_Data);}
+  cout<<"integral of Data here:"<<histo_Data->Integral()<<endl;
 
   for(int i = 0; i < MC_FileNames.size(); i++)
     {
       hs_list.push_back(GetHistogram(MC_FileNames[i],MC_Xsec[i],variable,MC_Label[i]));
-      hs_list[i]->SetName((MC_Label[i]+varname).c_str());
-      cout<<"integral of "<<MC_Label[i]<<" here:"<<hs_list[i]->Integral()<<endl;
+      hs_list[hs_list.size()-1]->SetName((MC_Label[i]+varname).c_str());
+      cout<<"integral of "<<hs_list[hs_list.size()-1]->GetName()<<" here:"<<hs_list[hs_list.size()-1]->Integral()<<endl;
+    }
+  vector<TH1F*> histo_Signal;
+  if (mchi.find("Mx") != string::npos || mchi.find("-1") != string::npos)
+    {
+      histo_Signal=GetMx_Mv(mchi,variable);
+      for (int i = 0; i < histo_Signal.size(); i++) histo_Signal[i]->SetName((string(histo_Signal[i]->GetName())+varname).c_str());
+    }
+  else
+    {
+      histo_Signal = GetSignal(mchi,variable);
+      histo_Signal[0]->SetName((string("DM")+mchi+varname).c_str());
+    }
+  for (int i = 0; i < histo_Signal.size(); i++)
+    {
+      hs_list.push_back(histo_Signal[i]);
+      cout<<"integral of "<<histo_Signal[i]->GetName()<<" here:"<<histo_Signal[i]->Integral()<<endl;
     }
   
-  vector<TH1F*> histo_Signal = GetSignal(mchi,variable);
-  histo_Signal[0]->SetName((string("DM")+varname).c_str());
-  if (varname.find("jes") == string::npos){hs_list.push_back(histo_Signal[0]);}
-
   hs_save(mchi,cat,variable,hs_list);
 }
 
@@ -798,7 +921,9 @@ void PlotTool::integral(const char* variable,string name,string mchi,int print)
     }
   if (print == 1 || print == -1)
     {
-      vector<TH1F*> histo_Signal = GetSignal(mchi,variable);
+      vector<TH1F*> histo_Signal;
+      if (mchi.find("Mx") != string::npos) histo_Signal=GetMx_Mv(mchi,variable);
+      else histo_Signal = GetSignal(mchi,variable);
       for (int i = 0; i < histo_Signal.size(); i++){cout<<"integral of "<<histo_Signal[i]->GetName()<<" here:"<<histo_Signal[i]->Integral()<<endl;}
     }
 }
@@ -860,9 +985,17 @@ void PlotTool::plotter(const char * variable,string name,string mchi)
   histo_Data->SetMarkerStyle(20);
   histo_Data->SetMarkerSize(0.7);
   histo_Data->Draw("pex0same");
-  vector<TH1F*> histo_Signal = GetSignal(mchi,variable);
-  if (mchi != "0"){histo_Signal[0]->Draw("HIST same");}
+
+  vector<TH1F*> histo_Signal; 
+  if (mchi.find("Mx") != string::npos) histo_Signal=GetMx_Mv(mchi,variable);
+  else histo_Signal = GetSignal(mchi,variable);
+  if (mchi != "0")
+    {
+      cout<<"integral of "<<histo_Signal[0]->GetName()<<" here:"<<histo_Signal[0]->Integral()<<endl;
+      histo_Signal[0]->Draw("HIST same");
+    }
   TLegend *leg = new TLegend(0.62,0.60,0.86,0.887173,"");
+  leg->AddEntry(histo_Data,"Data","lp");
   if (mchi != "0"){leg->AddEntry(histo_Signal[0], histo_Signal[0]->GetName());};   
   leg->AddEntry(hs_list[0],"W#rightarrowl#nu","f");
   leg->AddEntry(hs_list[3],"Z#rightarrow ll","F"); 
@@ -875,7 +1008,11 @@ void PlotTool::plotter(const char * variable,string name,string mchi)
   leg->SetFillStyle(0);
   leg->SetTextSize(0.025);
   leg->Draw();
-  TLatex *texS = new TLatex(0.20,0.837173,"#sqrt{s} = 13 TeV, 1.89 fb^{-1}");
+  string lumi_label;
+  bool that = (int)lumi==35900;
+  if ((int)lumi == 35900) lumi_label="35.9";
+  else if ((int)lumi == 1885) lumi_label="1.89";
+  TLatex *texS = new TLatex(0.20,0.837173,("#sqrt{s} = 13 TeV, "+lumi_label+" fb^{-1}").c_str());
   texS->SetNDC();
   texS->SetTextFont(42);
   texS->SetTextSize(0.040);

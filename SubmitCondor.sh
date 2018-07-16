@@ -37,7 +37,6 @@ for arg in "$@"; do
 	fi
     elif echo $arg | grep -q $prefix; then
 	dirsplit=${arg#$prefix}
-	echo $displit
 	break
     fi
 done
@@ -61,7 +60,7 @@ source /cvmfs/cms.cern.ch/cmsset_default.sh
 cd /cms/uhussain/CMSSW_8_0_26_patch1/src
 cmsenv
 cd \${_CONDOR_SCRATCH_DIR}
-./${1} \${1} \${2} \${3} \${4} \${5} \${6} \${7}
+./${1} \${1} \${2} \${3} \${4} \${5} \${6} \${7} \${8}
 EOF
 
 chmod 775 .output/Job_${6}.sh
@@ -92,7 +91,7 @@ binsize=$(($fileNum/$dirsplit))
 #If directory ends in */0001/ or higher, files in directory won't start at 1.root
 #shift is used to deal with that
 shift=0
-if ! echo ${2} | grep -q "*/0000/"; then
+if ! echo ${2} | grep -q "/0000/" && echo ${2} | grep -q "/000"; then
     chld=${2#*/000}
     chld=${chld%/}
     for ((i=0;$(($i < $chld));i++)); do
@@ -100,7 +99,6 @@ if ! echo ${2} | grep -q "*/0000/"; then
 	shift=$(($shift+$( ls -f $parntdir*.root | wc -l)))
     done
 fi
-
 #Determine range of files that will be used in each batch run
 start=$shift
 for ((i=1;$(($i <= $dirsplit));i++)); do
@@ -123,13 +121,13 @@ for ((i=1;$(($i <= $dirsplit));i++)); do
 	j=$(($j+1))
     done
     
-    if echo $1 | grep -q "analyze" ; then
+    if echo $1 | grep -q "analyze" || echo $1 | grep -q "signal" ; then
 	echo Running $i $start $end ${6}
 	#./debug.sh ${1} $argv $start $end
 
 	#Append argument lines to condor_submit file adding the start and end file numbers for this batch
 	cat>>.output/condor_${6}<<EOF
-Arguments = $argv $start $end
+Arguments = $argv $start $end $8
 Queue
 EOF
     fi

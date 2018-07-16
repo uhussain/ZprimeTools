@@ -1,4 +1,3 @@
-
 //For use with Ntuples made from JetAnalyzer
 ////Required arguments: 1 is folder containing input files, 2 is output file path, 3 is maxEvents (-1 to run over all events), 4 is reportEvery
 ////

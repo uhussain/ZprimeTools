@@ -343,6 +343,7 @@ void ZprimeJetsClass_MC_WJets::BookHistos(const char* file2)
     h_j1nCons[i] = new TH1F (("j1nCons"+histname).c_str(),"j1NConstituents; Number of Constituents of Leading Jet",25, 0, 50);h_j1nCons[i]->Sumw2();
     h_j1nCategory1[i] = new TH1F(("j1nCategory1"+histname).c_str(),"j1nCategory1: Number of events with exactly two charged Hadrons",2,-0.5,1.5);h_j1nCategory1[i]->Sumw2();
     h_j1nCategory2[i] = new TH1F(("j1nCategory2"+histname).c_str(),"j1nCategory2: Number of events with two charged Hadrons and one Photon",2,-0.5,1.5);h_j1nCategory2[i]->Sumw2();
+    h_PF123PtFraction[i]= new TH1F(("PF123PtFraction"+histname).c_str(), "PF123PtFraction;P_{T} fraction carried by 3 leading daughters of the Pencil Jet" ,50,0,1);h_PF123PtFraction[i]->Sumw2();
     h_j1PF12PtFrac_ID_1[i]= new TH1F(("j1PF12PtFrac_ID_1"+histname).c_str(), "j1PF12PtFrac_ID_1;P_{T} fraction carried by charged hadrons of the leading Jet: Category 1" ,50,0,1.1);h_j1PF12PtFrac_ID_1[i]->Sumw2();   
     h_j1dRPF12_ID_1[i] = new TH1F(("j1dRPF12_ID_1"+histname).c_str(),"j1dRPF12_ID_1; deltaR between oppositely charged hadrons of the leading Jet: Category 1",50,0,0.15);h_j1dRPF12_ID_1[i]->Sumw2();
     h_j1PF12PtFrac_ID_2[i]= new TH1F(("j1PF12PtFrac_ID_2"+histname).c_str(), "j1PF12PtFrac_ID_2;P_{T} fraction carried by charged hadrons of the leading Jet: Category 2" ,50,0,1.1);h_j1PF12PtFrac_ID_2[i]->Sumw2();
@@ -387,6 +388,7 @@ void ZprimeJetsClass_MC_WJets::fillHistos(int histoNumber,double event_weight)
     h_j1Phi[histoNumber]->Fill(jetPhi->at(jetCand[0]),event_weight); 
     h_j1nCategory1[histoNumber]->Fill(TwoChPFCons,event_weight); 
     h_j1nCategory2[histoNumber]->Fill(TwoChPFConsPlusPho,event_weight);
+    h_PF123PtFraction[histoNumber]->Fill(Pt123Fraction,event_weight);
     h_j1PF12PtFrac_ID_1[histoNumber]->Fill(PF12PtFrac_ID_1,event_weight);
     h_j1dRPF12_ID_1[histoNumber]->Fill(dR_PF12_ID_1,event_weight);
     h_j1PF12PtFrac_ID_2[histoNumber]->Fill(PF12PtFrac_ID_2,event_weight);
@@ -413,6 +415,18 @@ void ZprimeJetsClass_MC_WJets::fillHistos(int histoNumber,double event_weight)
   }
   if(lepton_pt > 0){
     h_recoil[histoNumber]->Fill(Recoil,event_weight);}
+}
+
+void ZprimeJetsClass_MC_WJets::getPt123Frac()
+{
+  double Pt123=0.;
+  double jetPtAll=0.;
+  for (int j = 0; j < j1PFConsPID.size(); j++)
+    {
+      jetPtAll+=j1PFConsPt.at(j);
+      if (j < 3) Pt123+=j1PFConsPt.at(j);
+    }
+  Pt123Fraction=(Pt123/jetPtAll);
 }
 
 void ZprimeJetsClass_MC_WJets::AllPFCand(std::vector<int> jetCand,std::vector<int> PFCandidates)
@@ -451,12 +465,8 @@ void ZprimeJetsClass_MC_WJets::AllPFCand(std::vector<int> jetCand,std::vector<in
        j1PFConsEta=JetsPFConsEta->at(jetCand[0]);
        j1PFConsPhi=JetsPFConsPhi->at(jetCand[0]);
        j1PFConsPID=JetsPFConsPID->at(jetCand[0]);
-       for(int i=0;i<j1PFConsPt.size();i++){
-         if(i<3){
-           Pt123+=j1PFConsPt.at(i);
-         }
-        }
-       Pt123Fraction=(Pt123/jetPt->at(jetCand[0]));
+
+       getPt123Frac();
     //Positively charged hadron Cons of the Pencil Jet 
        if(j1PFConsPID.size()>0 && j1PFConsPID.at(0)==+211)
        {

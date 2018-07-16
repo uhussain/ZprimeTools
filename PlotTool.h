@@ -33,6 +33,49 @@ class PlotTool{
   string Region;
   const char* regionFile;
 
+  //List of Signal Files and Xsec
+  vector<const char*> Mx10_Mv100 = {"postMx10_Mv100"};vector<const char*> Mx50_Mv100 = {"postMx50_Mv100"};vector<const char*> Mx100_Mv100 = {"postMx100_Mv100"};
+  vector<double> Mx10_Mv100_Xsec = {0.006065};        vector<double> Mx50_Mv100_Xsec = {0.002986};        vector<double> Mx100_Mv100_Xsec = {0.001705};
+  
+  vector<const char*> Mx10_Mv200 = {"postMx10_Mv200"};vector<const char*> Mx50_Mv200 = {"postMx50_Mv200"};vector<const char*> Mx100_Mv200 = {"postMx100_Mv200"};
+  vector<double> Mx10_Mv200_Xsec = {0.006522};        vector<double> Mx50_Mv200_Xsec = {0.003184};        vector<double> Mx100_Mv200_Xsec = {0.001786};
+  
+  vector<const char*> Mx10_Mv500 = {"postMx10_Mv500"};vector<const char*> Mx50_Mv500 = {"postMx50_Mv500"};vector<const char*> Mx100_Mv500 = {"postMx100_Mv500"};
+  vector<double> Mx10_Mv500_Xsec = {0.01165};         vector<double> Mx50_Mv500_Xsec = {0.00515};         vector<double> Mx100_Mv500_Xsec = {0.002607};
+  
+  vector<const char*> Mx10_Mv1000 = {"postMx10_Mv1000"};vector<const char*> Mx50_Mv1000 = {"postMx50_Mv1000"};vector<const char*> Mx100_Mv1000 = {"postMx100_Mv1000"};
+  vector<double> Mx10_Mv1000_Xsec = {0.3};              vector<double> Mx50_Mv1000_Xsec = {0.1473};           vector<double> Mx100_Mv1000_Xsec = {0.08242};
+  
+  vector<const char*> Mx10_Mv1500 = {"postMx10_Mv1500"};vector<const char*> Mx50_Mv1500 = {"postMx50_Mv1500"};vector<const char*> Mx100_Mv1500 = {"postMx100_Mv1500"};
+  vector<double> Mx10_Mv1500_Xsec = {0.1559};           vector<double> Mx50_Mv1500_Xsec = {0.08896};           vector<double> Mx100_Mv1500_Xsec = {0.06155};
+  
+  vector<const char*> Mx10_Mv1800 = {"postMx10_Mv1800"};vector<const char*> Mx50_Mv1800 = {"postMx50_Mv1800"};vector<const char*> Mx100_Mv1800 = {"postMx100_Mv1800"};
+  vector<double> Mx10_Mv1800_Xsec = {0.09052};          vector<double> Mx50_Mv1800_Xsec = {0.05555};           vector<double> Mx100_Mv1800_Xsec = {0.04012};
+  
+  vector<const char*> Mx10_Mv2000 = {"postMx10_Mv2000"};vector<const char*> Mx50_Mv2000 = {"postMx50_Mv2000"};vector<const char*> Mx100_Mv2000 = {"postMx100_Mv2000"};
+  vector<double> Mx10_Mv2000_Xsec = {0.06387};          vector<double> Mx50_Mv2000_Xsec = {0.03968};          vector<double> Mx100_Mv2000_Xsec = {0.02939};
+  
+  vector<const char*> Mx10_Mv2500 = {"postMx10_Mv2500"};vector<const char*> Mx50_Mv2500 = {"postMx50_Mv2500"};vector<const char*> Mx100_Mv2500 = {"postMx100_Mv2500"};
+  vector<double> Mx10_Mv2500_Xsec = {0.02553};          vector<double> Mx50_Mv2500_Xsec = {0.01682};          vector<double> Mx100_Mv2500_Xsec = {0.01288};
+  
+  vector<const char*> Mx10_Mv3500 = {"postMx10_Mv3500"};vector<const char*> Mx50_Mv3500 = {"postMx50_Mv3500"};vector<const char*> Mx100_Mv3500 = {"postMx100_Mv3500"};
+  vector<double> Mx10_Mv3500_Xsec = {0.00454};          vector<double> Mx50_Mv3500_Xsec = {0.003093};          vector<double> Mx100_Mv3500_Xsec = {0.00243};
+
+  vector<vector<const char*>> Mx10_Mv = {Mx10_Mv100,Mx10_Mv200,Mx10_Mv1000,Mx10_Mv1500,Mx10_Mv1800,Mx10_Mv2000,Mx10_Mv2500,Mx10_Mv3500};
+  vector<vector<double>> Mx10_Mv_Xsec = {Mx10_Mv100_Xsec,Mx10_Mv200_Xsec,Mx10_Mv1000_Xsec,Mx10_Mv1500_Xsec,Mx10_Mv1800_Xsec,Mx10_Mv2000_Xsec,Mx10_Mv2500_Xsec,Mx10_Mv3500_Xsec};
+
+  vector<vector<const char*>> Mx50_Mv = {Mx50_Mv100,Mx50_Mv200,Mx50_Mv1000,Mx50_Mv1500,Mx50_Mv1800,Mx50_Mv2000,Mx50_Mv2500,Mx50_Mv3500};
+  vector<vector<double>> Mx50_Mv_Xsec = {Mx50_Mv100_Xsec,Mx50_Mv200_Xsec,Mx50_Mv1000_Xsec,Mx50_Mv1500_Xsec,Mx50_Mv1800_Xsec,Mx50_Mv2000_Xsec,Mx50_Mv2500_Xsec,Mx50_Mv3500_Xsec};
+
+  vector<vector<const char*>> Mx100_Mv = {Mx100_Mv100,Mx100_Mv200,Mx100_Mv1000,Mx100_Mv1500,Mx100_Mv1800,Mx100_Mv2000,Mx100_Mv2500,Mx100_Mv3500};
+  vector<vector<double>> Mx100_Mv_Xsec = {Mx100_Mv100_Xsec,Mx100_Mv200_Xsec,Mx100_Mv1000_Xsec,Mx100_Mv1500_Xsec,Mx100_Mv1800_Xsec,Mx100_Mv2000_Xsec,Mx100_Mv2500_Xsec,Mx100_Mv3500_Xsec};
+
+  vector<vector<vector<const char*>>> Mx_Mv = {Mx10_Mv,Mx50_Mv,Mx100_Mv};
+  vector<vector<vector<double>>> Mx_Mv_Xsec = {Mx10_Mv_Xsec,Mx50_Mv_Xsec,Mx100_Mv_Xsec};
+
+  vector<string> Mx_Label = {"10","50","100"};
+  vector<string> Mv_Label = {"100","200","1000","1500","1800","2000","2500","3500"};
+  
   //List of Region Data Files
   vector<const char*> SignalData_FileNames = {"postMETdata_0","postMETdata_1","postMETdata_2"};
   vector<const char*> SingleEleData_FileNames = {"postSingleEle_0","postSingleEle_1","postSingleEle_2","postSingleEle_3","postSingleEle_4","postSingleEle_5","postSingleEle_6","postSingleEle_7","postSingleEle_8","postSingleEle_9","postSingleEle_10","postSingleEle_11","postSingleEle_12","postSingleEle_13","postSingleEle_14","postSingleEle_15","postSingleEle_16","postSingleEle_17","postSingleEle_18","postSingleEle_19"};
@@ -80,6 +123,7 @@ class PlotTool{
   virtual TH1F* GetHistogram(vector<const char*> Sample_FileNames,vector<double> Sample_Xsec,const char* variable,string SampleName);
   virtual TH2F* GetTH2F(vector<const char*> Sample_FileNames,vector<double> Sample_Xsec,const char* variable,string SampleName);
   virtual THStack* StackHistogram(vector<TH1F*> hs_list,string name);
+  virtual vector<TH1F*> GetMx_Mv(string mchi,const char* variable);
   virtual vector<TH1F*> GetSignal(string mchi,const char* variable);
   virtual void DrawRatio(TH1F* histo_Data, THStack* hs_datamc,TCanvas* c);
   virtual void DrawAxis(TH1F* histo_Data,THStack* hs_datamc, TCanvas* c,string name);

@@ -77,7 +77,7 @@ public :
    int TotalPFCandidates, ChargedPFCandidates,NeutralPFCandidates,GammaPFCandidates;
    
     TH1F *h_nVtx[16],*h_metcut, *h_dphimin,*h_metFilters[16],*h_pfMETall[16],*h_pfMET200[16],*h_nJets[16],*h_pfMET[16],*h_pfMETPhi[16],*h_j1nCategory1[16],*h_j1nCategory2[16],*h_j1dRPF12_ID_1[16],*h_j1dRPF12_ID_2[16];
-   TH1F *h_j1Pt[16], *h_j1Eta[16], *h_j1Phi[16], *h_j1etaWidth[16], *h_j1phiWidth[16],*h_j1nCons[16], *h_j1PF12PtFrac_ID_1[16], *h_j1PF12PtFrac_ID_2[16],*h_j1PFPtFrac_ID_2[16]; 
+  TH1F *h_j1Pt[16], *h_j1Eta[16], *h_j1Phi[16], *h_j1etaWidth[16], *h_j1phiWidth[16],*h_j1nCons[16], *h_j1PF12PtFrac_ID_1[16], *h_j1PF12PtFrac_ID_2[16],*h_j1PFPtFrac_ID_2[16],*h_PF123PtFraction[16]; 
    TH1F *h_j1TotPFCands[16], *h_j1ChPFCands[16], *h_j1NeutPFCands[16], *h_j1GammaPFCands[16], *h_j1CHF[16], *h_j1NHF[16], *h_j1ChMultiplicity[16], *h_j1NeutMultiplicity[16],*h_j1Mt[16]; 
    //CR histograms
    TH1F *h_leadingLeptonPt[16], *h_leadingLeptonEta[16],*h_leadingLeptonPhi[16],*h_subleadingLeptonPt[16],*h_subleadingLeptonEta[16], *h_subleadingLeptonPhi[16],*h_dileptonPt[16],*h_dileptonM[16];
@@ -755,6 +755,7 @@ public :
    virtual vector<int> muon_veto_tightID(int jet_index, float muPtCut);
    virtual vector<int> muon_veto_looseID(int jet_index, int leading_ele_index, int subleading_ele_index, float muPtCut);
    virtual vector<int>getPFCandidates();
+  virtual void getPt123Frac();
    virtual void AllPFCand(std::vector<int> jetCand,std::vector<int> PFCandidates);
 };
 
