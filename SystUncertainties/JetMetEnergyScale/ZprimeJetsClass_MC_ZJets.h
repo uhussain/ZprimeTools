@@ -66,6 +66,7 @@ public :
    int TwoChPFCons,TwoChPFConsPlusPho;
    double PF12PtFrac_ID_1,PF12PtFrac_ID_2,dR_PF12_ID_1,dR_PF12_ID_2,PF123PtFrac_ID_2;
 
+   std::vector<double> PtFraction_to_use;
    double Pt123,Pt123Fraction;
    //Category 3 variables
    double dR_PionPhoton_3,Cat3_ChPionPt,Cat3_PhotonPt,Cat3_ChPionEta,Cat3_PhotonEta,Cat3_ChPionPhi,Cat3_PhotonPhi;
@@ -74,12 +75,12 @@ public :
 
    //JetEnergyScale
    Float_t MET_to_use, METPhi_to_use;
-TH1F *h_nVtx[52], *h_metcut, *h_dphimin,*h_metFilters[52],*h_pfMETall[52],*h_pfMET200[52],*h_nJets[52],*h_pfMET[52],*h_pfMETPhi[52],*h_j1nCategory1[52],*h_j1nCategory2[52],*h_j1dRPF12_ID_1[52],*h_j1dRPF12_ID_2[52];
-   TH1F *h_j1Pt[52], *h_j1Eta[52], *h_j1Phi[52], *h_j1etaWidth[52], *h_j1phiWidth[52],*h_j1nCons[52], *h_j1PF12PtFrac_ID_1[52], *h_j1PF12PtFrac_ID_2[52],*h_j1PFPtFrac_ID_2[52],*h_PF123PtFraction[52];  
-   TH1F *h_j1TotPFCands[52], *h_j1ChPFCands[52], *h_j1NeutPFCands[52], *h_j1GammaPFCands[52], *h_j1CHF[52], *h_j1NHF[52], *h_j1ChMultiplicity[52], *h_j1NeutMultiplicity[52],*h_j1Mt[52]; 
+TH1F *h_nVtx[36], *h_metcut, *h_dphimin,*h_metFilters[36],*h_pfMETall[36],*h_pfMET200[36],*h_nJets[36],*h_pfMET[36],*h_pfMETPhi[36],*h_j1nCategory1[36],*h_j1nCategory2[36],*h_j1dRPF12_ID_1[36],*h_j1dRPF12_ID_2[36];
+   TH1F *h_j1Pt[36], *h_j1Eta[36], *h_j1Phi[36], *h_j1etaWidth[36], *h_j1phiWidth[36],*h_j1nCons[36], *h_j1PF12PtFrac_ID_1[36], *h_j1PF12PtFrac_ID_2[36],*h_j1PFPtFrac_ID_2[36],*h_PF123PtFraction[36];  
+   TH1F *h_j1TotPFCands[36], *h_j1ChPFCands[36], *h_j1NeutPFCands[36], *h_j1GammaPFCands[36], *h_j1CHF[36], *h_j1NHF[36], *h_j1ChMultiplicity[36], *h_j1NeutMultiplicity[36],*h_j1Mt[36]; 
    // Fixed size dimensions of array or collections stored in the TTree if any.
    //Category3 Histos
-   TH1F *h_ChPionPt[52],*h_PhotonPt[52],*h_dRPionPhoton[52];
+   TH1F *h_ChPionPt[36],*h_PhotonPt[36],*h_dRPionPhoton[36];
    TH1D *h_cutflow;
    // Declaration of leaf types
    Int_t           run;
@@ -728,8 +729,8 @@ TH1F *h_nVtx[52], *h_metcut, *h_dphimin,*h_metFilters[52],*h_pfMETall[52],*h_pfM
    TBranch        *b_jetVtx3DVal;   //!
    TBranch        *b_jetVtx3DSig;   //!
 
-  
-   ZprimeJetsClass_MC_ZJets(const char* file1,const char* file2);
+ 
+   ZprimeJetsClass_MC_ZJets(const char* file1,const char* file2,int min,int max);
    virtual ~ZprimeJetsClass_MC_ZJets();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
@@ -750,6 +751,7 @@ TH1F *h_nVtx[52], *h_metcut, *h_dphimin,*h_metFilters[52],*h_pfMETall[52],*h_pfM
    virtual bool electron_veto_looseID(int jet_index, float elePtCut);
    virtual bool muon_veto_looseID(int jet_index, float muPtCut);
    virtual vector<int>getPFCandidates();
+   virtual vector<double>getPtFrac();
    virtual void AllPFCand(std::vector<std::pair<int,double>> jetCand,std::vector<int> PFCandidates);
 };
 
@@ -757,7 +759,18 @@ TH1F *h_nVtx[52], *h_metcut, *h_dphimin,*h_metFilters[52],*h_pfMETall[52],*h_pfM
 
 #ifdef ZprimeJetsClass_MC_ZJets_cxx
 
-ZprimeJetsClass_MC_ZJets::ZprimeJetsClass_MC_ZJets(const char* file1,const char* file2) 
+bool fileSelection(std::string filename, std::string dataset,int min, int max)
+{
+  filename.erase(filename.begin(),filename.begin()+dataset.size());
+  std::cout<<"\n\n\n\n\n"<<filename<<std::endl;
+  int fileNum = stoi(filename);
+  //std::cout<<fileNum<<std::endl;
+  //std::cout<<"Min: "<<min<<"Max: "<<max<<std::endl;
+  if (min < fileNum && fileNum <= max) return true;
+  else return false;
+}
+
+ZprimeJetsClass_MC_ZJets::ZprimeJetsClass_MC_ZJets(const char* file1,const char* file2,int min,int max) 
 {
   TChain *chain = new TChain("ggNtuplizer/EventTree");
   TString path = file1;
@@ -767,26 +780,33 @@ ZprimeJetsClass_MC_ZJets::ZprimeJetsClass_MC_ZJets(const char* file1,const char*
   TSystemFile* filename;
   int fileNumber = 0;
   int maxFiles = -1;
+  int inFile=0;
   while ((filename = (TSystemFile*)nextlist()) && fileNumber >  maxFiles)
     {
       //Debug
-    std::cout<<"file path found: "<<(path+filename->GetName())<<std::endl;
-    std::cout<<"name: "<<(filename->GetName())<<std::endl;
-    std::cout<<"fileNumber: "<<fileNumber<<std::endl;
+      std::cout<<"file path found: "<<(path+filename->GetName())<<std::endl;
+      std::cout<<"name: "<<(filename->GetName())<<std::endl;
+      std::cout<<"fileNumber: "<<fileNumber<<std::endl;
 
-     TString dataset = "ggtree_mc_";
-     TString  FullPathInputFile = (path+filename->GetName());
-     TString name = filename->GetName();
-     if(name.Contains(dataset))
-       {
-         std::cout<<"Adding FullPathInputFile to chain:"<<FullPathInputFile<<std::endl;
-         std::cout<<std::endl;
-         chain->Add(FullPathInputFile);
-       }
-
+      TString dataset = "ggtree_mc_";
+      TString  FullPathInputFile = (path+filename->GetName());
+      TString name = filename->GetName();
+      if (name.Contains(dataset))
+	{
+	  std::string fname = std::string(name);
+	  fname.erase(fname.end()-5,fname.end());
+	  bool isin = fileSelection(fname,std::string(dataset),min,max);
+	  if(isin)
+	    {
+	      std::cout<<"Adding FullPathInputFile to chain:"<<FullPathInputFile<<std::endl;
+	      std::cout<<std::endl;
+	      chain->Add(FullPathInputFile);
+	      inFile++;
+	    }
+	}
       fileNumber++;
     }
-  std::cout<<"All files added."<<std::endl;
+  std::cout<<inFile<<" files added."<<std::endl;
   std::cout<<"Initializing chain."<<std::endl;
   Init(chain);
   BookHistos(file2);
