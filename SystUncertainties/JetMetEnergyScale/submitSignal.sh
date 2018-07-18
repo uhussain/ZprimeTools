@@ -12,7 +12,7 @@ for dm in $Mx;do
     dir="Mx${dm}_Mv${Med}_MINIAOD"
     echo " "
     echo "----------------------"   ${dir}  "-------------------------"
-    ./SubmitCondor_signal analyze /hdfs/store/user/uhussain/${dir}-ZprimeSignalJobs_${DATE}/ postSignal_Mx${dm}_Mv${Med}.root -1 1000 signal_Mx${dm}_Mv${Med} split_1
+    ./SubmitCondor_signal.sh analyze /hdfs/store/user/uhussain/${dir}-ZprimeSignalJobs_${DATE}/ postSignal_Mx${dm}_Mv${Med}.root -1 1000 signal_Mx${dm}_Mv${Med} split_1
   done
 done
 
