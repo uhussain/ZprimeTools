@@ -1,5 +1,5 @@
 #!/bin/sh
-
+#Author: E.Koenig
 #Create Directories to put condor files in
 if [ ! -d .output ]; then
     #Where executable and output files go
