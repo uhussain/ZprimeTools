@@ -9,10 +9,14 @@ from ROOT import TLegend
 from ROOT import TColor
 from ROOT import TGraph
 import ROOT
-import CMS_lumi, tdrstyle
 from array import array
 import operator
 gROOT.SetBatch(True)
+
+if len(argv) == 1:
+    print "usage: python CLplotter.py limits_shape_mchi*085.txt"
+    print "replace 085 with and cut you wish to plot"
+    exit()
 
 
 #tdrstyle.setTDRStyle()
@@ -386,6 +390,6 @@ elif "limits_shape_mchi" in argv[1]:
             for mv in order_mv:
                 filenames.append(orginize[catType][str(mchi)][str(mv)])
                 break
-            
+
 main(filenames)
     
