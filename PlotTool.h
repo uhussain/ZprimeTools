@@ -74,7 +74,8 @@ class PlotTool{
   vector<vector<vector<double>>> Mx_Mv_Xsec = {Mx10_Mv_Xsec,Mx50_Mv_Xsec,Mx100_Mv_Xsec};
 
   vector<string> Mx_Label = {"10","50","100"};
-  vector<string> Mv_Label = {"100","200","1000","1500","1800","2000","2500","3500"};
+  vector<string> Mv_Label = {"100","200","1000"   ,"1500"  ,"1800"   ,"2000"  ,"2500" ,"3500"};
+  vector<int> Mv_Color =    {kRed ,kBlue,kViolet+1,kMagenta,kSpring-1,kAzure+1,kPink-7,kOrange-7};
   
   //List of Region Data Files
   vector<const char*> SignalData_FileNames = {"postMETdata_0","postMETdata_1","postMETdata_2"};
@@ -133,10 +134,12 @@ class PlotTool{
   virtual void saveplot(const char* variable,string name,string varname,string cat,string mchi);
   virtual void integral(const char* variable,string name,string mchi,int print);
   virtual void plotter(const char * variable,string name,string mchi);
+  virtual void plotsignal(const char* variable,string name);
   virtual void plotTH2F(const char * variable,string name,string mchi);
   virtual void saveplotOption(int argc,vector<const char*> argv);
-  virtual void integralOption(int print);
+  virtual void integralOption(int argc, vector<const char*> argv,int print);
   virtual void plotterOption(int argc, vector<const char*> argv);
+  virtual void plotsignalOption(int argc,vector<const char*> argv);
   virtual void plotTH2FOption(int argc,vector<const char*> argv);
   
 };

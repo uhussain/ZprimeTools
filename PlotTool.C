@@ -59,15 +59,17 @@ void PlotTool::Options(int argc,const char* argv[])
   
   cout<<"Running in "<<Region<<endl;
   //if (Region == "SignalRegion"){lumi=lumi_3;}
-  regionFile = haddRegion();
   vector<const char*> realargv;
   if (string(argv[1]).compare("-i") == 0)
     {
+      regionFile = haddRegion();
       cout<<"Integrals"<<endl;
-      integralOption(atof(argv[2]));
+      for (int j = 3; j < argc; j++) realargv.push_back(argv[j]);
+      integralOption(realargv.size(),realargv,atof(argv[2]));
     }
   else if (string(argv[1]).compare("-s") == 0)
     {
+      regionFile = haddRegion();
       if (Region != "SignalRegion")
 	{
 	  cout<<"Please only run ./PlotTool -s in SignalRegion"<<endl;
@@ -81,6 +83,7 @@ void PlotTool::Options(int argc,const char* argv[])
     }
   else if (string(argv[1]).compare("-th2f") == 0)
     {
+      regionFile = haddRegion();
       if (Region != "SignalRegion")
 	{
 	  cout<<"Please only run ./PlotTool -th2f in PFUncertainty"<<endl;
@@ -89,8 +92,14 @@ void PlotTool::Options(int argc,const char* argv[])
       for (int j = 1; j < argc; j++){ realargv.push_back(argv[j]);}
       plotTH2FOption(realargv.size(),realargv);
     }
+  else if (string(argv[1]).compare("-ps") == 0)
+    {
+      for(int j = 2; j < argc; j++) realargv.push_back(argv[j]);
+      plotsignalOption(realargv.size(),realargv);
+    }
   else
     {
+      regionFile = haddRegion();
       cout<<"Plotting at "<<lumi<<" pb^{-1}"<<endl;
       for (int j = 1; j < argc; j++){realargv.push_back(argv[j]);}
       plotterOption(realargv.size(),realargv);
@@ -135,17 +144,31 @@ void PlotTool::saveplotOption(int argc,vector<const char*> argv)
     }
 }
 
-void PlotTool::integralOption(int print)
+void PlotTool::integralOption(int argc,vector<const char*> argv,int print)
 {
   vector<const char*> variable;
-  if (regionFile == "postMETdata_final"){variable = {"pfMET_15","pfMET_10","pfMET_12","pfMET_14"};}
-  else{variable = {"nJets_8"};}//,"nJets_10","nJets_12","nJets_14"};}
-  vector<string> type = {"NoCat","Cat1","Cat2","Cat3"};
+  vector<string> type;
+  for (int i=0;i<argc;i++)
+    {
+      type.push_back(string(argv[i]));
+      variable.push_back(argv[i]);
+    }
   for (int i = 0; i < variable.size(); i++)
     {
       string name = type[i];
       integral(variable[i],name,"-1",print);
     } 
+}
+
+void PlotTool::plotsignalOption(int argc,vector<const char*> argv)
+{
+  vector<const char*> variable;
+  for(int i = 0; i < argc; i++) variable.push_back(argv[i]);
+  for(int i = 0; i < variable.size(); i++)
+    {
+      string name = SampleName(variable[i]);
+      plotsignal(variable[i],name);
+    }
 }
 
 void PlotTool::plotterOption(int argc, vector<const char*> argv)
@@ -903,6 +926,8 @@ void PlotTool::saveplot(const char* variable,string name,string varname,string c
 void PlotTool::integral(const char* variable,string name,string mchi,int print)
 {
   cout<<name<<endl;
+  double bkgsum=0.0;
+  vector<TH1F*> histo_Signal;
   if (print == 0 || print == -1)
     {
       vector<const char*> Data_FileNames = {regionFile};
@@ -916,16 +941,18 @@ void PlotTool::integral(const char* variable,string name,string mchi,int print)
       for(int i = 0; i < MC_FileNames.size(); i++)
 	{
 	  hs_list.push_back(GetHistogram(MC_FileNames[i],MC_Xsec[i],variable,MC_Label[i]));
+	  bkgsum+=hs_list[i]->Integral();
 	  cout<<"integral of "<<MC_Label[i]<<" here:"<<hs_list[i]->Integral()<<endl;
 	}
     }
   if (print == 1 || print == -1)
     {
-      vector<TH1F*> histo_Signal;
-      if (mchi.find("Mx") != string::npos) histo_Signal=GetMx_Mv(mchi,variable);
+      if (mchi.find("Mx") != string::npos || mchi.find("-1") != string::npos) histo_Signal=GetMx_Mv(mchi,variable);
       else histo_Signal = GetSignal(mchi,variable);
       for (int i = 0; i < histo_Signal.size(); i++){cout<<"integral of "<<histo_Signal[i]->GetName()<<" here:"<<histo_Signal[i]->Integral()<<endl;}
     }
+  cout<<bkgsum<<endl<<endl;
+  for (int i = 0; i < histo_Signal.size(); i++) cout<<histo_Signal[i]->Integral()<<endl;
 }
 
 void PlotTool::plotter(const char * variable,string name,string mchi)
@@ -1045,8 +1072,80 @@ void PlotTool::plotter(const char * variable,string name,string mchi)
   //c->SaveAs((string(variable)+string(".png")).c_str());
   c->SaveAs((string(variable)+string(".pdf")).c_str());
   c->SaveAs((string(variable)+string(".png")).c_str());
-  system((string("mv ")+string(variable)+string(".pdf ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string(".pdf")).c_str());
-  system((string("mv ")+string(variable)+string(".png ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string(".png")).c_str());
+  system((string("mv ")+string(variable)+string(".pdf ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/MonoZprimeJet/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string(".pdf")).c_str());
+  system((string("mv ")+string(variable)+string(".png ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/MonoZprimeJet/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string(".png")).c_str());
+}
+
+void PlotTool::plotsignal(const char* variable,string name)
+{
+  cout << name <<endl;
+
+  TCanvas *c = new TCanvas("c", "canvas",800,800);
+  gStyle->SetOptStat(0);
+  gStyle->SetLegendBorderSize(0);
+  //c->SetLeftMargin(0.15);
+  //c->SetLogy();
+  //c->cd();
+  
+  TPad *pad1 = new TPad("pad1","pad1",0.01,0.1,0.99,0.99);
+  pad1->Draw(); pad1->cd();
+  if (name != "Z Mass (GeV)") pad1->SetLogy();
+  pad1->SetFillColor(0); pad1->SetFrameBorderMode(0); pad1->SetBorderMode(0);
+  pad1->SetBottomMargin(0.);
+
+  vector<TH1F*> hs_list = GetMx_Mv("-1",variable);
+  string norm="";
+  if (0) for(int i = 0; i < hs_list.size(); i++) hs_list[i]->Scale(1/hs_list[i]->Integral());
+  int mv = Mv_Label.size();
+
+  double max=0.0;
+  double min=pow(10,10);
+
+  for(int i = 0; i < hs_list.size(); i++)
+    {
+      if(max < hs_list[i]->GetMaximum()) max = hs_list[i]->GetMaximum();
+      for(int j = 0; j < hs_list[i]->GetNbinsX(); j++) if (min > hs_list[i]->GetBinContent(j) && hs_list[i]->GetBinContent(i) != 0) min = hs_list[i]->GetBinContent(i);
+    }
+  
+  for(int i = 0; i < Mx_Label.size(); i ++)
+    {
+      TLegend *leg = new TLegend(0.62,0.60,0.86,0.887173,"");
+      for(int j = 0; j < Mv_Label.size(); j++)
+	{
+	  hs_list[mv*i+j]->SetLineColor(Mv_Color[j]);
+	  hs_list[mv*i+j]->SetLineWidth(2);
+	  leg->AddEntry(hs_list[mv*i+j],hs_list[mv*i+j]->GetName(),"l");
+	  if (j == 0) hs_list[mv*i+j]->Draw("HIST");
+	  else hs_list[mv*i+j]->Draw("HIST SAME");
+	  cout<<"integral of "<<hs_list[mv*i+j]->GetName()<<" here:"<<hs_list[mv*i+j]->Integral()<<endl;
+	}
+      hs_list[mv*i]->SetMaximum(max*pow(10,1.8));
+      hs_list[mv*i]->SetMinimum(min*pow(10,-1.3));
+      hs_list[mv*i]->SetTitle("");
+      hs_list[mv*i]->GetXaxis()->SetTitle(name.c_str());
+      hs_list[mv*i]->GetYaxis()->SetTitle("Events");
+      hs_list[mv*i]->GetYaxis()->SetTitleOffset(1.2);
+      leg->SetFillColor(kWhite);
+      leg->SetFillStyle(0);
+      leg->SetTextSize(0.025);
+      leg->Draw();
+      string lumi_label;
+      bool that = (int)lumi==35900;
+      if ((int)lumi == 35900) lumi_label="35.9";
+      else if ((int)lumi == 1885) lumi_label="1.89";
+      TLatex *texS = new TLatex(0.20,0.837173,("#sqrt{s} = 13 TeV, "+lumi_label+" fb^{-1}").c_str());
+      texS->SetNDC();
+      texS->SetTextFont(42);
+      texS->SetTextSize(0.040);
+      texS->Draw();
+      TLatex *texS1 = new TLatex(0.12092,0.907173,"#bf{CMS} : #it{Preliminary}");
+      texS1->SetNDC();
+      texS1->SetTextFont(42);
+      texS1->SetTextSize(0.040);
+      texS1->Draw();
+      c->SaveAs((string(variable)+"_Mx"+Mx_Label[i]+norm+".png").c_str());
+      system(("mv "+string(variable)+"_Mx"+Mx_Label[i]+norm+".png ~/public_html/MonoZprimeJet/Plots/Mx_MvPlots_EWK/").c_str());
+    } 
 }
 
 void PlotTool::plotTH2F(const char * variable,string name,string mchi)
