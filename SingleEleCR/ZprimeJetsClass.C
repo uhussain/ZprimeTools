@@ -70,8 +70,8 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
   std::vector<int> jetveto;
   jetveto.clear();
 
-  double nTotalEvents,nFilters, nHLT, nCRSelection, nMET200, lepMET_MT160, nNoMuons, nMETcut,nbtagVeto, nDphiJetMET,nJetSelection;
-  nTotalEvents = nFilters = nHLT = nCRSelection = nMET200 = lepMET_MT160 = nNoMuons = nMETcut = nDphiJetMET = nbtagVeto = nJetSelection = 0;
+  double nTotalEvents,nFilters, nHLT, nCRSelection, nMET200, pfMET50, nNoMuons, nMETcut,nbtagVeto, nDphiJetMET,nJetSelection;
+  nTotalEvents = nFilters = nHLT = nCRSelection = nMET200 = pfMET50 = nNoMuons = nMETcut = nDphiJetMET = nbtagVeto = nJetSelection = 0;
 
   //getPFCandidates
   std::vector<int>PFCandidates;
@@ -111,7 +111,7 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
         nFilters++;
         //h_cutflow->SetBinContent(2,nFilters);
         fillHistos(0);
-	if ((HLTEleMuX>>4&1 == 1) || (HLTEleMuX>>38&1 == 1)) //"HLT_Ele27_WPTight_Gsf_v or HLT_Ele115_CaloIdVT_GsfTrkIdT_v"
+	if ((HLTEleMuX>>4&1 == 1) || (HLTEleMuX>>38&1 == 1) || (HLTPho >>7&1 ==1)) //"HLT_Ele27_WPTight_Gsf_v or HLT_Ele115_CaloIdVT_GsfTrkIdT_v"
 	  //if (HLTJet>>8&1 == 1) //"HLT_PFMET170_HBHECleaned_v"
 	  {
 	    nHLT++;
@@ -160,9 +160,9 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 			    Float_t dPhi_lepMET = DeltaPhi(elePhi->at(lepindex),pfMETPhi);
 			    Float_t lepMET_MT = sqrt(2*elePt->at(lepindex)*pfMET*(1-TMath::Cos(dPhi_lepMET)));
 			    h_lepMET_MT->Fill(lepMET_MT);
-			    if(lepMET_MT < 160)
+			    if(pfMET > 50)
 			      {
-				lepMET_MT160++;
+				pfMET50++;
 				fillHistos(5);
 				h_metcut->Fill(metcut);
 				if(metcut<0.5)
@@ -246,7 +246,7 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
   h_cutflow->SetBinContent(5,nCRSelection);
   h_cutflow->SetBinContent(6,nMET200);
   h_cutflow->SetBinContent(7,nNoMuons);
-  h_cutflow->SetBinContent(8,lepMET_MT160);
+  h_cutflow->SetBinContent(8,pfMET50);
   h_cutflow->SetBinContent(9,nMETcut);
   h_cutflow->SetBinContent(10,nbtagVeto);
   h_cutflow->SetBinContent(11,nDphiJetMET);
@@ -270,7 +270,7 @@ void ZprimeJetsClass::BookHistos(const char* file2)
   h_cutflow->GetXaxis()->SetBinLabel(5,"CRSelection"); 
   h_cutflow->GetXaxis()->SetBinLabel(6,"leptoMetCut");
   h_cutflow->GetXaxis()->SetBinLabel(7,"NoMuons");
-  h_cutflow->GetXaxis()->SetBinLabel(8,"lepMT160");
+  h_cutflow->GetXaxis()->SetBinLabel(8,"pfMET50");
   h_cutflow->GetXaxis()->SetBinLabel(9,"caloMET cut");
   h_cutflow->GetXaxis()->SetBinLabel(10,"B-JetVeto");
   h_cutflow->GetXaxis()->SetBinLabel(11,"DeltaPhiCut");
@@ -278,8 +278,8 @@ void ZprimeJetsClass::BookHistos(const char* file2)
   float MtBins[51]={180.,200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,420.,440.,460.,480.,500.,520.,540.,560.,580.,600.,620.,640.,660.,680.,700.,720.,740.,760.,
 		    780.,800.,820.,840.,860.,880.,900.,920.,940.,960.,980.,1000.,1050.,1100.,1200.,1300.,1400.,1500.,2000.,2500.,3000.};
   
-  float MetBins[51]={160,180.,200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,420.,440.,460.,480.,500.,520.,540.,560.,580.,600.,620.,640.,660.,680.,700.,720.,740.,760.,
-		     780.,800.,820.,840.,860.,880.,900.,920.,940.,960.,980.,1000.,1050.,1100.,1200.,1300.,1400.,1500.,2000.,2500.};
+  float MetBins[45]={200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,420.,440.,460.,480.,500.,520.,540.,560.,580.,600.,620.,640.,660.,680.,700.,720.,740.,760.,
+		     780.,800.,820.,840.,860.,880.,900.,920.,940.,960.,980.,1000.,1400.,1800.,2000.,2500.};
 
   float PtBins[51]={160,180.,200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,420.,440.,460.,480.,500.,520.,540.,560.,580.,600.,620.,640.,660.,680.,700.,720.,740.,760.,
 		    780.,800.,820.,840.,860.,880.,900.,920.,940.,960.,980.,1000.,1050.,1100.,1200.,1300.,1400.,1500.,2000.,2500.};
@@ -296,7 +296,7 @@ void ZprimeJetsClass::BookHistos(const char* file2)
     h_nJets[i]   = new TH1F(("nJets"+histname).c_str(), "nJets;Number of Jets", 10, 0, 10);h_nJets[i]->Sumw2();
     h_pfMETall[i] =  new TH1F(("pfMETall"+histname).c_str(), "pfMET",50,0,2000);h_pfMETall[i] ->Sumw2(); 
     h_pfMET200[i] = new TH1F(("pfMET200"+histname).c_str(), "pfMET",50,170,1500);h_pfMET200[i] ->Sumw2(); 
-    h_pfMET[i] = new TH1F(("pfMET"+histname).c_str(), "E_{T}^{miss} (GeV)",50,MetBins);h_pfMET[i] ->Sumw2();
+    h_pfMET[i] = new TH1F(("pfMET"+histname).c_str(), "E_{T}^{miss} (GeV)",44,MetBins);h_pfMET[i] ->Sumw2();
     h_pfMETPhi[i] = new TH1F(("pfMETPhi"+histname).c_str(), "pfMETPhi",50,-4,4);h_pfMETPhi[i]->Sumw2();
     h_j1Pt[i]  = new TH1F(("j1pT"+histname).c_str(), "j1pT;p_{T} of Leading Jet (GeV)", 50,PtBins);h_j1Pt[i]->Sumw2();
     h_j1Eta[i] = new TH1F(("j1Eta"+histname).c_str(), "j1Eta; #eta of Leading Jet", 50, -2.5, 2.5);h_j1Eta[i]->Sumw2();
@@ -326,7 +326,7 @@ void ZprimeJetsClass::BookHistos(const char* file2)
     h_LeptonPt[i] = new TH1F(("h_LeptonPt"+histname).c_str(),"h_LeptonPt",30,0.,1500.);h_LeptonPt[i]->Sumw2();
     h_LeptonEta[i] = new TH1F(("h_LeptonEta"+histname).c_str(),"h_LeptonEta",30,-3.0,3.0);h_LeptonEta[i]->Sumw2();
     h_LeptonPhi[i] = new TH1F(("h_LeptonPhi"+histname).c_str(),"h_LeptonPhi",30,0.,3.1416);h_LeptonPhi[i]->Sumw2();
-    h_recoil[i] = new TH1F(("h_recoil"+histname).c_str(), "Recoil (GeV)",50,MetBins);h_recoil[i] ->Sumw2();
+    h_recoil[i] = new TH1F(("h_recoil"+histname).c_str(), "Recoil (GeV)",44,MetBins);h_recoil[i] ->Sumw2();
   }
 }
 
