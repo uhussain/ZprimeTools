@@ -1,3 +1,4 @@
+p p > vt vt~ Zp QED=0 dmvector=3 dmzpu=1
 10,100 Cross-section :   0.006065 +- 3.716e-05 pb
 10,200 Cross-section :   0.006522 +- 3.9e-05 pb
 10,500 Cross-section :   0.01165 +- 9.637e-05 pb
@@ -28,3 +29,5 @@
 100,2000     Cross-section :   0.02939 +- 0.000348 pb
 100,2500     Cross-section :   0.01288 +- 0.0001312 pb
 100,3500     Cross-section :   0.00243 +- 3.548e-05 pb
+
+Date: 16/07/2018
