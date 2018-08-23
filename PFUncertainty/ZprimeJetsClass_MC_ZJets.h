@@ -77,16 +77,16 @@ public :
 
    //JetEnergyScale
    Float_t MET_to_use, METPhi_to_use;
-TH1F *h_nVtx[60], *h_metcut, *h_dphimin,*h_metFilters[60],*h_pfMETall[60],*h_pfMET200[60],*h_nJets[60],*h_pfMET[60],*h_pfMETPhi[60],*h_j1nCategory1[60],*h_j1nCategory2[60],*h_j1dRPF12_ID_1[60],*h_j1dRPF12_ID_2[60];
-   TH1F *h_j1Pt[60], *h_j1Eta[60], *h_j1Phi[60], *h_j1etaWidth[60], *h_j1phiWidth[60],*h_j1nCons[60], *h_j1PF12PtFrac_ID_1[60], *h_j1PF12PtFrac_ID_2[60],*h_j1PFPtFrac_ID_2[60],*h_PF123PtFraction[60];  
-   TH1F *h_j1TotPFCands[60], *h_j1ChPFCands[60], *h_j1NeutPFCands[60], *h_j1GammaPFCands[60], *h_j1CHF[60], *h_j1NHF[60], *h_j1ChMultiplicity[60], *h_j1NeutMultiplicity[60],*h_j1Mt[60]; 
+TH1F *h_nVtx[57], *h_metcut, *h_dphimin,*h_metFilters[57],*h_pfMETall[57],*h_pfMET200[57],*h_nJets[57],*h_pfMET[57],*h_pfMETPhi[57],*h_j1nCategory1[57],*h_j1nCategory2[57],*h_j1dRPF12_ID_1[57],*h_j1dRPF12_ID_2[57];
+   TH1F *h_j1Pt[57], *h_j1Eta[57], *h_j1Phi[57], *h_j1etaWidth[57], *h_j1phiWidth[57],*h_j1nCons[57], *h_j1PF12PtFrac_ID_1[57], *h_j1PF12PtFrac_ID_2[57],*h_j1PFPtFrac_ID_2[57],*h_PF123PtFraction[57];  
+   TH1F *h_j1TotPFCands[57], *h_j1ChPFCands[57], *h_j1NeutPFCands[57], *h_j1GammaPFCands[57], *h_j1CHF[57], *h_j1NHF[57], *h_j1ChMultiplicity[57], *h_j1NeutMultiplicity[57],*h_j1Mt[57]; 
    // Fixed size dimensions of array or collections stored in the TTree if any.
    //Category3 Histos
-   TH1F *h_ChPionPt[60],*h_PhotonPt[60],*h_dRPionPhoton[60];
+   TH1F *h_ChPionPt[57],*h_PhotonPt[57],*h_dRPionPhoton[57];
    TH1D *h_cutflow;
 
-  TH2F *h_EcalPtUnc[60],*h_TrackerPtUnc[60],*h_HcalPtUnc[60];
-  TH1F *h_TrackerPtFrac[60],*h_EcalPtFrac[60],*h_HcalPtFrac[60];
+  TH2F *h_EcalPtUnc[57],*h_TrackerPtUnc[57],*h_HcalPtUnc[57];
+  TH1F *h_TrackerPtFrac[57],*h_EcalPtFrac[57],*h_HcalPtFrac[57];
    // Declaration of leaf types
    Int_t           run;
    Long64_t        event;
@@ -750,7 +750,7 @@ TH1F *h_nVtx[60], *h_metcut, *h_dphimin,*h_metFilters[60],*h_pfMETall[60],*h_pfM
    virtual bool electron_veto_looseID(int jet_index, float elePtCut);
    virtual bool muon_veto_looseID(int jet_index, float muPtCut);
    virtual vector<int> getPFCandidates();
-  virtual void getPt123Frac(int UncType);
+  virtual void getPt123Frac(std::vector<std::pair<int,double>> jetCand,int UncType);
    virtual void AllPFCand(std::vector<std::pair<int,double>> jetCand,std::vector<int> PFCandidates);
 };
 

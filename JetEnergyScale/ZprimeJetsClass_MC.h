@@ -75,11 +75,11 @@ public :
    //JetEnergyScale
    Float_t MET_to_use, METPhi_to_use;
    
-   TH1F *h_nVtx[46],*h_metcut, *h_dphimin,*h_metFilters[46],*h_pfMETall[46],*h_pfMET200[46],*h_nJets[46],*h_pfMET[46],*h_pfMETPhi[46],*h_j1nCategory1[46],*h_j1nCategory2[46],*h_j1dRPF12_ID_1[46],*h_j1dRPF12_ID_2[46];
-   TH1F *h_j1Pt[46], *h_j1Eta[46], *h_j1Phi[46], *h_j1etaWidth[46], *h_j1phiWidth[46],*h_j1nCons[46], *h_j1PF12PtFrac_ID_1[46], *h_j1PF12PtFrac_ID_2[46],*h_j1PFPtFrac_ID_2[46],*h_PF123PtFraction[46];  
-   TH1F *h_j1TotPFCands[46], *h_j1ChPFCands[46], *h_j1NeutPFCands[46], *h_j1GammaPFCands[46], *h_j1CHF[46], *h_j1NHF[46], *h_j1ChMultiplicity[46], *h_j1NeutMultiplicity[46],*h_j1Mt[46];  
+   TH1F *h_nVtx[38],*h_metcut, *h_dphimin,*h_metFilters[38],*h_pfMETall[38],*h_pfMET200[38],*h_nJets[38],*h_pfMET[38],*h_pfMETPhi[38],*h_j1nCategory1[38],*h_j1nCategory2[38],*h_j1dRPF12_ID_1[38],*h_j1dRPF12_ID_2[38];
+   TH1F *h_j1Pt[38], *h_j1Eta[38], *h_j1Phi[38], *h_j1etaWidth[38], *h_j1phiWidth[38],*h_j1nCons[38], *h_j1PF12PtFrac_ID_1[38], *h_j1PF12PtFrac_ID_2[38],*h_j1PFPtFrac_ID_2[38],*h_PF123PtFraction[38];  
+   TH1F *h_j1TotPFCands[38], *h_j1ChPFCands[38], *h_j1NeutPFCands[38], *h_j1GammaPFCands[38], *h_j1CHF[38], *h_j1NHF[38], *h_j1ChMultiplicity[38], *h_j1NeutMultiplicity[38],*h_j1Mt[38];  
    //Category3 Histos
-   TH1F *h_ChPionPt[46],*h_PhotonPt[46],*h_dRPionPhoton[46];
+   TH1F *h_ChPionPt[38],*h_PhotonPt[38],*h_dRPionPhoton[38];
    TH1D *h_cutflow;
    // Fixed size dimensions of array or collections stored in the TTree if any.
 
@@ -725,7 +725,7 @@ public :
    TBranch        *b_jetVtx3DSig;   //!
 
   
-  ZprimeJetsClass_MC(const char* file1,const char* file2,int min,int max);
+  ZprimeJetsClass_MC(const char* file1,const char* file2,int min,int max,const char* set);
    virtual ~ZprimeJetsClass_MC();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
@@ -737,9 +737,9 @@ public :
    virtual void BookHistos(const char* file2);
    virtual double deltaR(double eta1, double phi1, double eta2, double phi2);
    virtual void fillHistos(std::vector<std::pair<int,double>> jetCand_to_use,int histoNumber,double event_weight);
-   virtual float DeltaPhi(float phi1, float phi2);
-   virtual vector<pair<int,double>> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut,int UncType);
-   virtual vector<int> JetVetoDecision(int UncType);
+  virtual float DeltaPhi(float phi1, float phi2);
+  virtual vector<pair<int,double>> getJetCand(vector<int> jets,double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut,int UncType);
+  virtual vector<int> JetVetoDecision(int UncType);
    virtual bool btagVeto(int UncType);
    virtual bool dPhiJetMETcut(std::vector<int> jets,float METPhi);
    virtual float dPhiJetMETmin(std::vector<int> jets);
@@ -762,7 +762,7 @@ bool fileSelection(std::string filename, std::string dataset,int min, int max)
   else return false;
 }
 
-ZprimeJetsClass_MC::ZprimeJetsClass_MC(const char* file1,const char* file2,int min,int max) 
+ZprimeJetsClass_MC::ZprimeJetsClass_MC(const char* file1,const char* file2,int min,int max,const char* set) 
 {
   TChain *chain = new TChain("ggNtuplizer/EventTree");
   TString path = file1;
@@ -773,15 +773,25 @@ ZprimeJetsClass_MC::ZprimeJetsClass_MC(const char* file1,const char* file2,int m
   int fileNumber = 0;
   int maxFiles = -1;
   int inFile=0;
+  TString dataset;
+  if (string(set).compare("1GeV") == 0)dataset = "ggtree_signal1GeV_May";
+  else if (string(set).compare("5GeV") == 0)dataset = "ggtree_signal5GeV_May";
+  else if (string(set).compare("10GeV") == 0)dataset = "ggtree_signal10GeV_May";
+  else if (string(set).compare("20GeV") == 0)dataset = "ggtree_signal20GeV_May";
+  else if (string(set).compare("50GeV") == 0)dataset = "ggtree_signal50GeV_May";
+  else if (string(set).compare("100GeV") == 0)dataset = "ggtree_signal100GeV_May";
+  else if (string(set).compare("null") == 0) dataset = "ggtree_mc_";
+  else dataset = set;
+
+  cout<<"Using dataset "<<dataset<<endl;
+  
   while ((filename = (TSystemFile*)nextlist()) && fileNumber >  maxFiles)
     {
       //Debug
       std::cout<<"file path found: "<<(path+filename->GetName())<<std::endl;
       std::cout<<"name: "<<(filename->GetName())<<std::endl;
       std::cout<<"fileNumber: "<<fileNumber<<std::endl;
-
-      TString dataset = "ggtree_mc_";
-      //TString dataset = "Zprime_";
+      
       TString  FullPathInputFile = (path+filename->GetName());
       TString name = filename->GetName();
       if (name.Contains(dataset))

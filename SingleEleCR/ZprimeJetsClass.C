@@ -111,7 +111,7 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
         nFilters++;
         //h_cutflow->SetBinContent(2,nFilters);
         fillHistos(0);
-	if ((HLTEleMuX>>4&1 == 1) || (HLTEleMuX>>38&1 == 1) || (HLTPho >>7&1 ==1)) //"HLT_Ele27_WPTight_Gsf_v or HLT_Ele115_CaloIdVT_GsfTrkIdT_v"
+	if ((HLTEleMuX>>4&1 == 1) || (HLTEleMuX>>38&1 == 1) || (HLTPho>>7&1 ==1)) //"HLT_Ele27_WPTight_Gsf_v or HLT_Ele115_CaloIdVT_GsfTrkIdT_v"
 	  //if (HLTJet>>8&1 == 1) //"HLT_PFMET170_HBHECleaned_v"
 	  {
 	    nHLT++;
@@ -423,7 +423,7 @@ void ZprimeJetsClass::AllPFCand(std::vector<int> jetCand,std::vector<int> PFCand
     dR_PionPhoton_3=Cat3_ChPionPt=Cat3_PhotonPt=Cat3_ChPionEta=Cat3_PhotonEta=Cat3_ChPionPhi=Cat3_PhotonPhi=0.0;
     //We are using these conditions so we only calculate the following quantities for the signal we are interested in
     //This will also make it faster to process the events
-    if(pfMET>250 && jetCand.size()>0){
+    if(jetCand.size()>0){
        j1PFConsPt=JetsPFConsPt->at(jetCand[0]);
        j1PFConsEta=JetsPFConsEta->at(jetCand[0]);
        j1PFConsPhi=JetsPFConsPhi->at(jetCand[0]);

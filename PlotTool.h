@@ -108,7 +108,7 @@ class PlotTool{
 
   vector<vector<const char*>> MC_FileNames = {WJets_FileNames,ZJets_FileNames,GJets_FileNames,DYJets_FileNames,TTJets_FileNames,DiBoson_FileNames,QCD_FileNames};
   vector<vector<double>> MC_Xsec =           {WJets_Xsec     ,ZJets_Xsec     ,GJets_Xsec     ,DYJets_Xsec     ,TTJets_Xsec     ,DiBoson_Xsec     ,QCD_Xsec};
-  vector<Color_t> MC_Color =                 {kRed-10        ,kAzure+10      ,kTeal-9        ,kGray+2         ,kOrange-2       ,kCyan-10         ,kGray};
+  vector<Color_t> MC_Color =                 {kRed-10        ,kAzure+10      ,kGray+2        ,kTeal-9         ,kOrange-2       ,kCyan-10         ,kGray};
   vector<string> MC_Label =                  {"WJets"        ,"ZJets"        ,"GJets"        ,"DYJets"        ,"TTJets"        ,"DiBoson"        ,"QCD"};
   
   PlotTool(int argc,const char* argv[]);
@@ -118,7 +118,7 @@ class PlotTool{
   virtual vector<float> GetTotal(vector<TFile*> Files);
   virtual string SampleName(const char * variable);
   virtual string GetCategory(int hs_num);
-  virtual vector<string> GetName(const char * variable);
+  virtual vector<string> GetName(const char * variable,string UncType);
   virtual int hs_save(string mchi,string cat, const char * variable, vector<TH1F*> histo);
   virtual vector<int> hs_sort(vector<TH1F*> hs_list);
   virtual TH1F* GetHistogram(vector<const char*> Sample_FileNames,vector<double> Sample_Xsec,const char* variable,string SampleName);

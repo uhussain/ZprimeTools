@@ -58,7 +58,7 @@ void PlotTool::Options(int argc,const char* argv[])
   lumi=lumi_2;
   
   cout<<"Running in "<<Region<<endl;
-  //if (Region == "SignalRegion"){lumi=lumi_3;}
+  if (Region == "SignalRegion"){lumi=lumi_3;}
   vector<const char*> realargv;
   if (string(argv[1]).compare("-i") == 0)
     {
@@ -124,14 +124,15 @@ void PlotTool::saveplotOption(int argc,vector<const char*> argv)
   vector<const char*> variable;
   if (mchi != "pdf")
     {
-      for (int i = 1; i < argc; i++)
+      string UncType = argv[argc-1];
+      for (int i = 1; i < argc-1; i++)
 	{
 	  variable.push_back(argv[i]);
 	}
       for (int i = 0; i < variable.size(); i++)
 	{
 	  string name = SampleName(variable[i]);
-	  vector<string> label = GetName(variable[i]);
+	  vector<string> label = GetName(variable[i],UncType);
 	  string varname = label[0];
 	  string cat = "";
 	  saveplot(variable[i],name,varname,cat,mchi);
@@ -345,47 +346,62 @@ string PlotTool::GetCategory(int hs_num)
   return cat;
 }
 
-vector<string> PlotTool::GetName(const char * variable)
+vector<string> PlotTool::GetName(const char * variable,string UncType)
 {
   string name = string(variable);
   size_t pos = name.find("_");
   name = name.substr(pos+1);
   int n = stoi(name);
   string cat="";
-  if (8<=n && n<=18)
+  
+  if (8<=n && n<=15)
     {
       //cat = GetCategory(n);
       name="";
     }
-  else if (n == 28 || n == 32 || n == 36)
+  else if (UncType.compare("pfu") == 0)
     {
-      //cat = GetCategory(n-16);
-      name="_trackerUp";
+      if (n>=18 && n<=23)
+	{
+	  //cat = GetCategory(n-16);
+	  name="_trackerUp";
+	}
+      else if (n >= 24 && n <= 29)
+	{
+	  //cat = GetCategory(n-16);
+	  name="_ecalUp";
+	}
+      else if (n>=30 && n<=35)
+	{
+	  //cat = GetCategory(n-16);
+	  name="_hcalUp";
+	}
+      else if (n>=38 && n<=43)
+	{
+	  //cat = GetCategory(n-16);
+	  name="_trackerDown";
+	}
+      else if (n>=44 && n<=49)
+	{
+	  //cat = GetCategory(n-16);
+	  name="_ecalDown";
+	}
+      else if (n>=50 && n<=55)
+	{
+	  //cat = GetCategory(n-16);
+	  name="_hcalDown";
+	}
     }
-  else if (n == 29 || n == 33 || n == 37)
+  else if (UncType.compare("jes") == 0)
     {
-      //cat = GetCategory(n-16);
-      name="_ecalUp";
-    }
-  else if (n == 30 || n == 34 || n == 38)
-    {
-      //cat = GetCategory(n-16);
-      name="_hcalUp";
-    }
-  else if (n == 49 || n == 53 || n == 57)
-    {
-      //cat = GetCategory(n-16);
-      name="_trackerDown";
-    }
-  else if (n == 50 || n == 54 || n == 58)
-    {
-      //cat = GetCategory(n-16);
-      name="_ecalDown";
-    }
-  else if (n == 51 || n == 55 || n == 59)
-    {
-      //cat = GetCategory(n-16);
-      name="_hcalDown";
+      if (19<=n && n<=29)
+	{
+	  name="_jesUp";
+	}
+      else if (30<=n && n<=40)
+	{
+	  name="_jesDown";
+	}
     }
   vector<string> label = {name,cat};
   return label;
@@ -617,7 +633,7 @@ vector<TH1F*> PlotTool::GetSignal(string mchi,const char* variable)
 	  
 	  histo_Signal.push_back(histo_signal_1GeV);
 	}
-       if (mchi == "-1" || mchi == "5GeV")
+      if (mchi == "-1" || mchi == "5GeV")
 	{
 	  TFile *f_signal_5GeVfile = new TFile("postSignal.root");
 	  TH1F *histo_signal_5GeV = (TH1F*)f_signal_5GeVfile ->Get(variable);
@@ -630,7 +646,7 @@ vector<TH1F*> PlotTool::GetSignal(string mchi,const char* variable)
 	  
 	  histo_Signal.push_back(histo_signal_5GeV);
 	}
-       if (mchi == "-1" || mchi == "10GeV")
+      if (mchi == "-1" || mchi == "10GeV")
 	{
 	  TFile *f_signal_10GeVfile = new TFile("postSignal_mchi10GeV.root");
 	  TH1F *histo_signal_10GeV = (TH1F*)f_signal_10GeVfile ->Get(variable);
@@ -643,7 +659,7 @@ vector<TH1F*> PlotTool::GetSignal(string mchi,const char* variable)
 	  
 	  histo_Signal.push_back(histo_signal_10GeV);
 	}
-       if (mchi == "-1" || mchi == "20GeV")
+      if (mchi == "-1" || mchi == "20GeV")
 	{
 	  TFile *f_signal_20GeVfile = new TFile("postSignal_mchi20GeV.root");
 	  TH1F *histo_signal_20GeV = (TH1F*)f_signal_20GeVfile ->Get(variable);
@@ -656,7 +672,7 @@ vector<TH1F*> PlotTool::GetSignal(string mchi,const char* variable)
 	  
 	  histo_Signal.push_back(histo_signal_20GeV);
 	}
-       if (mchi == "-1" || mchi == "50GeV")
+      if (mchi == "-1" || mchi == "50GeV")
 	{
 	  TFile *f_signal_50GeVfile = new TFile("postSignal_mchi50GeV.root");
 	  TH1F *histo_signal_50GeV = (TH1F*)f_signal_50GeVfile ->Get(variable);
@@ -669,7 +685,7 @@ vector<TH1F*> PlotTool::GetSignal(string mchi,const char* variable)
 	  
 	  histo_Signal.push_back(histo_signal_50GeV);  
 	}
-       if (mchi == "-1" || mchi == "100GeV")
+      if (mchi == "-1" || mchi == "100GeV")
 	{
 	  TFile *f_signal_100GeVfile = new TFile("postSignal_mchi100GeV.root");
 	  TH1F *histo_signal_100GeV = (TH1F*)f_signal_100GeVfile ->Get(variable);
@@ -787,10 +803,10 @@ void PlotTool::DrawAxis(TH1F* histo_Data,THStack* hs_datamc, TCanvas* c,string n
 vector<TH1F*> PlotTool::GetPDF(vector<string> filenames)
 {
   
-  string dir = "/nfs_scratch/uhussain/MonoZprimeJet_postanalyzer_jobsubmission/Uncertainties/CMSSW_8_0_26_patch2/src/Pt123Fraction08/";
+  string dir = "/nfs_scratch/uhussain/MonoZprimeJet_postanalyzer_jobsubmission/Uncertainties/CMSSW_8_0_26_patch2/src/Pt123Fraction085/";
   TFile* main = TFile::Open((dir+filenames[0]).c_str());
   string name = string(filenames[0].c_str());
-  name.erase(name.begin()+1,name.begin()+10);
+  name.erase(name.begin()+1,name.begin()+20);
   name.erase(name.end()-5,name.end());
   TH1F* pdfUp = (TH1F*)main->Get((name+"_pdfUp").c_str());
   TH1F* pdfDo = (TH1F*)main->Get((name+"_pdfDown").c_str());
@@ -799,7 +815,7 @@ vector<TH1F*> PlotTool::GetPDF(vector<string> filenames)
     {
       TFile* file = TFile::Open((dir+filenames[i]).c_str());
       name = string(filenames[i].c_str());
-      name.erase(name.begin()+1,name.begin()+10);
+      name.erase(name.begin()+1,name.begin()+20);
       name.erase(name.end()-5,name.end());
       TH1F* UpTemp = (TH1F*)file->Get((name+"_pdfUp").c_str());
       TH1F* DoTemp = (TH1F*)file->Get((name+"_pdfDown").c_str());
@@ -837,42 +853,42 @@ void PlotTool::pdf_save(vector< vector<TH1F*> > hs_list)
 }
 void PlotTool::savepdf()
 {
-  vector<string> DYFiles = {"histos_MET_postDY100to200.root","histos_MET_postDY1200to2500.root","histos_MET_postDY200to400.root","histos_MET_postDY2500toInf.root","histos_MET_postDY400to600.root","histos_MET_postDY600to800.root","histos_MET_postDY800to1200.root","histos_MET_postDY_MLM_0.root"};
+  vector<string> DYFiles = {"histos_Pt123Fraction_postDY100to200.root","histos_Pt123Fraction_postDY1200to2500.root","histos_Pt123Fraction_postDY200to400.root","histos_Pt123Fraction_postDY2500toInf.root","histos_Pt123Fraction_postDY400to600.root","histos_Pt123Fraction_postDY600to800.root","histos_Pt123Fraction_postDY800to1200.root","histos_Pt123Fraction_postDY_MLM_0.root"};
   
   vector<TH1F*> DYpdfSys = GetPDF(DYFiles);
 
   DYpdfSys[0]->SetName("DYJets_pdfUp");
   DYpdfSys[1]->SetName("DYJets_pdfDown");
 
-  vector<string> GJetFiles = {"histos_MET_postGJets100to200.root","histos_MET_postGJets200to400.root","histos_MET_postGJets400to600.root","histos_MET_postGJets400to600.root","histos_MET_postGJets600toInf.root"};
+  vector<string> GJetFiles = {"histos_Pt123Fraction_postGJets100to200.root","histos_Pt123Fraction_postGJets200to400.root","histos_Pt123Fraction_postGJets400to600.root","histos_Pt123Fraction_postGJets400to600.root","histos_Pt123Fraction_postGJets600toInf.root"};
 
   vector<TH1F*> GJetpdfSys = GetPDF(GJetFiles);
   
   GJetpdfSys[0]->SetName("GJets_pdfUp");
   GJetpdfSys[1]->SetName("GJets_pdfDown");
 
-  vector<string> QCDFiles = {"histos_MET_postQCD1000to1500_0.root","histos_MET_postQCD100to200_0.root","histos_MET_postQCD1500to2000_0.root","histos_MET_postQCD2000toInf_0.root","histos_MET_postQCD200to300_0.root","histos_MET_postQCD300to500_0.root","histos_MET_postQCD500to700_0.root","histos_MET_postQCD700to1000_0.root"};
+  vector<string> QCDFiles = {"histos_Pt123Fraction_postQCD1000to1500_0.root","histos_Pt123Fraction_postQCD100to200_0.root","histos_Pt123Fraction_postQCD1500to2000_0.root","histos_Pt123Fraction_postQCD2000toInf_0.root","histos_Pt123Fraction_postQCD200to300_0.root","histos_Pt123Fraction_postQCD300to500_0.root","histos_Pt123Fraction_postQCD500to700_0.root","histos_Pt123Fraction_postQCD700to1000_0.root"};
 
   vector<TH1F*> QCDpdfSys = GetPDF(QCDFiles);
 
   QCDpdfSys[0]->SetName("QCD_pdfUp");
   QCDpdfSys[1]->SetName("QCD_pdfDown");
 
-  vector<string> TTJetFiles = {"histos_MET_postTTJets_MLM.root"};
+  vector<string> TTJetFiles = {"histos_Pt123Fraction_postTTJets_MLM.root"};
 
   vector<TH1F*> TTJetpdfSys = GetPDF(TTJetFiles);
 
   TTJetpdfSys[0]->SetName("TTJets_pdfUp");
   TTJetpdfSys[1]->SetName("TTJets_pdfDown");
   
-  vector<string> WJetFiles = {"histos_MET_postW100to200_0.root","histos_MET_postW1200to2500_0.root","histos_MET_postW200to400_0.root","histos_MET_postW2500toInf_0.root","histos_MET_postW400to600_0.root","histos_MET_postW600to800_0.root","histos_MET_postW800to1200_0.root","histos_MET_postWJets_MLM_0.root"};
+  vector<string> WJetFiles = {"histos_Pt123Fraction_postW100to200_0.root","histos_Pt123Fraction_postW1200to2500_0.root","histos_Pt123Fraction_postW200to400_0.root","histos_Pt123Fraction_postW2500toInf_0.root","histos_Pt123Fraction_postW400to600_0.root","histos_Pt123Fraction_postW600to800_0.root","histos_Pt123Fraction_postW800to1200_0.root","histos_Pt123Fraction_postWJets_MLM_0.root"};
 
   vector<TH1F*> WJetpdfSys = GetPDF(WJetFiles);
 
   WJetpdfSys[0]->SetName("WJets_pdfUp");
   WJetpdfSys[1]->SetName("WJets_pdfDown");
 
-  vector<string> ZJetFiles = {"histos_MET_postZ100to200_0.root","histos_MET_postZ1200to2500_0.root","histos_MET_postZ200to400_0.root","histos_MET_postZ2500toInf_0.root","histos_MET_postZ400to600_0.root","histos_MET_postZ600to800_0.root","histos_MET_postZ800to1200_0.root"};
+  vector<string> ZJetFiles = {"histos_Pt123Fraction_postZ100to200_0.root","histos_Pt123Fraction_postZ1200to2500_0.root","histos_Pt123Fraction_postZ200to400_0.root","histos_Pt123Fraction_postZ2500toInf_0.root","histos_Pt123Fraction_postZ400to600_0.root","histos_Pt123Fraction_postZ600to800_0.root","histos_Pt123Fraction_postZ800to1200_0.root"};
 
   vector<TH1F*> ZJetpdfSys = GetPDF(ZJetFiles);
 
@@ -986,9 +1002,9 @@ void PlotTool::plotter(const char * variable,string name,string mchi)
   histo_Data->GetYaxis()->SetTitle("");
   histo_Data->GetYaxis()->SetTickLength(0);
   histo_Data->GetYaxis()->SetLabelOffset(999);
-
+  
   cout<<"integral of Data here:"<<histo_Data->Integral()<<endl;
-
+  
   vector<TH1F*> hs_list;
   for(int i = 0; i < MC_FileNames.size(); i++)
     {
@@ -1007,12 +1023,12 @@ void PlotTool::plotter(const char * variable,string name,string mchi)
   //Stack histograms using THStack
   THStack* hs_datamc = StackHistogram(hs_list,name);
   hs_datamc->Draw("HIST");
-
+  
   histo_Data->SetLineColor(kBlack);
   histo_Data->SetMarkerStyle(20);
   histo_Data->SetMarkerSize(0.7);
   histo_Data->Draw("pex0same");
-
+  
   vector<TH1F*> histo_Signal; 
   if (mchi.find("Mx") != string::npos) histo_Signal=GetMx_Mv(mchi,variable);
   else histo_Signal = GetSignal(mchi,variable);

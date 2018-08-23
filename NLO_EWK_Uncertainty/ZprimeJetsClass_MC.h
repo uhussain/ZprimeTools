@@ -5,8 +5,8 @@
 // found on file: /hdfs/store/user/uhussain/Zprime_Ntuples_Mar7/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_W3Jets/170306_174919/0000/ggtree_mc_53.root
 //////////////////////////////////////////////////////////
 
-#ifndef ZprimeJetsClass_MC_WJets_h
-#define ZprimeJetsClass_MC_WJets_h
+#ifndef ZprimeJetsClass_MC_h
+#define ZprimeJetsClass_MC_h
 
 #include <TROOT.h>
 #include <TChain.h>
@@ -43,7 +43,7 @@
 #include "TString.h"
 #include "vector"
 using namespace std;
-class ZprimeJetsClass_MC_WJets {
+class ZprimeJetsClass_MC {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
@@ -69,25 +69,25 @@ public :
    double j1PFPosConsPt, j1PFPosConsEta,j1PFPosConsPhi, j1PFNegConsPt,j1PFNegConsEta,j1PFNegConsPhi,j1PFPhoConsPt,j1PFPhoConsEta,j1PFPhoConsPhi;
    int TwoChPFCons,TwoChPFConsPlusPho;
    double PF12PtFrac_ID_1,PF12PtFrac_ID_2,dR_PF12_ID_1,dR_PF12_ID_2,PF123PtFrac_ID_2;
-
    //Category 3 variables
    double dR_PionPhoton_3,Cat3_ChPionPt,Cat3_PhotonPt,Cat3_ChPionEta,Cat3_PhotonEta,Cat3_ChPionPhi,Cat3_PhotonPhi;
    //getPFCandidates
    int TotalPFCandidates, ChargedPFCandidates,NeutralPFCandidates,GammaPFCandidates;
 
-   //JetEneregyScale
+   //JetEnergyScale
    Float_t MET_to_use, METPhi_to_use;
    
-   TH1F *h_nVtx[57], *h_metcut, *h_dphimin,*h_metFilters[57],*h_pfMETall[57],*h_pfMET200[57],*h_nJets[57],*h_pfMET[57],*h_pfMETPhi[57],*h_j1nCategory1[57],*h_j1nCategory2[57],*h_j1dRPF12_ID_1[57],*h_j1dRPF12_ID_2[57];
-   TH1F *h_j1Pt[57], *h_j1Eta[57], *h_j1Phi[57], *h_j1etaWidth[57], *h_j1phiWidth[57],*h_j1nCons[57], *h_j1PF12PtFrac_ID_1[57], *h_j1PF12PtFrac_ID_2[57],*h_j1PFPtFrac_ID_2[57],*h_PF123PtFraction[57];  
-   TH1F *h_j1TotPFCands[57], *h_j1ChPFCands[57], *h_j1NeutPFCands[57], *h_j1GammaPFCands[57], *h_j1CHF[57], *h_j1NHF[57], *h_j1ChMultiplicity[57], *h_j1NeutMultiplicity[57],*h_j1Mt[57]; 
-   // Fixed size dimensions of array or collections stored in the TTree if any.
+   TH1F *h_nVtx[32],*h_metcut, *h_dphimin,*h_metFilters[32],*h_pfMETall[32],*h_pfMET200[32],*h_nJets[32],*h_pfMET[32],*h_pfMETPhi[32],*h_j1nCategory1[32],*h_j1nCategory2[32],*h_j1dRPF12_ID_1[32],*h_j1dRPF12_ID_2[32];
+   TH1F *h_j1Pt[32], *h_j1Eta[32], *h_j1Phi[32], *h_j1etaWidth[32], *h_j1phiWidth[32],*h_j1nCons[32], *h_j1PF12PtFrac_ID_1[32], *h_j1PF12PtFrac_ID_2[32],*h_j1PFPtFrac_ID_2[32],*h_PF123PtFraction[32];  
+   TH1F *h_j1TotPFCands[32], *h_j1ChPFCands[32], *h_j1NeutPFCands[32], *h_j1GammaPFCands[32], *h_j1CHF[32], *h_j1NHF[32], *h_j1ChMultiplicity[32], *h_j1NeutMultiplicity[32],*h_j1Mt[32];  
    //Category3 Histos
-   TH1F *h_ChPionPt[57],*h_PhotonPt[57],*h_dRPionPhoton[57];
+   TH1F *h_ChPionPt[32],*h_PhotonPt[32],*h_dRPionPhoton[32];
    TH1D *h_cutflow;
 
-  TH2F *h_EcalPtUnc[57],*h_TrackerPtUnc[57],*h_HcalPtUnc[57];
-  TH1F *h_TrackerPtFrac[57],*h_EcalPtFrac[57],*h_HcalPtFrac[57];
+  TH2F *h_EcalPtUnc[32],*h_TrackerPtUnc[32],*h_HcalPtUnc[32];
+  TH1F *h_TrackerPtFrac[32],*h_EcalPtFrac[32],*h_HcalPtFrac[32];
+   // Fixed size dimensions of array or collections stored in the TTree if any.
+
    // Declaration of leaf types
    Int_t           run;
    Long64_t        event;
@@ -730,8 +730,8 @@ public :
    TBranch        *b_jetVtx3DSig;   //!
 
   
-  ZprimeJetsClass_MC_WJets(const char* file1,const char* file2,int min,int max);
-   virtual ~ZprimeJetsClass_MC_WJets();
+  ZprimeJetsClass_MC(const char* file1,const char* file2,int min,int max,const char* set);
+   virtual ~ZprimeJetsClass_MC();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
@@ -757,7 +757,7 @@ public :
 
 #endif
 
-#ifdef ZprimeJetsClass_MC_WJets_cxx
+#ifdef ZprimeJetsClass_MC_cxx
 
 bool fileSelection(std::string filename, std::string dataset,int min, int max)
 {
@@ -768,7 +768,7 @@ bool fileSelection(std::string filename, std::string dataset,int min, int max)
   else return false;
 }
 
-ZprimeJetsClass_MC_WJets::ZprimeJetsClass_MC_WJets(const char* file1,const char* file2,int min, int max) 
+ZprimeJetsClass_MC::ZprimeJetsClass_MC(const char* file1,const char* file2,int min,int max,const char* set) 
 {
   TChain *chain = new TChain("ggNtuplizer/EventTree");
   TString path = file1;
@@ -779,6 +779,16 @@ ZprimeJetsClass_MC_WJets::ZprimeJetsClass_MC_WJets(const char* file1,const char*
   int fileNumber = 0;
   int maxFiles = -1;
   int inFile=0;
+  TString dataset;
+  if (string(set).compare("1GeV") == 0)dataset = "ggtree_signal1GeV_May";
+  else if (string(set).compare("5GeV") == 0)dataset = "ggtree_signal5GeV_May";
+  else if (string(set).compare("10GeV") == 0)dataset = "ggtree_signal10GeV_May";
+  else if (string(set).compare("20GeV") == 0)dataset = "ggtree_signal20GeV_May";
+  else if (string(set).compare("50GeV") == 0)dataset = "ggtree_signal50GeV_May";
+  else if (string(set).compare("100GeV") == 0)dataset = "ggtree_signal100GeV_May";
+  else if (string(set).compare("null") == 0) dataset = "ggtree_mc_";
+  else dataset = set;
+  cout<<"Using dataset:"<<dataset<<endl;
   while ((filename = (TSystemFile*)nextlist()) && fileNumber >  maxFiles)
     {
       //Debug
@@ -786,8 +796,7 @@ ZprimeJetsClass_MC_WJets::ZprimeJetsClass_MC_WJets(const char* file1,const char*
       std::cout<<"name: "<<(filename->GetName())<<std::endl;
       std::cout<<"fileNumber: "<<fileNumber<<std::endl;
 
-      TString dataset = "ggtree_mc_";
-      //TString dataset = "Zprime_";
+      
       TString  FullPathInputFile = (path+filename->GetName());
       TString name = filename->GetName();
       if (name.Contains(dataset))
@@ -810,7 +819,7 @@ ZprimeJetsClass_MC_WJets::ZprimeJetsClass_MC_WJets(const char* file1,const char*
   Init(chain);
   BookHistos(file2);
 }
-ZprimeJetsClass_MC_WJets::~ZprimeJetsClass_MC_WJets()
+ZprimeJetsClass_MC::~ZprimeJetsClass_MC()
 {
    if (!fChain) return;
    delete fChain->GetCurrentFile();
@@ -820,13 +829,13 @@ ZprimeJetsClass_MC_WJets::~ZprimeJetsClass_MC_WJets()
    fileName->Close();
 }
 
-Int_t ZprimeJetsClass_MC_WJets::GetEntry(Long64_t entry)
+Int_t ZprimeJetsClass_MC::GetEntry(Long64_t entry)
 {
 // Read contents of entry.
    if (!fChain) return 0;
    return fChain->GetEntry(entry);
 }
-Long64_t ZprimeJetsClass_MC_WJets::LoadTree(Long64_t entry)
+Long64_t ZprimeJetsClass_MC::LoadTree(Long64_t entry)
 {
 // Set the environment to read one entry
    if (!fChain) return -5;
@@ -839,7 +848,7 @@ Long64_t ZprimeJetsClass_MC_WJets::LoadTree(Long64_t entry)
    return centry;
 }
 
-void ZprimeJetsClass_MC_WJets::Init(TTree *tree)
+void ZprimeJetsClass_MC::Init(TTree *tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -1053,7 +1062,7 @@ void ZprimeJetsClass_MC_WJets::Init(TTree *tree)
    muchi2LocalPosition = 0;
    mutrkKink = 0;
    muBestTrkPtError = 0;
-   muBestTrkPt = 0;
+   muBestTrkPt = 0; 
    jetetaWidth = 0;
    jetphiWidth = 0;
    jetnPhotons = 0;
@@ -1443,7 +1452,7 @@ void ZprimeJetsClass_MC_WJets::Init(TTree *tree)
    Notify();
 }
 
-Bool_t ZprimeJetsClass_MC_WJets::Notify()
+Bool_t ZprimeJetsClass_MC::Notify()
 {
    // The Notify() function is called when a new file is opened. This
    // can be either for a new TTree in a TChain or when when a new TTree
@@ -1454,18 +1463,18 @@ Bool_t ZprimeJetsClass_MC_WJets::Notify()
    return kTRUE;
 }
 
-void ZprimeJetsClass_MC_WJets::Show(Long64_t entry)
+void ZprimeJetsClass_MC::Show(Long64_t entry)
 {
 // Print contents of entry.
 // If entry is not specified, print current entry
    if (!fChain) return;
    fChain->Show(entry);
 }
-Int_t ZprimeJetsClass_MC_WJets::Cut(Long64_t entry)
+Int_t ZprimeJetsClass_MC::Cut(Long64_t entry)
 {
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
 // returns -1 otherwise.
    return 1;
 }
-#endif // #ifdef ZprimeJetsClass_MC_WJets_cxx
+#endif // #ifdef ZprimeJetsClass_MC_cxx

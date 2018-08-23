@@ -65,6 +65,12 @@ EOF
 
 chmod 775 .output/Job_${6}.sh
 
+transfer_files="${1},../kfactors.root,../PU_Central.root"
+
+if [[ -f WJets_NLO_EWK.root ]];then
+    transfer_files="${1},../kfactors.root,../PU_Central.root,../WJets_NLO_EWK.root,../ZJets_NLO_EWK.root"
+fi
+
 #Beginning to write condor_submit file
 cat>.output/condor_${6}<<EOF
 x509userproxy = /tmp/x509up_u23216
@@ -79,7 +85,7 @@ on_exit_remove       = (ExitBySignal == FALSE && (ExitCode == 0 || ExitCode == 4
 getenv = true
 request_memory       = 1992
 request_disk         = 2048000
-Transfer_Input_Files = ${1},../kfactors.root,../PU_Central.root
+Transfer_Input_Files = $transfer_files
 output               = ../.status/\$(Process)_${6}.out
 error                = ../.status/\$(Process)_${6}.err
 Log                  = ../.status/\$(Process)_${6}.log

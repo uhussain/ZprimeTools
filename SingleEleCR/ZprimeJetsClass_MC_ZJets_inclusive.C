@@ -461,7 +461,7 @@ void ZprimeJetsClass_MC_ZJets::AllPFCand(std::vector<int> jetCand,std::vector<in
     dR_PionPhoton_3=Cat3_ChPionPt=Cat3_PhotonPt=Cat3_ChPionEta=Cat3_PhotonEta=Cat3_ChPionPhi=Cat3_PhotonPhi=0.0;
     //We are using these conditions so we only calculate the following quantities for the signal we are interested in
     //This will also make it faster to process the events
-    if(pfMET>250 && jetCand.size()>0){
+    if(jetCand.size()>0){
        j1PFConsPt=JetsPFConsPt->at(jetCand[0]);
        j1PFConsEta=JetsPFConsEta->at(jetCand[0]);
        j1PFConsPhi=JetsPFConsPhi->at(jetCand[0]);

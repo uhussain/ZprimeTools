@@ -74,11 +74,11 @@ public :
 
    Float_t MET_to_use, METPhi_to_use;
 
-   TH1F *h_nVtx[52],*h_metcut, *h_dphimin,*h_metFilters[52],*h_pfMETall[52],*h_pfMET200[52],*h_nJets[52],*h_pfMET[52],*h_pfMETPhi[52],*h_j1nCategory1[52],*h_j1nCategory2[52],*h_j1dRPF12_ID_1[52],*h_j1dRPF12_ID_2[52];
-   TH1F *h_j1Pt[52], *h_j1Eta[52], *h_j1Phi[52], *h_j1etaWidth[52], *h_j1phiWidth[52],*h_j1nCons[52], *h_j1PF12PtFrac_ID_1[52], *h_j1PF12PtFrac_ID_2[52],*h_j1PFPtFrac_ID_2[52],*h_PF123PtFraction[52];  
-   TH1F *h_j1TotPFCands[52], *h_j1ChPFCands[52], *h_j1NeutPFCands[52], *h_j1GammaPFCands[52], *h_j1CHF[52], *h_j1NHF[52], *h_j1ChMultiplicity[52], *h_j1NeutMultiplicity[52],*h_j1Mt[52]; 
+   TH1F *h_nVtx[38],*h_metcut, *h_dphimin,*h_metFilters[38],*h_pfMETall[38],*h_pfMET200[38],*h_nJets[38],*h_pfMET[38],*h_pfMETPhi[38],*h_j1nCategory1[38],*h_j1nCategory2[38],*h_j1dRPF12_ID_1[38],*h_j1dRPF12_ID_2[38];
+   TH1F *h_j1Pt[38], *h_j1Eta[38], *h_j1Phi[38], *h_j1etaWidth[38], *h_j1phiWidth[38],*h_j1nCons[38], *h_j1PF12PtFrac_ID_1[38], *h_j1PF12PtFrac_ID_2[38],*h_j1PFPtFrac_ID_2[38],*h_PF123PtFraction[38];  
+   TH1F *h_j1TotPFCands[38], *h_j1ChPFCands[38], *h_j1NeutPFCands[38], *h_j1GammaPFCands[38], *h_j1CHF[38], *h_j1NHF[38], *h_j1ChMultiplicity[38], *h_j1NeutMultiplicity[38],*h_j1Mt[38]; 
    //Category3 Histos
-   TH1F *h_ChPionPt[52],*h_PhotonPt[52],*h_dRPionPhoton[52];
+   TH1F *h_ChPionPt[38],*h_PhotonPt[38],*h_dRPionPhoton[38];
 
    TH1D *h_cutflow;
    // Fixed size dimensions of array or collections stored in the TTree if any.                   

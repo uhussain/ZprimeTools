@@ -75,12 +75,12 @@ public :
    //JetEneregyScale
    Float_t MET_to_use, METPhi_to_use;
    
-   TH1F *h_nVtx[46], *h_metcut, *h_dphimin,*h_metFilters[46],*h_pfMETall[46],*h_pfMET200[46],*h_nJets[46],*h_pfMET[46],*h_pfMETPhi[46],*h_j1nCategory1[46],*h_j1nCategory2[46],*h_j1dRPF12_ID_1[46],*h_j1dRPF12_ID_2[46];
-   TH1F *h_j1Pt[46], *h_j1Eta[46], *h_j1Phi[46], *h_j1etaWidth[46], *h_j1phiWidth[46],*h_j1nCons[46], *h_j1PF12PtFrac_ID_1[46], *h_j1PF12PtFrac_ID_2[46],*h_j1PFPtFrac_ID_2[46],*h_PF123PtFraction[46];  
-   TH1F *h_j1TotPFCands[46], *h_j1ChPFCands[46], *h_j1NeutPFCands[46], *h_j1GammaPFCands[46], *h_j1CHF[46], *h_j1NHF[46], *h_j1ChMultiplicity[46], *h_j1NeutMultiplicity[46],*h_j1Mt[46]; 
+   TH1F *h_nVtx[38], *h_metcut, *h_dphimin,*h_metFilters[38],*h_pfMETall[38],*h_pfMET200[38],*h_nJets[38],*h_pfMET[38],*h_pfMETPhi[38],*h_j1nCategory1[38],*h_j1nCategory2[38],*h_j1dRPF12_ID_1[38],*h_j1dRPF12_ID_2[38];
+   TH1F *h_j1Pt[38], *h_j1Eta[38], *h_j1Phi[38], *h_j1etaWidth[38], *h_j1phiWidth[38],*h_j1nCons[38], *h_j1PF12PtFrac_ID_1[38], *h_j1PF12PtFrac_ID_2[38],*h_j1PFPtFrac_ID_2[38],*h_PF123PtFraction[38];  
+   TH1F *h_j1TotPFCands[38], *h_j1ChPFCands[38], *h_j1NeutPFCands[38], *h_j1GammaPFCands[38], *h_j1CHF[38], *h_j1NHF[38], *h_j1ChMultiplicity[38], *h_j1NeutMultiplicity[38],*h_j1Mt[38]; 
    // Fixed size dimensions of array or collections stored in the TTree if any.
    //Category3 Histos
-   TH1F *h_ChPionPt[46],*h_PhotonPt[46],*h_dRPionPhoton[46];
+   TH1F *h_ChPionPt[38],*h_PhotonPt[38],*h_dRPionPhoton[38];
    TH1D *h_cutflow;
    // Declaration of leaf types
    Int_t           run;
@@ -743,7 +743,7 @@ public :
    virtual double deltaR(double eta1, double phi1, double eta2, double phi2);
    virtual void fillHistos(std::vector<std::pair<int,double>> jetCand_to_use,int histoNumber,double event_weight);
    virtual float DeltaPhi(float phi1, float phi2);
-   virtual vector<pair<int,double>> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut,int UncType);
+  virtual vector<pair<int,double>> getJetCand(vector<int> jets,double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut,int UncType);
    virtual vector<int> JetVetoDecision(int UncType);
    virtual bool btagVeto(int UncType);
    virtual bool dPhiJetMETcut(std::vector<int> jets,float METPhi);
