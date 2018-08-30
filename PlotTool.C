@@ -361,47 +361,22 @@ vector<string> PlotTool::GetName(const char * variable,string UncType)
     }
   else if (UncType.compare("pfu") == 0)
     {
-      if (n>=18 && n<=23)
-	{
-	  //cat = GetCategory(n-16);
-	  name="_trackerUp";
-	}
-      else if (n >= 24 && n <= 29)
-	{
-	  //cat = GetCategory(n-16);
-	  name="_ecalUp";
-	}
-      else if (n>=30 && n<=35)
-	{
-	  //cat = GetCategory(n-16);
-	  name="_hcalUp";
-	}
-      else if (n>=38 && n<=43)
-	{
-	  //cat = GetCategory(n-16);
-	  name="_trackerDown";
-	}
-      else if (n>=44 && n<=49)
-	{
-	  //cat = GetCategory(n-16);
-	  name="_ecalDown";
-	}
-      else if (n>=50 && n<=55)
-	{
-	  //cat = GetCategory(n-16);
-	  name="_hcalDown";
-	}
+      if (n>=18 && n<=23) name="_trackerUp";
+      else if (n>=24 && n<=29) name="_ecalUp";
+      else if (n>=30 && n<=35) name="_hcalUp";
+      else if (n>=38 && n<=43) name="_trackerDown";
+      else if (n>=44 && n<=49) name="_ecalDown";
+      else if (n>=50 && n<=55) name="_hcalDown";
     }
   else if (UncType.compare("jes") == 0)
     {
-      if (19<=n && n<=29)
-	{
-	  name="_jesUp";
-	}
-      else if (30<=n && n<=40)
-	{
-	  name="_jesDown";
-	}
+      if (19<=n && n<=29)  name="_jesUp";
+      else if (30<=n && n<=40) name="_jesDown";
+    }
+  else if (UncType.compare("nlo") == 0)
+    {
+      if (16<=n && n<=23) name="_nloUp";
+      else if (24<=n && n<=31) name="_nloDown";
     }
   vector<string> label = {name,cat};
   return label;
@@ -1188,6 +1163,7 @@ void PlotTool::plotTH2F(const char * variable,string name,string mchi)
   TH2F* allBkg;
   for(int i = 0; i < MC_FileNames.size(); i++)
     {
+      if (i >= 2) break;
       hs_list.push_back(GetTH2F(MC_FileNames[i],MC_Xsec[i],variable,MC_Label[i]));
       if (i == 0)
 	{
@@ -1200,7 +1176,7 @@ void PlotTool::plotTH2F(const char * variable,string name,string mchi)
     }
 
   mainBkg->GetYaxis()->SetTitle("Uncertainty");
-  allBkg->GetYaxis()->SetTitle("Uncertainty");
+  //allBkg->GetYaxis()->SetTitle("Uncertainty");
   
   system("echo '${PWD##*/}' > .filelist/dir.txt");
   ifstream dirfile(".filelist/dir.txt");
@@ -1211,16 +1187,17 @@ void PlotTool::plotTH2F(const char * variable,string name,string mchi)
       while(getline(dirfile,line)) dir=line;
     }
 
-  mainBkg->Draw();
+  mainBkg->Draw("COLZ");
+  mainBkg->GetYaxis()->SetRangeUser(-0.5,0.5);
   //c->SaveAs((string(variable)+string(".png")).c_str());
   c->SaveAs((string(variable)+string("MainBkg.pdf")).c_str());
   c->SaveAs((string(variable)+string("MainBkg.png")).c_str());
-  system((string("mv ")+string(variable)+string("MainBkg.pdf ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string("MainBkg.pdf")).c_str());
-  system((string("mv ")+string(variable)+string("MainBkg.png ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string("MainBkg.png")).c_str());
+  system((string("mv ")+string(variable)+string("MainBkg.pdf ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/MonoZprimeJet/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string("MainBkg.pdf")).c_str());
+  system((string("mv ")+string(variable)+string("MainBkg.png ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/MonoZprimeJet/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string("MainBkg.png")).c_str());
 
-  allBkg->Draw();
-  c->SaveAs((string(variable)+string("AllBkg.pdf")).c_str());
-  c->SaveAs((string(variable)+string("AllBkg.png")).c_str());
-  system((string("mv ")+string(variable)+string("AllBkg.pdf ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string("AllBkg.pdf")).c_str());
-  system((string("mv ")+string(variable)+string("AllBkg.png ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string("AllBkg.png")).c_str());    
+  //allBkg->Draw();
+  //c->SaveAs((string(variable)+string("AllBkg.pdf")).c_str());
+  //c->SaveAs((string(variable)+string("AllBkg.png")).c_str());
+  //system((string("mv ")+string(variable)+string("AllBkg.pdf ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/MonoZprimeJet/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string("AllBkg.pdf")).c_str());
+  //system((string("mv ")+string(variable)+string("AllBkg.png ")+string("/afs/hep.wisc.edu/home/ekoenig4/public_html/MonoZprimeJet/Plots/")+dir+string("Plots_EWK/datamc_")+string(variable)+string("AllBkg.png")).c_str());    
 }

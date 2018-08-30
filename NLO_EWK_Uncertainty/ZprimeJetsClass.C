@@ -158,37 +158,8 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 				if(dPhiJetMETcut(jetveto,METPhi_to_use))
 				  {
 				    nDphiJetMET++;
-				    fillHistos(jetCand,8);
-				    fillHistos(jetCand,16);
-				    fillHistos(jetCand,24);
-
-				    //This is for comparison with previous results (for all events)
-				    if (jetetaWidth->at(jetCand[0].first)<0.04)
-				      {
-					fillHistos(jetCand,9);
-					fillHistos(jetCand,17);
-					fillHistos(jetCand,25);
-				      }
-				    if (Pt123Fraction_to_use[0]>0.6) fillHistos(jetCand,10);
-				    if (Pt123Fraction_to_use[0]>0.7) fillHistos(jetCand,11);
-				    if (Pt123Fraction_to_use[0]>0.75)fillHistos(jetCand,12);
-				    if (Pt123Fraction_to_use[0]>0.8) fillHistos(jetCand,13);
-				    if (Pt123Fraction_to_use[0]>0.85)fillHistos(jetCand,14);
-				    if (Pt123Fraction_to_use[0]>0.9) fillHistos(jetCand,15);
-
-				    if (Pt123Fraction_to_use[0]>0.6) fillHistos(jetCand,18);
-				    if (Pt123Fraction_to_use[0]>0.7) fillHistos(jetCand,19);
-				    if (Pt123Fraction_to_use[0]>0.75)fillHistos(jetCand,20);
-				    if (Pt123Fraction_to_use[0]>0.8) fillHistos(jetCand,21);
-				    if (Pt123Fraction_to_use[0]>0.85)fillHistos(jetCand,22);
-				    if (Pt123Fraction_to_use[0]>0.9) fillHistos(jetCand,23);
-
-				    if (Pt123Fraction_to_use[0]>0.6) fillHistos(jetCand,26);
-				    if (Pt123Fraction_to_use[0]>0.7) fillHistos(jetCand,27);
-				    if (Pt123Fraction_to_use[0]>0.75)fillHistos(jetCand,28);
-				    if (Pt123Fraction_to_use[0]>0.8) fillHistos(jetCand,29);
-				    if (Pt123Fraction_to_use[0]>0.85)fillHistos(jetCand,30);
-				    if (Pt123Fraction_to_use[0]>0.9) fillHistos(jetCand,31);
+				    for (int i = 0; i < 7; i++) fillHistos(jetCand,8+2*i);
+				    for (int i = 0; i < 7; i++) if (Pt123Fraction_to_use[0]>0.5) fillHistos(jetCand,9+2*i);
 				  }
 			      }   
 			  }	
@@ -253,7 +224,7 @@ void ZprimeJetsClass::BookHistos(const char* file2)
   
   h_metcut  = new TH1F("h_metcut","h_metcut; |pfMET-caloMET|/pfMET", 50,0,1.2);h_metcut->Sumw2();
   h_dphimin = new TH1F("h_dphimin","h_dphimin; Minimum dPhiJetMET",50,0,3.2);h_dphimin->Sumw2();
-  for(int i=0; i<32; i++){
+  for(int i=0; i<22; i++){
 
     char ptbins[100];
     sprintf(ptbins, "_%d", i);
@@ -292,12 +263,7 @@ void ZprimeJetsClass::BookHistos(const char* file2)
     h_ChPionPt[i]=new TH1F(("ChPionPt"+histname).c_str(),"ChPionPt;p_{T} of Charged Pion in 3rd Signal Category",50,0,2000);h_ChPionPt[i]->Sumw2();
     h_PhotonPt[i]=new TH1F(("PhotonPt"+histname).c_str(),"PhotonPt;p_{T} of Photon in 3rd Signal Category",50,0,2000);h_PhotonPt[i]->Sumw2();
     h_dRPionPhoton[i]=new TH1F(("dRPionPhoton"+histname).c_str(),"dRPionPhoton;deltaR between ChPion and Photon 3rd Signal Category",50,0,0.5);h_dRPionPhoton[i]->Sumw2();
-    h_EcalPtUnc[i]=new TH2F(("EcalPtUnc"+histname).c_str(),"ECAL P_{T} Uncertainty;Photon P_{T} (GeV);Uncertainty",50,0.,2500.,50,0.,1.);
-    h_TrackerPtUnc[i]=new TH2F(("TrackerPtUnc"+histname).c_str(),"Tracker P_{T} Uncertainty;Charged Hadrons P_{T} (GeV);Uncertainty",50,0.,2500.,50,0.,1.);
-    h_HcalPtUnc[i]=new TH2F(("HcalPtUnc"+histname).c_str(),"HCAL P_{T} Uncertainty;Neutral Hadron P_{T} (GeV);Uncertainty",50,0.,2500.,50,0.,1.);
-    h_TrackerPtFrac[i]=new TH1F(("TrackerPtFraction"+histname).c_str(), "TrackerPtFraction;P_{T} fraction carried by Charged Hadrons of the Pencil Jet" ,50,0,1);h_TrackerPtFrac[i]->Sumw2();
-    h_EcalPtFrac[i]=new TH1F(("EcalPtFraction"+histname).c_str(), "EcalPtFraction;P_{T} fraction carried by Photons of the Pencil Jet" ,50,0,1);h_EcalPtFrac[i]->Sumw2();
-    h_HcalPtFrac[i]=new TH1F(("HcalPtFraction"+histname).c_str(), "HcalPtFraction;P_{T} fraction carried by Neutral Hadrons of the Pencil Jet" ,50,0,1);h_HcalPtFrac[i]->Sumw2();
+    h_dnKUnc[i]=new TH2F(("NLO_EWK"+histname).c_str(),"NLO EWK Uncertainty;Pt123Fraction;Uncertainty",50,0,1.,50,-1.,1.);
   }
 }
 
@@ -345,31 +311,7 @@ void ZprimeJetsClass::fillHistos(std::vector<std::pair<int,double>> jetCand_to_u
     h_j1etaWidth[histoNumber]->Fill(jetetaWidth->at(jetCand_to_use[0].first));
     h_j1phiWidth[histoNumber]->Fill(jetphiWidth->at(jetCand_to_use[0].first));
     h_j1nCons[histoNumber]->Fill(jetnPhotons->at(jetCand_to_use[0].first)+jetnCHPions->at(jetCand_to_use[0].first)+jetnMisc->at(jetCand_to_use[0].first));
-    h_TrackerPtFrac[histoNumber]->Fill(Pt123Fraction_to_use[1]);
-    h_EcalPtFrac[histoNumber]->Fill(Pt123Fraction_to_use[2]);
-    h_HcalPtFrac[histoNumber]->Fill(Pt123Fraction_to_use[3]);
-
-    for(int i=0;i<TrackerCand.size();i++)
-      {
-	if (j1PFConsPt.at(TrackerCand[i]) > 1. && TrackerCand[i] < 3)
-	  {
-	    h_TrackerPtUnc[histoNumber]->Fill(j1PFConsPt.at(TrackerCand[i]),j1PFConsPtUnc.at(TrackerCand[i]));
-	  }
-      }
-    for(int i=0;i<EcalCand.size();i++)
-      {
-	if (j1PFConsPt.at(EcalCand[i]) > 1. && EcalCand[i] < 3)
-	  {
-	    h_EcalPtUnc[histoNumber]->Fill(j1PFConsPt.at(EcalCand[i]),j1PFConsPtUnc.at(EcalCand[i]));
-	  }
-      }
-    for(int i=0;i<HcalCand.size();i++)
-      {
-	if (j1PFConsPt.at(HcalCand[i]) > 1. && HcalCand[i] < 3)
-	  {
-	    h_HcalPtUnc[histoNumber]->Fill(j1PFConsPt.at(HcalCand[i]),j1PFConsPtUnc.at(HcalCand[i]));
-	  }
-      }
+    h_dnKUnc[histoNumber]->Fill(Pt123Fraction_to_use[0],0);
   }
 }
 

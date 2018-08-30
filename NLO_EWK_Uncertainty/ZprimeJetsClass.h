@@ -80,15 +80,14 @@ public :
 
   Float_t MET_to_use, METPhi_to_use;
 
-  TH1F *h_nVtx[32],*h_metcut, *h_dphimin,*h_metFilters[32],*h_pfMETall[32],*h_pfMET200[32],*h_nJets[32],*h_pfMET[32],*h_pfMETPhi[32],*h_j1nCategory1[32],*h_j1nCategory2[32],*h_j1dRPF12_ID_1[32],*h_j1dRPF12_ID_2[32];
-  TH1F *h_j1Pt[32], *h_j1Eta[32], *h_j1Phi[32], *h_j1etaWidth[32], *h_j1phiWidth[32],*h_j1nCons[32], *h_j1PF12PtFrac_ID_1[32], *h_j1PF12PtFrac_ID_2[32],*h_j1PFPtFrac_ID_2[32],*h_PF123PtFraction[32];  
-  TH1F *h_j1TotPFCands[32], *h_j1ChPFCands[32], *h_j1NeutPFCands[32], *h_j1GammaPFCands[32], *h_j1CHF[32], *h_j1NHF[32], *h_j1ChMultiplicity[32], *h_j1NeutMultiplicity[32],*h_j1Mt[32]; 
+  TH1F *h_nVtx[22],*h_metcut, *h_dphimin,*h_metFilters[22],*h_pfMETall[22],*h_pfMET200[22],*h_nJets[22],*h_pfMET[22],*h_pfMETPhi[22],*h_j1nCategory1[22],*h_j1nCategory2[22],*h_j1dRPF12_ID_1[22],*h_j1dRPF12_ID_2[22];
+  TH1F *h_j1Pt[22], *h_j1Eta[22], *h_j1Phi[22], *h_j1etaWidth[22], *h_j1phiWidth[22],*h_j1nCons[22], *h_j1PF12PtFrac_ID_1[22], *h_j1PF12PtFrac_ID_2[22],*h_j1PFPtFrac_ID_2[22],*h_PF123PtFraction[22];  
+  TH1F *h_j1TotPFCands[22], *h_j1ChPFCands[22], *h_j1NeutPFCands[22], *h_j1GammaPFCands[22], *h_j1CHF[22], *h_j1NHF[22], *h_j1ChMultiplicity[22], *h_j1NeutMultiplicity[22],*h_j1Mt[22]; 
   //Category3 Histos
-  TH1F *h_ChPionPt[32],*h_PhotonPt[32],*h_dRPionPhoton[32];
+  TH1F *h_ChPionPt[22],*h_PhotonPt[22],*h_dRPionPhoton[22];
   TH1D *h_cutflow;
 
-  TH2F *h_TrackerPtUnc[32],*h_EcalPtUnc[32],*h_HcalPtUnc[32];
-  TH1F *h_TrackerPtFrac[32],*h_EcalPtFrac[32],*h_HcalPtFrac[32];
+  TH2F *h_dnKUnc[22];
   // Fixed size dimensions of array or collections stored in the TTree if any.                   
   // Declaration of leaf types
   Int_t           run;

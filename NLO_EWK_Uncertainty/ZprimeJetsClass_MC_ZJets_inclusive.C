@@ -69,8 +69,8 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
 
   std::vector<int> jetveto;
 
-  double nTotalEvents,nFilters, nHLT, nMET200, nMETcut,nLeptonIDs,nbtagVeto, nDphiJetMET,nJetSelection,Norm,JESUp,JESDo;
-  nTotalEvents = nFilters = nHLT = nMET200 = nMETcut = nLeptonIDs = nDphiJetMET = nbtagVeto = nJetSelection = Norm = JESUp = JESDo = 0;
+  double nTotalEvents,nFilters, nHLT, nMET200, nMETcut,nLeptonIDs,nbtagVeto, nDphiJetMET,nJetSelection;
+  nTotalEvents = nFilters = nHLT = nMET200 = nMETcut = nLeptonIDs = nDphiJetMET = nbtagVeto = nJetSelection = 0;
 
   //getPFCandidates
   std::vector<int>PFCandidates;
@@ -83,6 +83,12 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
   TFile *file = new TFile("kfactors.root");
   TH1D *ewkCorrection = (TH1D*)file->Get("EWKcorr/Z");
   TH1D *NNLOCorrection = (TH1D*)file->Get("ZJets_LO/inv_pt");
+
+  //This is the root file with NLO EWK Corrections
+  TFile *file2 = new TFile("WJets_NLO_EWK.root");
+  TH1F *nlo_ewkCorrection = (TH1F*)file2->Get("evj_pTV_kappa_NLO_EW");
+  vector<TH1F*> dK_NLOCorrection;
+  for (int i = 1; i<=3; i++) dK_NLOCorrection.push_back((TH1F*)file2->Get(("evj_pTV_d"+to_string(i)+"K_NLO").c_str()));
  
   float dphimin=-99;
   //Event is rejected if it contains a HighPtMuon faking MET
@@ -106,6 +112,8 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
     TrackerCand.clear();
     HcalCand.clear();
 
+    Pt123Fraction_to_use = {-1,-1,-1,-1};
+
     Long64_t ientry = LoadTree(jentry);
     if (ientry < 0) break;
     nb = fChain->GetEntry(jentry);   nbytes += nb;
@@ -113,8 +121,10 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
     double event_weight=1.0;
     double EWK_corrected_weight=1.0;
     double NNLO_weight = 1.0;
+    double NLO_weight[3] = {1.0,1.0,1.0};
     double kfactor = 1.0;
-    
+
+    double event_weight_to_use = -1;
     //For each event we find the bin in the PU histogram that corresponds to puTrue->at(0) and store
     //binContent as event_weight
     int bin = PU->GetXaxis()->FindBin(puTrue->at(0));
@@ -135,9 +145,9 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
     //std::cout<<"bosonPID: "<<bosonPID<<std::endl;
     //std::cout<<"bosonPt: "<<bosonPt<<std::endl;
     //}
-    jetCand = getJetCand(200,2.4,0.8,0.1,0);
+    jetveto = JetVetoDecision(0);
+    jetCand = getJetCand(jetveto,200,2.4,0.8,0.1,0);
     AllPFCand(jetCand,PFCandidates);
-    getPt123Frac(0);
     fillHistos(jetCand,0,event_weight);
     float metcut= 0.0;
     metcut = (fabs(pfMET-caloMET))/pfMET;
@@ -145,10 +155,12 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
     METPhi_to_use = pfMETPhi;
     //std::cout<<"|caloMET-pfMET|/pfMET: "<<metcut<<std::endl;
     nTotalEvents+=event_weight;
-    if (genHT < 100 && xmetFilters==0)
+    if (genHT < 100 && metFilters==0)
       {
         EWK_corrected_weight = 1.0*(ewkCorrection->GetBinContent(ewkCorrection->GetXaxis()->FindBin(bosonPt)));
         NNLO_weight = 1.0*(NNLOCorrection->GetBinContent(NNLOCorrection->GetXaxis()->FindBin(bosonPt)));
+	
+	for (int i = 0; i < 3; i++) NLO_weight[i]=1.0*(dK_NLOCorrection[i]->GetBinContent(dK_NLOCorrection[i]->GetXaxis()->FindBin(bosonPt)));
         if(EWK_corrected_weight!=0 && NNLO_weight!=0){
           kfactor = (EWK_corrected_weight/NNLO_weight);}
         else{kfactor=1.23;}
@@ -163,8 +175,6 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
 	      {
                 nJetSelection+=event_weight;
 		fillHistos(jetCand,3,event_weight);
-		jetveto = JetVetoDecision(0);
-		Norm+=event_weight;
 		if (pfMET>250)
 		  {
 		    nMET200+=event_weight;
@@ -198,50 +208,56 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
 				  {
 				    nDphiJetMET+=event_weight;
 				    fillHistos(jetCand,8,event_weight);
-				    
-				    if (Pt123Fraction_to_use>0.8)
-				      {
-					fillHistos(jetCand,9,event_weight);
-				      }
-				    if (Pt123Fraction_to_use>0.85)
-				      {
-					fillHistos(jetCand,10,event_weight);
-				      }
-				    if (Pt123Fraction_to_use>0.9)
-				      {
-					fillHistos(jetCand,11,event_weight);
-				      }
-
-				    getPt123Frac(1);
-				    if (Pt123Fraction_to_use>0.8)
-				      {
-					fillHistos(jetCand,12,event_weight);
-				      }
-				    if (Pt123Fraction_to_use>0.85)
-				      {
-					fillHistos(jetCand,13,event_weight);
-				      }
-				    if (Pt123Fraction_to_use>0.9)
-				      {
-					fillHistos(jetCand,14,event_weight);
-				      }
-
-				    getPt123Frac(-1);
-				    if (Pt123Fraction_to_use>0.8)
-				      {
-					fillHistos(jetCand,15,event_weight);
-				      }
-				    if (Pt123Fraction_to_use>0.85)
-				      {
-					fillHistos(jetCand,16,event_weight);
-				      }
-				    if (Pt123Fraction_to_use>0.9)
-				      {
-					fillHistos(jetCand,17,event_weight);
-				      }
+				    if (Pt123Fraction_to_use[0]>0.6) fillHistos(jetCand,9,event_weight);
 				  }
 			      }   
 			  }	
+		      }
+		  }
+	      }
+	  }
+	double updown[2] = {1,-1};
+	for (int i = 0; i < 3; i++)
+	  {
+	    for (int j = 0; j < 2; j++)
+	      {
+		NLO_EWK_Unc_to_use=NLO_weight[i];
+		event_weight_to_use = event_weight*(1+updown[j]*NLO_weight[i]); 
+		if (true) 
+		  {
+		    if (jetCand.size()>0)
+		      {
+			if (pfMET>250)
+			  {
+			    if(metcut<0.5)
+			      {
+				if(electron_veto_looseID(jetCand[0].first,10) &&  muon_veto_looseID(jetCand[0].first,10))
+				  {
+				    if(btagVeto(0))
+				      {
+					double minDPhiJetMET = TMath::Pi();
+					double minDPhiJetMET_first4 = TMath::Pi();
+					for(int j = 0; j < jetveto.size(); j++)
+					  {
+					    if(DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi) < minDPhiJetMET)
+					      {
+						minDPhiJetMET = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);
+						if(j < 4){
+						  minDPhiJetMET_first4 = DeltaPhi(jetPhi->at(jetveto[j]),pfMETPhi);}
+					      } 
+					  }
+					if(dPhiJetMETcut(jetveto,METPhi_to_use))
+					  {
+					    ////  d1K   d2K   d3K
+					    //Up 10-11 14-15 18-19
+					    //Do 12-13 16-17 20-21
+					    fillHistos(jetCand,10+4*i+2*j,event_weight_to_use);
+					    if (Pt123Fraction_to_use[0]>0.5) fillHistos(jetCand,11+4*i+2*j,event_weight_to_use);
+					  }
+				      }   
+				  }	
+			      }
+			  }
 		      }
 		  }
 	      }
@@ -292,15 +308,15 @@ void ZprimeJetsClass_MC_ZJets::BookHistos(const char* file2)
   float MtBins[51]={180.,200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,420.,440.,460.,480.,500.,520.,540.,560.,580.,600.,620.,640.,660.,680.,700.,720.,740.,760.,
 		    780.,800.,820.,840.,860.,880.,900.,920.,940.,960.,980.,1000.,1050.,1100.,1200.,1300.,1400.,1500.,2000.,2500.,3000.};
   
-  float MetBins[49]={200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,420.,440.,460.,480.,500.,520.,540.,560.,580.,600.,620.,640.,660.,680.,700.,720.,740.,760.,
-		     780.,800.,820.,840.,860.,880.,900.,920.,940.,960.,980.,1000.,1050.,1100.,1200.,1300.,1400.,1500.,2000.,2500.};
+  float MetBins[45]={200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,420.,440.,460.,480.,500.,520.,540.,560.,580.,600.,620.,640.,660.,680.,700.,720.,740.,760.,
+		     780.,800.,820.,840.,860.,880.,900.,920.,940.,960.,980.,1000.,1400.,1800.,2000.,2500.};
 
   double PtBins[49]={200.,220.,240.,260.,280.,300.,320.,340.,360.,380.,400.,420.,440.,460.,480.,500.,520.,540.,560.,580.,600.,620.,640.,660.,680.,700.,720.,740.,760.,
 		    780.,800.,820.,840.,860.,880.,900.,920.,940.,960.,980.,1000.,1050.,1100.,1200.,1300.,1400.,1500.,2000.,2500.};
 
   h_dphimin = new TH1F("h_dphimin","h_dphimin; Minimum dPhiJetMET",50,0,3.2);h_dphimin->Sumw2();
   h_metcut  = new TH1F("h_metcut","h_metcut; |pfMET-caloMET|/pfMET", 50,0,1.2);h_metcut->Sumw2();
-  for(int i=0; i<18; i++){
+  for(int i=0; i<22; i++){
 
     char ptbins[100];
     sprintf(ptbins, "_%d", i);
@@ -308,7 +324,7 @@ void ZprimeJetsClass_MC_ZJets::BookHistos(const char* file2)
     h_nJets[i]   = new TH1F(("nJets"+histname).c_str(), "nJets;Number of Jets", 50, 0, 100);h_nJets[i]->Sumw2();
     h_pfMETall[i] =  new TH1F(("pfMETall"+histname).c_str(), "pfMET",50,0,2000);h_pfMETall[i] ->Sumw2(); 
     h_pfMET200[i] = new TH1F(("pfMET200"+histname).c_str(), "pfMET",50,170,1500);h_pfMET200[i] ->Sumw2(); 
-    h_pfMET[i] = new TH1F(("pfMET"+histname).c_str(), "E_{T}^{miss} (GeV)",48,MetBins);h_pfMET[i] ->Sumw2();
+    h_pfMET[i] = new TH1F(("pfMET"+histname).c_str(), "E_{T}^{miss} (GeV)",44,MetBins);h_pfMET[i] ->Sumw2();
     h_pfMETPhi[i] = new TH1F(("pfMETPhi"+histname).c_str(), "pfMETPhi",50,-4,4);h_pfMETPhi[i]->Sumw2();
     h_j1Pt[i]  = new TH1F(("j1pT"+histname).c_str(), "j1pT;p_{T} of Leading Jet (GeV)", 48,PtBins);h_j1Pt[i]->Sumw2();
     h_j1Eta[i] = new TH1F(("j1Eta"+histname).c_str(), "j1Eta; #eta of Leading Jet", 50, -2.5, 2.5);h_j1Eta[i]->Sumw2();
@@ -318,7 +334,7 @@ void ZprimeJetsClass_MC_ZJets::BookHistos(const char* file2)
     h_j1nCons[i] = new TH1F (("j1nCons"+histname).c_str(),"j1NConstituents; Number of Constituents of Leading Jet",25, 0, 50);h_j1nCons[i]->Sumw2();
     h_j1nCategory1[i] = new TH1F(("j1nCategory1"+histname).c_str(),"j1nCategory1: Number of events with exactly two charged Hadrons",2,-0.5,1.5);h_j1nCategory1[i]->Sumw2();
     h_j1nCategory2[i] = new TH1F(("j1nCategory2"+histname).c_str(),"j1nCategory2: Number of events with two charged Hadrons and one Photon",2,-0.5,1.5);h_j1nCategory2[i]->Sumw2(); 
-    h_PF123PtFraction[i]= new TH1F(("PF123PtFraction"+histname).c_str(), "PF123PtFraction;P_{T} fraction carried by 3 leading daughters of the Pencil Jet" ,50,0,1.1);h_PF123PtFraction[i]->Sumw2();   
+    h_PF123PtFraction[i]= new TH1F(("PF123PtFraction"+histname).c_str(), "PF123PtFraction;P_{T} fraction carried by 3 leading daughters of the Pencil Jet" ,50,0,1);h_PF123PtFraction[i]->Sumw2();   
     h_j1PF12PtFrac_ID_1[i]= new TH1F(("j1PF12PtFrac_ID_1"+histname).c_str(), "j1PF12PtFrac_ID_1;P_{T} fraction carried by charged hadrons of the leading Jet: Category 1" ,50,0,1.1);h_j1PF12PtFrac_ID_1[i]->Sumw2();   
     h_j1dRPF12_ID_1[i] = new TH1F(("j1dRPF12_ID_1"+histname).c_str(),"j1dRPF12_ID_1; deltaR between oppositely charged hadrons of the leading Jet: Category 1",50,0,0.15);h_j1dRPF12_ID_1[i]->Sumw2();
     h_j1PF12PtFrac_ID_2[i]= new TH1F(("j1PF12PtFrac_ID_2"+histname).c_str(), "j1PF12PtFrac_ID_2;P_{T} fraction carried by charged hadrons of the leading Jet: Category 2" ,50,0,1.1);h_j1PF12PtFrac_ID_2[i]->Sumw2();
@@ -338,9 +354,7 @@ void ZprimeJetsClass_MC_ZJets::BookHistos(const char* file2)
     h_ChPionPt[i]=new TH1F(("ChPionPt"+histname).c_str(),"ChPionPt;p_{T} of Charged Pion in 3rd Signal Category",50,0,2000);h_ChPionPt[i]->Sumw2();
     h_PhotonPt[i]=new TH1F(("PhotonPt"+histname).c_str(),"PhotonPt;p_{T} of Photon in 3rd Signal Category",50,0,2000);h_PhotonPt[i]->Sumw2();
     h_dRPionPhoton[i]=new TH1F(("dRPionPhoton"+histname).c_str(),"dRPionPhoton;deltaR between ChPion and Photon 3rd Signal Category",50,0,0.5);h_dRPionPhoton[i]->Sumw2();
-    h_EcalPtUnc[i]=new TH2F(("EcalPtUnc"+histname).c_str(),"ECAL P_{T} Uncertainty;Photon P_{T} (GeV);Jet P_{T} (GeV);Uncertainty",48,PtBins,50,0.,1.);h_EcalPtUnc[i]->Sumw2();
-     h_TrackerPtUnc[i]=new TH2F(("TrackerPtUnc"+histname).c_str(),"Tracker P_{T} Uncertainty;Charged Hadrons P_{T} (GeV);Uncertainty",48,PtBins,50,0.,1.);h_EcalPtUnc[i]->Sumw2();
-     h_HcalPtUnc[i]=new TH2F(("HcalPtUnc"+histname).c_str(),"HCAL P_{T} Uncertainty;Neutral Hadron P_{T} (GeV);Uncertainty",48,PtBins,50,0.,1.);h_EcalPtUnc[i]->Sumw2();
+    h_dnKUnc[i]=new TH2F(("NLO_EWK"+histname).c_str(),"NLO EWK Uncertainty;Pt123Fraction;Uncertainty",50,0,1.,50,-1.,1.);
   }
 }
 
@@ -365,7 +379,7 @@ void ZprimeJetsClass_MC_ZJets::fillHistos(std::vector<std::pair<int,double>> jet
     h_j1Phi[histoNumber]->Fill(jetPhi->at(jetCand_to_use[0].first),event_weight); 
     h_j1nCategory1[histoNumber]->Fill(TwoChPFCons,event_weight);
     h_j1nCategory2[histoNumber]->Fill(TwoChPFConsPlusPho,event_weight);
-    h_PF123PtFraction[histoNumber]->Fill(Pt123Fraction_to_use,event_weight);
+    h_PF123PtFraction[histoNumber]->Fill(Pt123Fraction_to_use[0],event_weight);
     h_j1PF12PtFrac_ID_1[histoNumber]->Fill(PF12PtFrac_ID_1,event_weight);
     h_j1dRPF12_ID_1[histoNumber]->Fill(dR_PF12_ID_1,event_weight);
     h_j1PF12PtFrac_ID_2[histoNumber]->Fill(PF12PtFrac_ID_2,event_weight);
@@ -383,23 +397,39 @@ void ZprimeJetsClass_MC_ZJets::fillHistos(std::vector<std::pair<int,double>> jet
     h_j1etaWidth[histoNumber]->Fill(jetetaWidth->at(jetCand_to_use[0].first),event_weight);
     h_j1phiWidth[histoNumber]->Fill(jetphiWidth->at(jetCand_to_use[0].first),event_weight);
     h_j1nCons[histoNumber]->Fill((jetnPhotons->at(jetCand_to_use[0].first)+jetnCHPions->at(jetCand_to_use[0].first)+jetnMisc->at(jetCand_to_use[0].first)),event_weight);
-
-    for(int i=0;i<TrackerCand.size();i++) h_TrackerPtUnc[histoNumber]->Fill(j1PFConsPt.at(i),j1PFConsPtUnc.at(i),event_weight);
-    for(int i=0;i<EcalCand.size();i++) h_EcalPtUnc[histoNumber]->Fill(j1PFConsPt.at(i),j1PFConsPtUnc.at(i),event_weight);
-    for(int i=0;i<HcalCand.size();i++) h_HcalPtUnc[histoNumber]->Fill(j1PFConsPt.at(i),j1PFConsPtUnc.at(i),event_weight);
+    h_dnKUnc[histoNumber]->Fill(Pt123Fraction_to_use[0],NLO_EWK_Unc_to_use,event_weight);
   }
 }
 
-void ZprimeJetsClass_MC_ZJets::getPt123Frac(int UncType)
+void ZprimeJetsClass_MC_ZJets::getPt123Frac(std::vector<std::pair<int,double>> jetCand,int UncType)
 {
-  double Pt123=0.0;
-  double jetPtAll=0.0;
-  for (int i = 0; i < j1PFConsPID.size(); i++)
+  vector<double> Pt123 = {0.0,0.0,0.0,0.0};
+  vector<double> jetPtAll = {0.0,0.0,0.0,0.0};
+  vector<int> index(j1PFConsPID.size());
+  iota(begin(index),end(index),0);
+  vector<vector<int>> ConsIndex = {index,TrackerCand,EcalCand,HcalCand};
+  vector<string> ConsName = {"All","Tracker","Ecal","Hcal"};
+  for (int i = 0; i < ConsIndex.size(); i++)
     {
-      jetPtAll+=j1PFConsPt.at(i)+UncType*j1PFConsPtUnc.at(i);
-      if (i < 3) Pt123+=j1PFConsPt.at(i)+UncType*j1PFConsPtUnc.at(i);
+      //cout<<"\nRunning on "<<ConsName[i]<<": ";
+      for (int j = 0; j < j1PFConsPID.size(); j++)
+	{
+	  if (find(ConsIndex[i].begin(),ConsIndex[i].end(),j) != ConsIndex[i].end())
+	    {
+	      //cout<<"/"<<j<<" ";
+	      jetPtAll[i]+=j1PFConsPt.at(j)+UncType*j1PFConsPtUnc.at(j);
+	      if (j < 3) Pt123[i]+=j1PFConsPt.at(j)+UncType*j1PFConsPtUnc.at(j);
+	    }
+	  else
+	    {
+	      //cout<<j<<" ";
+	      jetPtAll[i]+=j1PFConsPt.at(j);
+	      if (j < 3) Pt123[i]+=j1PFConsPt.at(j);
+	    }
+	}
+      jetPtAll[0]=jetPt->at(jetCand[0].first);
+      Pt123Fraction_to_use[i]=(Pt123[i]/jetPtAll[i]);
     }
-  Pt123Fraction_to_use=(Pt123/jetPtAll);
 }
 
 void ZprimeJetsClass_MC_ZJets::AllPFCand(std::vector<std::pair<int,double>> jetCand,std::vector<int> PFCandidates)
@@ -423,8 +453,6 @@ void ZprimeJetsClass_MC_ZJets::AllPFCand(std::vector<std::pair<int,double>> jetC
     if(PFCandidates.size()>3){
       NeutralPFCandidates=PFCandidates.at(3);}
     //std::cout<<"TotalNeutralPFCandidates: "<<NeutralPFCandidates<<std::endl;}
-    double Pt123=0.0;
-    Pt123Fraction_to_use=0.0;
     //We are using these conditions so we only calculate the following quantities for the signal we are interested in
     //This will also make it faster to process the events
     if(pfMET>250 && jetCand.size()>0){
@@ -434,18 +462,18 @@ void ZprimeJetsClass_MC_ZJets::AllPFCand(std::vector<std::pair<int,double>> jetC
       j1PFConsPID=JetsPFConsPID->at(jetCand[0].first);
       for(int i=0;i<j1PFConsPID.size();i++)
 	{
-	  if (abs(j1PFConsPID.at(i)) == 211 || abs(j1PFConsPID.at(i)) == 11)
+	  if (abs(j1PFConsPID.at(i)) == 211 || abs(j1PFConsPID.at(i)) == 13)
 	    {
 	      //Tracker Uncertainty
 	      //deltaPt=(1/100)*sqrt((0.015*Pt)^2+(0.5)^2)
 	      j1PFConsPtUnc.push_back((1/100.)*sqrt(pow(0.015*j1PFConsPt.at(i),2)+pow(0.5,2)));
 	      TrackerCand.push_back(i);
 	    }
-	  else if (abs(j1PFConsPID.at(i)) == 22 || abs(j1PFConsPID.at(i)) == 13)
+	  else if (abs(j1PFConsPID.at(i)) == 22 || abs(j1PFConsPID.at(i)) == 11)
 	    {
 	      //ECAL Uncertainty
 	      //deltaPt=(1/100)*sqrt((2.8)^2/Pt+(12.8/Pt)^2+(0.3)^2)
-	      j1PFConsPtUnc.push_back((1/100.)*sqrt(pow(2.8,2)/j1PFConsPt.at(i)+pow(12.8,2)+pow(0.3,2)));
+	      j1PFConsPtUnc.push_back((1/100.)*sqrt(pow(2.8,2)/j1PFConsPt.at(i)+pow(12.8/j1PFConsPt.at(i),2)+pow(0.3,2)));
 	      EcalCand.push_back(i);
 	    }
 	  else if (abs(j1PFConsPID.at(i)) == 130)
@@ -460,6 +488,7 @@ void ZprimeJetsClass_MC_ZJets::AllPFCand(std::vector<std::pair<int,double>> jetC
 	      j1PFConsPtUnc.push_back(0);
 	    }
 	}
+      getPt123Frac(jetCand,0);
     }
 }
 
@@ -499,22 +528,27 @@ float ZprimeJetsClass_MC_ZJets::dPhiJetMETmin(std::vector<int> jets)
     }
   return dPhimin;
 }
-std::vector<std::pair<int,double>> ZprimeJetsClass_MC_ZJets::getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut,int UncType){
+std::vector<std::pair<int,double>> ZprimeJetsClass_MC_ZJets::getJetCand(std::vector<int> jets,double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut,int UncType){
 
+  //save the Pt of the jetCand as well, whether normal, shiftedUp or shiftedDown 
   std::vector<std::pair<int,double>> tmpCand;
   tmpCand.clear();
+  //So only check if leading candidate will pass these cuts?
+  int njets = jets.size();
+  //for(int p=0;p<njets;p++)
+    //{
+      //UncType = +1(up), or -1(down) or 0(normal)
+  if(njets>0){
+    int p=jets[0];
+    Float_t jetPt_to_use;
+    if (UncType == 0){jetPt_to_use = (*jetPt)[p];}
+    else if (UncType == 1){jetPt_to_use = (*jetPt)[p]*(1.+(*jetJECUnc)[p]);}
+    else if (UncType == -1){jetPt_to_use = (*jetPt)[p]*(1.-(*jetJECUnc)[p]);}
+      
+    bool kinematic = jetPt_to_use > jetPtCut && (*jetNHF)[p] < jetNHFCut && (*jetCHF)[p] > jetCHFCut && fabs((*jetEta)[p])<jetEtaCut;
 
-  for(int p=0;p<nJet;p++)
-    {
-      Float_t jetPt_to_use;
-      if (UncType == 0){jetPt_to_use = (*jetPt)[p];}
-      else if (UncType == 1){jetPt_to_use = (*jetPt)[p]*(1+(*jetJECUnc)[p]);}
-      else if (UncType == -1){jetPt_to_use = (*jetPt)[p]*(1-(*jetJECUnc)[p]);}
-
-      bool kinematic = jetPt_to_use > jetPtCut && (*jetNHF)[p] < jetNHFCut && (*jetCHF)[p] > jetCHFCut && fabs((*jetEta)[p])<jetEtaCut;
-
-      if((*jetPFLooseId)[p]==1 && kinematic){
-	tmpCand.push_back(std::make_pair(p,jetPt_to_use));
+    if((*jetPFLooseId)[p]==1 && kinematic){
+      tmpCand.push_back(std::make_pair(p,jetPt_to_use));
       }
     }
 
