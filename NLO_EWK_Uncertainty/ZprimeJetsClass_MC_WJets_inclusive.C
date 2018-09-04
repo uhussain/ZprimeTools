@@ -87,8 +87,9 @@ void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery)
   //This is the root file with NLO EWK Corrections
   TFile *file2 = new TFile("WJets_NLO_EWK.root");
   TH1F *nlo_ewkCorrection = (TH1F*)file2->Get("evj_pTV_kappa_NLO_EW");
-  vector<TH1F*> dK_NLOCorrection;
-  for (int i = 1; i<=3; i++) dK_NLOCorrection.push_back((TH1F*)file2->Get(("evj_pTV_d"+to_string(i)+"K_NLO").c_str()));
+  vector<TH1F*> NLOCorrection;
+  const char* nlo_unc_hn[3] = {"evj_pTV_d3kappa_EW","evj_pTV_kappa_NNLO_Sud","evj_pTV_dK_NLO_mix"};
+  for (int i = 0; i<3; i++) NLOCorrection.push_back((TH1F*)file2->Get(nlo_unc_hn[i]));
   float dphimin=-99;
 
   if (maxEvents != -1LL && nentries > maxEvents)
@@ -160,7 +161,7 @@ void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery)
         EWK_corrected_weight = 1.0*(ewkCorrection->GetBinContent(ewkCorrection->GetXaxis()->FindBin(bosonPt)));
         NNLO_weight = 1.0*(NNLOCorrection->GetBinContent(NNLOCorrection->GetXaxis()->FindBin(bosonPt)));
 
-	for (int i = 0; i < 3; i++) NLO_weight[i]=1.0*(dK_NLOCorrection[i]->GetBinContent(dK_NLOCorrection[i]->GetXaxis()->FindBin(bosonPt)));
+	for (int i = 0; i < 3; i++) NLO_weight[i]=1.0*(NLOCorrection[i]->GetBinContent(NLOCorrection[i]->GetXaxis()->FindBin(bosonPt)));
         if(EWK_corrected_weight!=0 && NNLO_weight!=0){
           kfactor = (EWK_corrected_weight/NNLO_weight);} 
         else{kfactor=1.21;}
@@ -248,7 +249,7 @@ void ZprimeJetsClass_MC_WJets::Loop(Long64_t maxEvents, int reportEvery)
 					  }
 					if(dPhiJetMETcut(jetveto,METPhi_to_use))
 					  {
-					    ////  d1K   d2K   d3K
+					    ////  d3K   Sud   Mix
 					    //Up 10-11 14-15 18-19
 					    //Do 12-13 16-17 20-21
 					    fillHistos(jetCand,10+4*i+2*j,event_weight_to_use);

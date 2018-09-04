@@ -85,10 +85,11 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
   TH1D *NNLOCorrection = (TH1D*)file->Get("ZJets_LO/inv_pt");
 
   //This is the root file with NLO EWK Corrections
-  TFile *file2 = new TFile("WJets_NLO_EWK.root");
-  TH1F *nlo_ewkCorrection = (TH1F*)file2->Get("evj_pTV_kappa_NLO_EW");
-  vector<TH1F*> dK_NLOCorrection;
-  for (int i = 1; i<=3; i++) dK_NLOCorrection.push_back((TH1F*)file2->Get(("evj_pTV_d"+to_string(i)+"K_NLO").c_str()));
+  TFile *file2 = new TFile("ZJets_NLO_EWK.root");
+  TH1F *nlo_ewkCorrection = (TH1F*)file2->Get("vvj_pTV_kappa_NLO_EW");
+  vector<TH1F*> NLOCorrection;
+  const char* nlo_unc_hn[3] = {"vvj_pTV_d3kappa_EW","vvj_pTV_kappa_NNLO_Sud","vvj_pTV_dK_NLO_mix"};
+  for (int i = 0; i<3; i++) NLOCorrection.push_back((TH1F*)file2->Get(nlo_unc_hn[i]));
  
   float dphimin=-99;
   //Event is rejected if it contains a HighPtMuon faking MET
@@ -160,7 +161,7 @@ void ZprimeJetsClass_MC_ZJets::Loop(Long64_t maxEvents, int reportEvery)
         EWK_corrected_weight = 1.0*(ewkCorrection->GetBinContent(ewkCorrection->GetXaxis()->FindBin(bosonPt)));
         NNLO_weight = 1.0*(NNLOCorrection->GetBinContent(NNLOCorrection->GetXaxis()->FindBin(bosonPt)));
 	
-	for (int i = 0; i < 3; i++) NLO_weight[i]=1.0*(dK_NLOCorrection[i]->GetBinContent(dK_NLOCorrection[i]->GetXaxis()->FindBin(bosonPt)));
+	for (int i = 0; i < 3; i++) NLO_weight[i]=1.0*(NLOCorrection[i]->GetBinContent(NLOCorrection[i]->GetXaxis()->FindBin(bosonPt)));
         if(EWK_corrected_weight!=0 && NNLO_weight!=0){
           kfactor = (EWK_corrected_weight/NNLO_weight);}
         else{kfactor=1.23;}

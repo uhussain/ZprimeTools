@@ -1187,7 +1187,7 @@ void PlotTool::plotTH2F(const char * variable,string name,string mchi)
       while(getline(dirfile,line)) dir=line;
     }
 
-  mainBkg->Draw("COLZ");
+  mainBkg->Draw("HIST");
   mainBkg->GetYaxis()->SetRangeUser(-0.5,0.5);
   //c->SaveAs((string(variable)+string(".png")).c_str());
   c->SaveAs((string(variable)+string("MainBkg.pdf")).c_str());
