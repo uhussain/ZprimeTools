@@ -5,8 +5,8 @@
 // found on file: /hdfs/store/user/uhussain/Zprime_Ntuples_Mar7/WJetsToLNu_HT-400To600_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_W3Jets/170306_174919/0000/ggtree_mc_53.root
 //////////////////////////////////////////////////////////
 
-#ifndef ZprimeJetsClass_MC_h
-#define ZprimeJetsClass_MC_h
+#ifndef ZprimeJetsClass_MC_signal_h
+#define ZprimeJetsClass_MC_signal_h
 
 #include <TROOT.h>
 #include <TChain.h>
@@ -43,7 +43,7 @@
 #include "TString.h"
 #include "vector"
 using namespace std;
-class ZprimeJetsClass_MC {
+class ZprimeJetsClass_MC_signal {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
    Int_t           fCurrent; //!current Tree number in a TChain
@@ -732,8 +732,8 @@ public :
    TBranch        *b_jetVtx3DSig;   //!
 
   
-   ZprimeJetsClass_MC(const char* file1,const char* file2);
-   virtual ~ZprimeJetsClass_MC();
+  ZprimeJetsClass_MC_signal(const char* file1,const char* file2,int min,int max);
+   virtual ~ZprimeJetsClass_MC_signal();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
    virtual Long64_t LoadTree(Long64_t entry);
@@ -759,12 +759,13 @@ public :
 
 #endif
 
-#ifdef ZprimeJetsClass_MC_cxx
+#ifdef ZprimeJetsClass_MC_signal_cxx
 
-ZprimeJetsClass_MC::ZprimeJetsClass_MC(const char* file1,const char* file2) 
+ZprimeJetsClass_MC_signal::ZprimeJetsClass_MC_signal(const char* file1,const char* file2,int min,int max) 
 {
   TChain *chain = new TChain("ggNtuplizer/EventTree");
   TString path = file1;
+  std::cout<<"file1: "<<file1<<std::endl;
   TSystemDirectory sourceDir("hi",path);
   TList* fileList = sourceDir.GetListOfFiles();
   TIter nextlist(fileList);
@@ -772,31 +773,41 @@ ZprimeJetsClass_MC::ZprimeJetsClass_MC(const char* file1,const char* file2)
   TSystemFile* filename;
   int fileNumber = 0;
   int maxFiles = -1;
+  int inFile=0;
   while ((filename = (TSystemFile*)nextlist()) && fileNumber >  maxFiles)
     {
       //Debug
-    std::cout<<"file path found: "<<(path+filename->GetName())<<std::endl;
-    std::cout<<"name: "<<(filename->GetName())<<std::endl;
-    std::cout<<"fileNumber: "<<fileNumber<<std::endl;
+      std::cout<<"file path found: "<<(path+filename->GetName())<<std::endl;
+      std::cout<<"name: "<<(filename->GetName())<<std::endl;
+      std::cout<<"fileNumber: "<<fileNumber<<std::endl;
 
-     TString dataset = "ggtree_mc_";
-     TString  FullPathInputFile = (path+filename->GetName());
-     TString name = filename->GetName();
-     if(name.Contains(dataset))
-       {
-         std::cout<<"Adding FullPathInputFile to chain:"<<FullPathInputFile<<std::endl;
-         std::cout<<std::endl;
-         chain->Add(FullPathInputFile);
-       }
-
+      TString dataset = "MonoZprime_";
+      //TString dataset = "ggtree_mc_";
+      //TString dataset = "ggtree_signal5GeV_May";
+      TString  FullPathInputFile = (path+filename->GetName());
+      TString name = filename->GetName();
+      if (name.Contains(dataset))
+	{
+	  std::string fname = std::string(name);
+	  fname.erase(fname.end()-5,fname.end());
+	  //bool isin = fileSelection(fname,std::string(dataset),min,max);
+	  //if(isin)
+    if(true)//This is for submitting signal samples because the root files are weirdly named
+	    {
+	      std::cout<<"Adding FullPathInputFile to chain:"<<FullPathInputFile<<std::endl;
+	      std::cout<<std::endl;
+	      chain->Add(FullPathInputFile);
+	      inFile++;
+	    }
+	}
       fileNumber++;
     }
-  std::cout<<"All files added."<<std::endl;
+  std::cout<<inFile<<" files added."<<std::endl;
   std::cout<<"Initializing chain."<<std::endl;
   Init(chain);
   BookHistos(file2);
 }
-ZprimeJetsClass_MC::~ZprimeJetsClass_MC()
+ZprimeJetsClass_MC_signal::~ZprimeJetsClass_MC_signal()
 {
    if (!fChain) return;
    delete fChain->GetCurrentFile();
@@ -806,13 +817,13 @@ ZprimeJetsClass_MC::~ZprimeJetsClass_MC()
    fileName->Close();
 }
 
-Int_t ZprimeJetsClass_MC::GetEntry(Long64_t entry)
+Int_t ZprimeJetsClass_MC_signal::GetEntry(Long64_t entry)
 {
 // Read contents of entry.
    if (!fChain) return 0;
    return fChain->GetEntry(entry);
 }
-Long64_t ZprimeJetsClass_MC::LoadTree(Long64_t entry)
+Long64_t ZprimeJetsClass_MC_signal::LoadTree(Long64_t entry)
 {
 // Set the environment to read one entry
    if (!fChain) return -5;
@@ -825,7 +836,7 @@ Long64_t ZprimeJetsClass_MC::LoadTree(Long64_t entry)
    return centry;
 }
 
-void ZprimeJetsClass_MC::Init(TTree *tree)
+void ZprimeJetsClass_MC_signal::Init(TTree *tree)
 {
    // The Init() function is called when the selector needs to initialize
    // a new tree or chain. Typically here the branch addresses and branch
@@ -1429,7 +1440,7 @@ void ZprimeJetsClass_MC::Init(TTree *tree)
    Notify();
 }
 
-Bool_t ZprimeJetsClass_MC::Notify()
+Bool_t ZprimeJetsClass_MC_signal::Notify()
 {
    // The Notify() function is called when a new file is opened. This
    // can be either for a new TTree in a TChain or when when a new TTree
@@ -1440,18 +1451,18 @@ Bool_t ZprimeJetsClass_MC::Notify()
    return kTRUE;
 }
 
-void ZprimeJetsClass_MC::Show(Long64_t entry)
+void ZprimeJetsClass_MC_signal::Show(Long64_t entry)
 {
 // Print contents of entry.
 // If entry is not specified, print current entry
    if (!fChain) return;
    fChain->Show(entry);
 }
-Int_t ZprimeJetsClass_MC::Cut(Long64_t entry)
+Int_t ZprimeJetsClass_MC_signal::Cut(Long64_t entry)
 {
 // This function may be called from Loop.
 // returns  1 if entry is accepted.
 // returns -1 otherwise.
    return 1;
 }
-#endif // #ifdef ZprimeJetsClass_MC_cxx
+#endif // #ifdef ZprimeJetsClass_MC_signal_cxx

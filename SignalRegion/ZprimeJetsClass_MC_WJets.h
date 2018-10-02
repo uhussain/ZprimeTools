@@ -52,7 +52,8 @@ public :
    TTree *tree;
 
    //Declaring these jet Vectors and jet substructure vectors
-   std::vector<int> jetCand;
+   std::vector<std::pair<int,double>> jetCand;
+   std::vector<std::pair<int,double>> PFCandidates;
    std::vector<double>j1PFConsPt;
    std::vector<double>j1PFConsEta;
    std::vector<double>j1PFConsPhi;
@@ -64,18 +65,26 @@ public :
    int TwoChPFCons,TwoChPFConsPlusPho;
    double PF12PtFrac_ID_1,PF12PtFrac_ID_2,dR_PF12_ID_1,dR_PF12_ID_2,PF123PtFrac_ID_2;
 
+   std::vector<double> PtFraction_to_use;
    double Pt123,Pt123Fraction;
+   double TotLowEnPFCandsPtFraction,ChPFCandsPtFraction,GammaPFCandsPtFraction,NeutralPFCandsPtFraction,MiscPFCandsPtFraction;
    //Category 3 variables
    double dR_PionPhoton_3,Cat3_ChPionPt,Cat3_PhotonPt,Cat3_ChPionEta,Cat3_PhotonEta,Cat3_ChPionPhi,Cat3_PhotonPhi;
-   //getPFCandidates
-   int TotalPFCandidates, ChargedPFCandidates,NeutralPFCandidates,GammaPFCandidates;
-   
-   TH1F *h_nVtx[20], *h_metcut, *h_dphimin,*h_metFilters[20],*h_pfMETall[20],*h_pfMET200[20],*h_nJets[20],*h_pfMET[20],*h_pfMETPhi[20],*h_j1nCategory1[20],*h_j1nCategory2[20],*h_j1dRPF12_ID_1[20],*h_j1dRPF12_ID_2[20];
-   TH1F *h_j1Pt[20], *h_j1Eta[20], *h_j1Phi[20], *h_j1etaWidth[20], *h_j1phiWidth[20],*h_j1nCons[20], *h_j1PF12PtFrac_ID_1[20], *h_j1PF12PtFrac_ID_2[20],*h_j1PFPtFrac_ID_2[20],*h_PF123PtFraction[20];  
-   TH1F *h_j1TotPFCands[20], *h_j1ChPFCands[20], *h_j1NeutPFCands[20], *h_j1GammaPFCands[20], *h_j1CHF[20], *h_j1NHF[20], *h_j1ChMultiplicity[20], *h_j1NeutMultiplicity[20],*h_j1Mt[20]; 
+   //getPFCandidates 
+   int TotalLowEnPFCandidates, ChargedPFCandidates,NeutralPFCandidates,GammaPFCandidates,MiscPFCandidates;
+
+   //3 Leading Constituents
+   TH1F *h_j1PFCons1PID[14], *h_j1PFCons2PID[14], *h_j1PFCons3PID[14]; 
+   TH1F *h_j1PFCons1Pt[14], *h_j1PFCons2Pt[14], *h_j1PFCons3Pt[14];  
+   TH1F *h_j1PFCons1PtFraction[14], *h_j1PFCons2PtFraction[14], *h_j1PFCons3PtFraction[14];  
+   //
+   TH1F *h_nVtx[14], *h_metcut, *h_dphimin,*h_metFilters[14],*h_pfMETall[14],*h_pfMET200[14],*h_nJets[14],*h_pfMET[14],*h_pfMETPhi[14],*h_j1nCategory1[14],*h_j1nCategory2[14],*h_j1dRPF12_ID_1[14],*h_j1dRPF12_ID_2[14];
+   TH1F *h_j1Pt[14], *h_j1Eta[14], *h_j1Phi[14], *h_j1etaWidth[14], *h_j1phiWidth[14],*h_j1nCons[14], *h_j1PF12PtFrac_ID_1[14], *h_j1PF12PtFrac_ID_2[14],*h_j1PFPtFrac_ID_2[14],*h_PF123PtFraction[14],*h_PF123PtFraction_v2[14],*h_j1PtAllCons[14];  
+   TH1F *h_j1TotPFCands[14], *h_j1ChPFCands[14], *h_j1NeutPFCands[14], *h_j1GammaPFCands[14], *h_j1MiscPFCands[14],*h_j1CHF[14], *h_j1NHF[14], *h_j1ChMultiplicity[14], *h_j1NeutMultiplicity[14],*h_j1Mt[14];  
+   TH1F *h_j1TotPFCandsPtFraction[14],*h_j1ChPFCandsPtFraction[14],*h_j1GammaPFCandsPtFraction[14],*h_j1NeutPFCandsPtFraction[14],*h_j1MiscPFCandsPtFraction[14];
    // Fixed size dimensions of array or collections stored in the TTree if any.
    //Category3 Histos
-   TH1F *h_ChPionPt[20],*h_PhotonPt[20],*h_dRPionPhoton[20];
+   TH1F *h_ChPionPt[14],*h_PhotonPt[14],*h_dRPionPhoton[14];
    TH1D *h_cutflow;
    // Declaration of leaf types
    Int_t           run;
@@ -736,16 +745,18 @@ public :
    virtual void     Show(Long64_t entry = -1);
    virtual void BookHistos(const char* file2);
    virtual double deltaR(double eta1, double phi1, double eta2, double phi2);
-   virtual void fillHistos(int histoNumber,double event_weight);
+   virtual void fillHistos(std::vector<std::pair<int,double>> jetCand_to_use,int histoNumber,double event_weight);
    virtual float DeltaPhi(float phi1, float phi2);
-   virtual vector<int> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut);
+   virtual vector<pair<int,double>> getJetCand(std::vector<int> jets,double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut,int UncType);
    virtual vector<int> JetVetoDecision();
    virtual bool btagVeto();
    virtual bool dPhiJetMETcut(std::vector<int> jets);
    virtual float dPhiJetMETmin(std::vector<int> jets);
    virtual bool electron_veto_looseID(int jet_index, float elePtCut);
    virtual bool muon_veto_looseID(int jet_index, float muPtCut);
-   virtual vector<int>getPFCandidates();
+   virtual vector<pair<int,double>> getPFCandidates();
+   virtual vector<double>getPtFrac();
+   virtual void AllPFCand(std::vector<std::pair<int,double>> jetCand,std::vector<std::pair<int,double>> PFCandidates);
 };
 
 #endif
@@ -759,6 +770,7 @@ ZprimeJetsClass_MC_WJets::ZprimeJetsClass_MC_WJets(const char* file1,const char*
   TSystemDirectory sourceDir("hi",path);
   TList* fileList = sourceDir.GetListOfFiles();
   TIter nextlist(fileList);
+  path.Replace(0,5,"root:://cmsxrootd.hep.wisc.edu/");//This is so we can run on other machines other than hep.wisc.edu
   TSystemFile* filename;
   int fileNumber = 0;
   int maxFiles = -1;
