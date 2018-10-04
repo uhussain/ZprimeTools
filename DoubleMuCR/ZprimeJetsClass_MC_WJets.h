@@ -53,7 +53,7 @@ public :
    TTree *tree;
 
    //Declaring these jet Vectors and jet substructure vectors
-   std::vector<int> jetCand;
+  std::vector<std::pair<int,double>> jetCand;
    std::vector<double>j1PFConsPt;
    std::vector<double>j1PFConsEta;
    std::vector<double>j1PFConsPhi;
@@ -745,7 +745,7 @@ public :
    virtual double deltaR(double eta1, double phi1, double eta2, double phi2);
    virtual void fillHistos(int histoNumber,double event_weight);
    virtual float DeltaPhi(float phi1, float phi2);
-   virtual vector<int> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut);
+  virtual vector<pair<int,double>> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut);
    virtual vector<int> JetVetoDecision(int leading_ele_index, int subleading_ele_index);
    virtual bool btagVeto();
    virtual bool dPhiJetMETcut(std::vector<int> jets);
@@ -756,7 +756,7 @@ public :
    virtual vector<int> muon_veto_looseID(int jet_index, int leading_ele_index, int subleading_ele_index, float muPtCut);
    virtual vector<int>getPFCandidates();
   virtual void getPt123Frac();
-   virtual void AllPFCand(std::vector<int> jetCand,std::vector<int> PFCandidates);
+  virtual void AllPFCand(std::vector<pair<int,double>> jetCand,std::vector<int> PFCandidates);
 };
 
 #endif

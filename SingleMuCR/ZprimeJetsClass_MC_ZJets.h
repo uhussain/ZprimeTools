@@ -52,7 +52,7 @@ public :
    TTree *tree;
 
    //Declaring these jet Vectors and jet substructure vectors
-   std::vector<int> jetCand;
+  std::vector<pair<int,double>> jetCand;
    std::vector<double>j1PFConsPt;
    std::vector<double>j1PFConsEta;
    std::vector<double>j1PFConsPhi;
@@ -75,12 +75,12 @@ public :
    double lepton_pt, Recoil;
    //float leptoMET_phi_to_use;
    
-    TH1F *h_nVtx[16],*h_metcut,*h_lepMET_MT, *h_dphimin,*h_metFilters[16],*h_pfMETall[16],*h_pfMET200[16],*h_nJets[16],*h_pfMET[16],*h_pfMETPhi[16],*h_j1nCategory1[16],*h_j1nCategory2[16],*h_j1dRPF12_ID_1[16],*h_j1dRPF12_ID_2[16];
-  TH1F *h_j1Pt[16], *h_j1Eta[16], *h_j1Phi[16], *h_j1etaWidth[16], *h_j1phiWidth[16],*h_j1nCons[16], *h_j1PF12PtFrac_ID_1[16], *h_j1PF12PtFrac_ID_2[16],*h_j1PFPtFrac_ID_2[16],*h_PF123PtFraction[16]; 
-   TH1F *h_j1TotPFCands[16], *h_j1ChPFCands[16], *h_j1NeutPFCands[16], *h_j1GammaPFCands[16], *h_j1CHF[16], *h_j1NHF[16], *h_j1ChMultiplicity[16], *h_j1NeutMultiplicity[16],*h_j1Mt[16]; 
+    TH1F *h_nVtx[9],*h_metcut,*h_lepMET_MT, *h_dphimin,*h_metFilters[9],*h_pfMETall[9],*h_pfMET200[9],*h_nJets[9],*h_pfMET[9],*h_pfMETPhi[9],*h_j1nCategory1[9],*h_j1nCategory2[9],*h_j1dRPF12_ID_1[9],*h_j1dRPF12_ID_2[9];
+  TH1F *h_j1Pt[9], *h_j1Eta[9], *h_j1Phi[9], *h_j1etaWidth[9], *h_j1phiWidth[9],*h_j1nCons[9], *h_j1PF12PtFrac_ID_1[9], *h_j1PF12PtFrac_ID_2[9],*h_j1PFPtFrac_ID_2[9],*h_PF123PtFraction[9]; 
+   TH1F *h_j1TotPFCands[9], *h_j1ChPFCands[9], *h_j1NeutPFCands[9], *h_j1GammaPFCands[9], *h_j1CHF[9], *h_j1NHF[9], *h_j1ChMultiplicity[9], *h_j1NeutMultiplicity[9],*h_j1Mt[9]; 
    //CR histograms 
-   TH1F *h_LeptonPt[16], *h_LeptonEta[16],*h_LeptonPhi[16]; 
-   TH1F *h_recoil[16];
+   TH1F *h_LeptonPt[9], *h_LeptonEta[9],*h_LeptonPhi[9]; 
+   TH1F *h_recoil[9];
    TH1D *h_cutflow;
    // Declaration of leaf types
    Int_t           run;
@@ -744,7 +744,7 @@ public :
    virtual double deltaR(double eta1, double phi1, double eta2, double phi2);
    virtual void fillHistos(int histoNumber,double event_weight);
    virtual float DeltaPhi(float phi1, float phi2);
-   virtual vector<int> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut); 
+  virtual vector<pair<int,double>> getJetCand(double jetPtCut, double jetEtaCut, double jetNHFCut, double jetCHFCut); 
    virtual vector<int> JetVetoDecision(int jet_index, int ele_index);
    virtual bool btagVeto();
    virtual bool dPhiJetMETcut(std::vector<int> jets);
@@ -755,7 +755,7 @@ public :
    virtual vector<int> muon_veto_looseID(int jet_index, int ele_index, float muPtCut);
    virtual vector<int>getPFCandidates();
   virtual void getPt123Frac();
-   virtual void AllPFCand(std::vector<int> jetCand,std::vector<int> PFCandidates);
+  virtual void AllPFCand(std::vector<pair<int,double>> jetCand,std::vector<int> PFCandidates);
 };
 
 #endif
