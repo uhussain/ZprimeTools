@@ -124,7 +124,7 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
     //binContent as event_weight
     int bin = PU->GetXaxis()->FindBin(puTrue->at(0));
     event_weight = PU->GetBinContent(bin); 
-    cout<<"event_weight: "<<event_weight<<endl;
+    // cout<<"event_weight: "<<event_weight<<endl;
     int bosonPID;
     double bosonPt;
     bool Zfound = false;
@@ -169,8 +169,8 @@ void ZprimeJetsClass::Loop(Long64_t maxEvents, int reportEvery)
 		  kfactor = (EWK_corrected_weight/NNLO_weight);}
 		else{kfactor=1.23;}
 		event_weight*=kfactor;
-		cout<<"kfactor: "<<kfactor<<endl; 
-		cout<<"event_weight: "<<event_weight<<endl;
+		// cout<<"kfactor: "<<kfactor<<endl; 
+		// cout<<"event_weight: "<<event_weight<<endl;
 		//CR code
 		//At least one of the two electrons passes the tight selection
 		vector<int> elelist = electron_veto_looseID(jetCand[0],0,0,10.0);
@@ -446,11 +446,11 @@ void ZprimeJetsClass::AllPFCand(vector<int> jetCand,vector<int> PFCandidates)
   if(PFCandidates.size()>3){
     NeutralPFCandidates=PFCandidates.at(3);}
   //cout<<"TotalNeutralPFCandidates: "<<NeutralPFCandidates<<endl;}
-    
+  
   Pt123Fraction=0.0;
   //We are using these conditions so we only calculate the following quantities for the signal we are interested in
   //This will also make it faster to process the events
-  if(pfMET>250 && jetCand.size()>0){
+  if(jetCand.size()>0){
     j1PFConsPt=JetsPFConsPt->at(jetCand[0]);
     j1PFConsEta=JetsPFConsEta->at(jetCand[0]);
     j1PFConsPhi=JetsPFConsPhi->at(jetCand[0]);
