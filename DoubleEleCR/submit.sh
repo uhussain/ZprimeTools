@@ -86,11 +86,10 @@ echo "Do the MC samples"
 
 
 #WJets
-./rootcom ZprimeJetsClass_MC_WJets_inclusive analyzeWJets1
-
-./../SubmitCondor.sh analyzeWJets1 /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_WJets/180528_*/0000/ postWJets_MLM_0.root -1 10000 W_0 split_-1
 
 ./rootcom ZprimeJetsClass_MC_WJets analyzeWJets
+
+./../SubmitCondor.sh analyzeWJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_WJets/180528_*/0000/ postWJets_MLM_0.root -1 10000 W_0 split_-1
 
 ./../SubmitCondor.sh analyzeWJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_W1Jets/180528_*/0000/ postW100to200_0.root -1 10000 W100_0 split_-1 
                                                                                                                                                                                                                   
@@ -108,11 +107,9 @@ echo "Do the MC samples"
 
 #ZJets
 
-./rootcom ZprimeJetsClass_MC_ZJets_inclusive analyzeZJets1
-
-./../SubmitCondor.sh analyzeZJets1 /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJetsToLL/180528_*/0000/ postDY_MLM_0.root -1 10000 DYMLM_0 split_-1
-
 ./rootcom ZprimeJetsClass_MC_ZJets analyzeZJets
+
+./../SubmitCondor.sh analyzeZJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJetsToLL/180528_*/0000/ postDY_MLM_0.root -1 10000 DYMLM_0 split_-1
 
 ./../SubmitCondor.sh analyzeZJets /hdfs/store/user/uhussain/Zprime_Ntuples_${DATE}/DYJetsToLL_M-50_HT-100to200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/crab_DYJets_HT100to200/180528_*/0000/ postDY100to200.root -1 10000 DY100 split_-1
 
