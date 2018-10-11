@@ -368,7 +368,7 @@ void ZprimeJetsClass::getPt123Frac()
       jetPtAll+=j1PFConsPt.at(j);
       if (j < 3) Pt123+=j1PFConsPt.at(j);
     }
-  Pt123Fraction=(Pt123/jetPtAll);
+  Pt123Fraction=(Pt123/jetPt->at(jetCand[0]));
 }
 
 void ZprimeJetsClass::AllPFCand(vector<int> jetCand,vector<int> PFCandidates)
