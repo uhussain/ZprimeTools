@@ -572,7 +572,7 @@ bool ZprimeJetsClass::btagVeto() {
   bool btagVeto = true;
   for(int i = 0; i < nJet; i++)
     {
-      if(jetPt->at(i) >20.0 && jetEta->at(i) < 2.4 && jetCSV2BJetTags->at(i) > 0.8)
+      if(jetPt->at(i) >20.0 && jetEta->at(i) < 2.4 && jetCSV2BJetTags->at(i) > 0.8484)
         btagVeto = false;
     }
   return btagVeto;
@@ -608,78 +608,10 @@ vector<int> ZprimeJetsClass::electron_veto_tightID(int jet_index, float elePtCut
   vector<int> ele_cands;
   ele_cands.clear();
 
-  bool pass_SigmaIEtaIEtaFull5x5 = false;
-  bool pass_dEtaIn = false;
-  bool pass_dPhiIn = false;
-  bool pass_HoverE = false;
-  bool pass_iso = false;
-  bool pass_ooEmooP = false;
-  bool pass_d0 = false;
-  bool pass_dz = false;
-  bool pass_missingHits = false;
-  bool pass_convVeto = false;
-  //Explicitly stating types to avoid a TMath::Max conversion issue
-  Float_t EA = 0.0;
-  Float_t zero = 0.0;
-  Float_t EAcorrIso = 999.9;
   for(int i = 0; i < nEle; i++)
     {
-      //Make sure these get reset for every electron
-      pass_SigmaIEtaIEtaFull5x5 = false;
-      pass_dEtaIn = false;
-      pass_dPhiIn = false;
-      pass_HoverE = false;
-      pass_iso = false;
-      pass_ooEmooP = false;
-      pass_d0 = false;
-      pass_dz = false;
-      pass_missingHits = false;
-      pass_convVeto = false;
-      //Find EA for corrected relative iso.
-      if(abs(eleSCEta->at(i)) <= 1.0)
-	EA = 0.1752;
-      else if(1.0 < abs(eleSCEta->at(i)) && abs(eleSCEta->at(i)) <= 1.479)
-	EA = 0.1862;
-      else if(1.479 < abs(eleSCEta->at(i)) && abs(eleSCEta->at(i)) <= 2.0)
-	EA = 0.1411;
-      else if(2.0 < abs(eleSCEta->at(i)) && abs(eleSCEta->at(i)) <= 2.2)
-	EA = 0.1534;
-      else if(2.2 < abs(eleSCEta->at(i)) && abs(eleSCEta->at(i)) <= 2.3)
-	EA = 0.1903;
-      else if(2.3 < abs(eleSCEta->at(i)) && abs(eleSCEta->at(i)) <= 2.4)
-	EA = 0.2243;
-      else if(2.4 < abs(eleSCEta->at(i)) && abs(eleSCEta->at(i)) < 2.5)
-	EA = 0.2687;
-      EAcorrIso = (elePFChIso->at(i) + TMath::Max(zero,elePFNeuIso->at(i) + elePFPhoIso->at(i) - rho*EA))/(elePt->at(i));
-
-      if(abs(eleSCEta->at(i)) <= 1.479)
-	{
-	  pass_SigmaIEtaIEtaFull5x5 = eleSigmaIEtaIEtaFull5x5->at(i) < 0.0101;
-	  pass_dEtaIn = abs(eledEtaAtVtx->at(i)) < 0.00926;
-	  pass_dPhiIn = abs(eledPhiAtVtx->at(i)) < 0.0336;
-	  pass_HoverE = eleHoverE->at(i) < 0.0597;
-	  pass_iso = EAcorrIso < 0.0354;
-	  pass_ooEmooP = eleEoverPInv->at(i) < 0.012;
-	  pass_d0 = abs(eleD0->at(i)) < 0.0111;
-	  pass_dz = abs(eleDz->at(i)) < 0.0466;
-	  pass_missingHits = eleMissHits->at(i) <= 2;
-	  pass_convVeto = eleConvVeto->at(i) == 1;
-	}
-      else if(1.479 < abs(eleSCEta->at(i)) < 2.5)
-	{
-	  pass_SigmaIEtaIEtaFull5x5 = eleSigmaIEtaIEtaFull5x5->at(i) < 0.0279;
-	  pass_dEtaIn = abs(eledEtaAtVtx->at(i)) < 0.00724;
-	  pass_dPhiIn = abs(eledPhiAtVtx->at(i)) < 0.0918;
-	  pass_HoverE = eleHoverE->at(i) < 0.0615;
-	  pass_iso = EAcorrIso < 0.0646;
-	  pass_ooEmooP = eleEoverPInv->at(i) < 0.00999;
-	  pass_d0 = abs(eleD0->at(i)) < 0.0351;
-	  pass_dz = abs(eleDz->at(i)) < 0.417;
-	  pass_missingHits = eleMissHits->at(i) <= 1;
-	  pass_convVeto = eleConvVeto->at(i) == 1;
-	}
-      //Electron passes Loose Electron ID cuts
-      if(pass_SigmaIEtaIEtaFull5x5 && pass_dEtaIn && pass_dPhiIn && pass_HoverE && pass_iso && pass_ooEmooP && pass_d0 && pass_dz && pass_missingHits && pass_convVeto)
+      //Electron passes Tight Electron ID cuts
+      if(eleIDbit->at(i)>>3&1 == 1)
 	{
 	  //Electron passes pt cut
 	  if(elePt->at(i) > elePtCut)
@@ -754,89 +686,21 @@ vector<int> ZprimeJetsClass::electron_veto_looseID(int jet_index, int leading_mu
 {
   vector<int> ele_cands;
   ele_cands.clear();
-
-  bool pass_SigmaIEtaIEtaFull5x5 = false;
-  bool pass_dEtaIn = false;
-  bool pass_dPhiIn = false;
-  bool pass_HoverE = false;
-  bool pass_iso = false;
-  bool pass_ooEmooP = false;
-  bool pass_d0 = false;
-  bool pass_dz = false;
-  bool pass_missingHits = false;
-  bool pass_convVeto = false;
-  //Explicitly stating types to avoid a TMath::Max conversion issue
-  Float_t EA = 0.0;
-  Float_t zero = 0.0;
-  Float_t EAcorrIso = 999.9;
+  
   for(int i = 0; i < nEle; i++)
     {
-      //Make sure these get reset for every electron
-      pass_SigmaIEtaIEtaFull5x5 = false;
-      pass_dEtaIn = false;
-      pass_dPhiIn = false;
-      pass_HoverE = false;
-      pass_iso = false;
-      pass_ooEmooP = false;
-      pass_d0 = false;
-      pass_dz = false;
-      pass_missingHits = false;
-      pass_convVeto = false;
-      //Find EA for corrected relative iso.
-      if(abs(eleSCEta->at(i)) <= 1.0)
-	EA = 0.1752;
-      else if(1.0 < abs(eleSCEta->at(i)) && abs(eleSCEta->at(i)) <= 1.479)
-	EA = 0.1862;
-      else if(1.479 < abs(eleSCEta->at(i)) && abs(eleSCEta->at(i)) <= 2.0)
-	EA = 0.1411;
-      else if(2.0 < abs(eleSCEta->at(i)) && abs(eleSCEta->at(i)) <= 2.2)
-	EA = 0.1534;
-      else if(2.2 < abs(eleSCEta->at(i)) && abs(eleSCEta->at(i)) <= 2.3)
-	EA = 0.1903;
-      else if(2.3 < abs(eleSCEta->at(i)) && abs(eleSCEta->at(i)) <= 2.4)
-	EA = 0.2243;
-      else if(2.4 < abs(eleSCEta->at(i)) && abs(eleSCEta->at(i)) < 2.5)
-	EA = 0.2687;
-      EAcorrIso = (elePFChIso->at(i) + TMath::Max(zero,elePFNeuIso->at(i) + elePFPhoIso->at(i) - rho*EA))/(elePt->at(i));
-
-      if(abs(eleSCEta->at(i)) <= 1.479)
-	{
-	  pass_SigmaIEtaIEtaFull5x5 = eleSigmaIEtaIEtaFull5x5->at(i) < 0.0103;
-	  pass_dEtaIn = abs(eledEtaAtVtx->at(i)) < 0.0105;
-	  pass_dPhiIn = abs(eledPhiAtVtx->at(i)) < 0.115;
-	  pass_HoverE = eleHoverE->at(i) < 0.104;
-	  pass_iso = EAcorrIso < 0.0893;
-	  pass_ooEmooP = eleEoverPInv->at(i) < 0.102;
-	  pass_d0 = abs(eleD0->at(i)) < 0.0261;
-	  pass_dz = abs(eleDz->at(i)) < 0.41;
-	  pass_missingHits = eleMissHits->at(i) <= 2;
-	  pass_convVeto = eleConvVeto->at(i) == 1;
-	}
-      else if(1.479 < abs(eleSCEta->at(i)) < 2.5)
-	{
-	  pass_SigmaIEtaIEtaFull5x5 = eleSigmaIEtaIEtaFull5x5->at(i) < 0.0301;
-	  pass_dEtaIn = abs(eledEtaAtVtx->at(i)) < 0.00814;
-	  pass_dPhiIn = abs(eledPhiAtVtx->at(i)) < 0.182;
-	  pass_HoverE = eleHoverE->at(i) < 0.0897;
-	  pass_iso = EAcorrIso < 0.121;
-	  pass_ooEmooP = eleEoverPInv->at(i) < 0.126;
-	  pass_d0 = abs(eleD0->at(i)) < 0.118;
-	  pass_dz = abs(eleDz->at(i)) < 0.822;
-	  pass_missingHits = eleMissHits->at(i) <= 1;
-	  pass_convVeto = eleConvVeto->at(i) == 1;
-	}
       //Electron passes Loose Electron ID cuts
-      if(pass_SigmaIEtaIEtaFull5x5 && pass_dEtaIn && pass_dPhiIn && pass_HoverE && pass_iso && pass_ooEmooP && pass_d0 && pass_dz && pass_missingHits && pass_convVeto)
+      if(eleIDbit->at(i)>>1&1 == 1)
 	{
-	  //Electron passes pt cut
-	  if(elePt->at(i) > elePtCut)
-	    {
-	      //Electron does not overlap photon
-	      if(deltaR(eleEta->at(i),elePhi->at(i),jetEta->at(jet_index),jetPhi->at(jet_index)) > 0.5)
-		{
-		  ele_cands.push_back(i);
-		}
-	    }
+	//Electron passes pt cut
+	if(elePt->at(i) > elePtCut)
+	  {
+	    //Electron does not overlap photon
+	    if(deltaR(eleEta->at(i),elePhi->at(i),jetEta->at(jet_index),jetPhi->at(jet_index)) > 0.5)
+	      {
+		ele_cands.push_back(i);
+	      }
+	  }
 	}
     }
   return ele_cands;
@@ -850,26 +714,8 @@ vector<int> ZprimeJetsClass::muon_veto_looseID(int jet_index, int leading_ele_in
   vector<int> mu_cands;
   mu_cands.clear();
 
-  bool veto_passed = true; //pass veto if no good muon found
-  bool pass_PFMuon = true;
-  bool pass_globalMuon = true;
-  bool pass_trackerMuon = true;
-  bool pass_iso = false;
-  //Explicitly stating types to avoid a TMath::Max conversion issue
-  Float_t zero = 0.0;
-  Float_t muPhoPU = 999.9;
-  Float_t tightIso_combinedRelative = 999.9;
   for(int i = 0; i < nMu; i++)
     {
-      // pass_PFMuon = muIsPFMuon->at(i);
-      // pass_globalMuon = muIsGlobalMuon->at(i);
-      // pass_trackerMuon = muIsTrackerMuon->at(i);
-      muPhoPU = muPFNeuIso->at(i) + muPFPhoIso->at(i) - 0.5*muPFPUIso->at(i);
-      tightIso_combinedRelative = (muPFChIso->at(i) + TMath::Max(zero,muPhoPU))/(muPt->at(i));
-      pass_iso = tightIso_combinedRelative < 0.25;
-      //Muon passes Loose Muon ID and PF-based combined relative, dBeta-corrected Loose Muon Isolation cuts
-      //      if(pass_PFMuon && (pass_globalMuon || pass_trackerMuon) && pass_iso)
-      // if(pass_PFMuon && (pass_globalMuon || pass_trackerMuon))
       if(muIDbit->at(i)>>0&1==1)
 	{
 	  //Muon passes pt cut
