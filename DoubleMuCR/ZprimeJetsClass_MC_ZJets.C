@@ -55,7 +55,7 @@ int main(int argc, const char* argv[])
   string inclusiveSample = "DYJetsToLL_M-50_TuneCUETP8M1_13TeV-madgraphMLM-pythia8";
   if (string(argv[1]).find(inclusiveSample) != string::npos) sample.isInclusive = true;
   else sample.isInclusive = false;
-  ZprimeJetsClass t(argv[1],argv[2],atoi(argv[6]),atoi(argv[7]));
+  ZprimeJetsClass t(argv[1],argv[2],argv[5]);
   
   t.Loop(maxEvents,reportEvery);
   return 0;

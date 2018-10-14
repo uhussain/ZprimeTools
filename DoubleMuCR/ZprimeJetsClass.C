@@ -47,8 +47,9 @@ int main(int argc, const char* argv[])
       return 1;
     }
   //const char* file2 = argv[2];
-
-  ZprimeJetsClass t(argv[1],argv[2],atoi(argv[6]),atoi(argv[7]));
+  cout<<argv[5]<<endl;
+  ZprimeJetsClass t(argv[1],argv[2],argv[5]);
+  return 0;
   t.Loop(maxEvents,reportEvery);
   return 0;
 }

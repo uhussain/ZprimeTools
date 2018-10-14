@@ -846,7 +846,7 @@ public :
   TBranch        *b_AK8puppiSDSJCSV;   //!
 
   
-  ZprimeJetsClass(const char* file1,const char* file2,int min,int max);
+  ZprimeJetsClass(const char* file1,const char* file2,const char* fileRange);
   virtual ~ZprimeJetsClass();
   virtual Int_t    Cut(Long64_t entry);
   virtual Int_t    GetEntry(Long64_t entry);
@@ -877,8 +877,21 @@ public :
 
 #ifdef ZprimeJetsClass_cxx
 
-bool fileSelection(string filename,int min, int max)
+vector<string> split(string str,string delim) {
+  vector<string> splitString;
+  char strChar[str.size() + 1];
+  strcpy(strChar,str.c_str());
+  char *token = strtok(strChar,delim.c_str());
+  while (token != NULL) {
+    splitString.push_back(string(token));
+    token = strtok(NULL,delim.c_str());
+  }
+  return splitString;
+}
+
+bool fileSelection(string filename,string fileRange)
 {
+  if (fileRange == "-1") return true;
   int numPos;
   for (int i = filename.size(); i > 0; --i) {
     if (filename[i] == '_') {
@@ -888,11 +901,18 @@ bool fileSelection(string filename,int min, int max)
   }
   filename.erase(filename.begin(),filename.begin()+numPos);
   int fileNum = stoi(filename);
-  if (min < fileNum && fileNum <= max) return true;
-  else return false;
+  //1-100/200-250/300-300
+  vector<string> rangeOfFiles = split(fileRange,"/");
+  for (int i = 0; i < rangeOfFiles.size(); i++) {
+    vector<string> range = split(rangeOfFiles[i],"-");
+    if (stoi(range[0]) <= fileNum && fileNum <= stoi(range[1])) {
+      return true;
+    }
+  }
+  return false;
 }
 
-ZprimeJetsClass::ZprimeJetsClass(const char* file1,const char* file2,int min,int max) 
+ZprimeJetsClass::ZprimeJetsClass(const char* file1,const char* file2,const char* fileRange) 
 {
   TChain *chain = new TChain("ggNtuplizer/EventTree");
   TString path = file1;
@@ -917,7 +937,7 @@ ZprimeJetsClass::ZprimeJetsClass(const char* file1,const char* file2,int min,int
 	{
 	  string fname = string(name);
 	  fname.erase(fname.end()-5,fname.end());
-	  bool isin = fileSelection(fname,min,max);
+	  bool isin = fileSelection(fname,string(fileRange));
 	  if(isin)
 	    {
 	      cout<<"Adding FullPathInputFile to chain:"<<FullPathInputFile<<endl;
