@@ -6,6 +6,8 @@ from os import path, system, mkdir, listdir, rename, remove, chdir
 #Create Directories to put condor files in
 #Where executable and output files go
 if not path.isdir(".output/"): mkdir(".output/")
+#Where PlotTool.C puts number of each type of sample file
+if not path.isdir(".filelist/"): mkdir(".filelist/")
 #Where all condor output, log, and error files go
 if not path.isdir(".status/"): mkdir(".status/")
 
@@ -49,7 +51,7 @@ if nBatches == -1:
 with open(".output/Job_"+label+".sh","w") as jobfile:
     jobfile.write("#!/bin/sh\n"
                 + "source /cvmfs/cms.cern.ch/cmsset_default.sh\n"
-                + "cd /cms/uhussain/CMSSW_8_0_26_patch1/src\n"
+                + "cd /cms/uhussain/CMSSW_9_4_9_cand2/src\n"
                 + "cmsenv\n"
                 + "cd ${_CONDOR_SCRATCH_DIR}\n"
                 + "./"+argv[1]+" ${1} ${2} ${3} ${4} ${5} ${6} ${7} ${8}\n")
@@ -88,6 +90,8 @@ with open(".output/condor_"+label,"w") as condor:
         else:
             #0-100/200-250/300-300
             fileRange = rootFiles[0]
+            if len(rootFiles)/binsize == 1:
+                binsize = len(rootFiles)
             for j in range(1,binsize):
                 if (int(rootFiles[j]) - int(rootFiles[j-1]) != 1):
                     fileRange += "-"+rootFiles[j-1]+"/"+rootFiles[j]
