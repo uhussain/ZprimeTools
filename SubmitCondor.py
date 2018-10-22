@@ -30,11 +30,13 @@ directory = argv[2]
 
 #Remove hadd file so that PlotTool.C does not get confused
 output = argv[3]
-if path.isfile(output): remove(output)
-
 maxEvents = argv[4]
 reportEvery = argv[5]
 label = argv[6]
+#Remove any old condor files
+# system("rm .status/*"+label+"* >/dev/null 2>&1" )
+# system("rm .output/*"+label+"* >/dev/null 2>&1" )
+# system("rm .output/"+output.replace(".root","")+"* >/dev/null 2>&1")
 
 if (len(argv) == 8):nBatches=int(argv[7].replace("split_",""))
 else:nBatches = 1
@@ -51,7 +53,7 @@ if nBatches == -1:
 with open(".output/Job_"+label+".sh","w") as jobfile:
     jobfile.write("#!/bin/sh\n"
                 + "source /cvmfs/cms.cern.ch/cmsset_default.sh\n"
-                + "cd /cms/uhussain/CMSSW_9_4_9_cand2/src\n"
+                + "cd /cms/uhussain/CMSSW_8_0_26_patch1/src\n"
                 + "cmsenv\n"
                 + "cd ${_CONDOR_SCRATCH_DIR}\n"
                 + "./"+argv[1]+" ${1} ${2} ${3} ${4} ${5} ${6} ${7} ${8}\n")
@@ -62,6 +64,7 @@ files_to_transfer=argv[1]+",../kfactors.root,../PU_Central.root"
 
 #If NLO EWK files in directory, transfer them
 if path.isfile("WJets_NLO_EWK.root"): files_to_transfer=argv[1]+",../kfactors.root,../PU_Central.root,../WJets_NLO_EWK.root,../ZJets_NLO_EWK.root"
+if path.isfile("egammaEffi.txt_EGM2D_runBCDEF_passingRECO.root"): files_to_transfer=argv[1]+",../kfactors.root,../PU_Central.root,../egammaEffi.txt_EGM2D_runBCDEF_passingRECO.root,../egammaEffi.txt_EGM2D_runBCDEF_passingTight94X.root"
 
 #Beginning to write condor_submit file
 with open(".output/condor_"+label,"w") as condor:
