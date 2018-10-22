@@ -21,7 +21,7 @@ for variable in argv[1:]:
     
     pad1 = TPad("pad1","pad1",0.01,0.25,0.99,0.99);
     pad1.Draw(); pad1.cd();
-    if (samples.name != "Z Mass (GeV)"): pad1.SetLogy();
+    pad1.SetLogy();
     pad1.SetFillColor(0); pad1.SetFrameBorderMode(0); pad1.SetBorderMode(0);
     pad1.SetBottomMargin(0.);
 
@@ -51,13 +51,16 @@ for variable in argv[1:]:
     hs_datamc = THStack("hs_datamc","Data/MC comparison");
 
     hs_order = {}
-    for key in samples.MC_Integral:hs_order[str(samples.MC_Integral[key])] = key
+    if (samples.name == "Cutflow"):
+        for key in samples.SampleList:
+            if key != "Data":hs_order[str(samples.histo[key].GetBinContent(11))] = key
+    else:
+        for key in samples.MC_Integral:hs_order[str(samples.MC_Integral[key])] = key
     keylist = hs_order.keys()
     keylist.sort(key=float)
-    for order in keylist: hs_datamc.Add(samples.histo[hs_order[order]])
+    for order in keylist:hs_datamc.Add(samples.histo[hs_order[order]])
     hs_datamc.SetTitle("");
-    if (samples.name != "Z Mass (GeV)"): min=0.1;max=pow(10,2.5);
-    else:min = 0;max = 1.3;
+    min=0.1;max=pow(10,2.5);
     hs_datamc.SetMinimum(min);
     hs_datamc.SetMaximum(hs_datamc.GetMaximum()*max);
 
@@ -86,7 +89,6 @@ for variable in argv[1:]:
 
     lumi_label = '';
     if (samples.lumi == 35900): lumi_label="35.9";
-    elif (samples.lumi == 1885): lumi_label="1.89";
     texS = TLatex(0.20,0.837173,("#sqrt{s} = 13 TeV, "+lumi_label+" fb^{-1}"));
     texS.SetNDC();
     texS.SetTextFont(42);
@@ -202,6 +204,6 @@ for variable in argv[1:]:
     rfile.Close()
     c.SaveAs((str(variable)+str(".pdf")));
     c.SaveAs((str(variable)+str(".png")));
-    system((str("mv ")+str(variable)+str(".pdf ")+str("/afs/hep.wisc.edu/home/ekoenig4/public_html/MonoZprimeJet/Plots/")+dir+str("Plots_EWK/datamc_")+str(variable)+str(".pdf")));
-    system((str("mv ")+str(variable)+str(".png ")+str("/afs/hep.wisc.edu/home/ekoenig4/public_html/MonoZprimeJet/Plots/")+dir+str("Plots_EWK/datamc_")+str(variable)+str(".png")));
+    system((str("mv ")+str(variable)+str(".pdf ")+str("/afs/hep.wisc.edu/home/ekoenig4/public_html/MonoZprimeJet/Plots2016/")+dir+str("Plots_EWK/datamc_")+str(variable)+str(".pdf")));
+    system((str("mv ")+str(variable)+str(".png ")+str("/afs/hep.wisc.edu/home/ekoenig4/public_html/MonoZprimeJet/Plots2016/")+dir+str("Plots_EWK/datamc_")+str(variable)+str(".png")));
   
