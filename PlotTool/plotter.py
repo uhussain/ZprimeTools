@@ -199,9 +199,6 @@ for variable in argv[1:]:
     yaxis.Draw("SAME");
     
     dir = getcwd().split("/")[-1]
-    rfile=TFile("cutflow.root","recreate")
-    c.Write()
-    rfile.Close()
     c.SaveAs((str(variable)+str(".pdf")));
     c.SaveAs((str(variable)+str(".png")));
     system((str("mv ")+str(variable)+str(".pdf ")+str("/afs/hep.wisc.edu/home/ekoenig4/public_html/MonoZprimeJet/Plots2016/")+dir+str("Plots_EWK/datamc_")+str(variable)+str(".pdf")));
